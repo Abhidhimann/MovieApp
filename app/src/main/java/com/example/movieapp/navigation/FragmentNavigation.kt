@@ -3,11 +3,12 @@ package com.example.movieapp.ui.navigation
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.example.movieapp.ui.fragments.Home
+import com.example.movieapp.ui.fragments.common.Home
 import com.example.movieapp.ui.fragments.movie.HomeMovieList
 import com.example.movieapp.ui.fragments.series.HomeSeriesList
 import com.example.movieapp.ui.fragments.movie.BaseMovieList
 import com.example.movieapp.ui.fragments.movie.SearchMovieResult
+import com.example.movieapp.ui.fragments.series.BaseSeriesList
 import com.example.movieapp.utils.Constants
 
 class FragmentNavigation(private val fragmentManager: FragmentManager) {
@@ -30,6 +31,17 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
 
     fun toBaseUpcomingMoviesFragment(containerId: Int) {
         navigateToFragmentMain(baseUpcomingMoviesList, containerId)
+    }
+    fun toBasePopularSeriesFragment(containerId: Int) {
+        navigateToFragmentMain(basePopularSeriesList, containerId)
+    }
+
+    fun toBaseImdbSeriesFragment(containerId: Int) {
+        navigateToFragmentMain(baseImdbSeriesList, containerId)
+    }
+
+    fun toBaseAiringSeriesFragment(containerId: Int) {
+        navigateToFragmentMain(baseAiringSeriesList, containerId)
     }
 
     fun toMovieListFragment(containerId: Int) {
@@ -64,5 +76,12 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
             BaseMovieList.newInstance(Constants.MoviesType.IMDB_RATED_MOVIES.value)
         val baseUpcomingMoviesList =
             BaseMovieList.newInstance(Constants.MoviesType.UPCOMING_MOVIES.value)
+
+        val basePopularSeriesList =
+            BaseSeriesList.newInstance(Constants.SeriesType.POPULAR_SERIES.value)
+        val baseImdbSeriesList =
+            BaseSeriesList.newInstance(Constants.SeriesType.IMDB_RATED_SERIES.value)
+        val baseAiringSeriesList =
+            BaseSeriesList.newInstance(Constants.SeriesType.AIRING_SERIES.value)
     }
 }

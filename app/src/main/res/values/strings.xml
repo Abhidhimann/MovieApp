@@ -8,7 +8,7 @@
     <string name="tvSeries">TV Series</string>
     <string name="popularSeries">Popular Series</string>
     <string name="imdbSeries">IMDB Rated Series</string>
-    <string name="upcomingSeries">Upcoming Series</string>
+    <string name="airingSeries">Airing Series</string>
     <string name="trending">Trending</string>
     <string name="movies">Movies</string>
     <string name="search_movies_series">Search movies/series</string>

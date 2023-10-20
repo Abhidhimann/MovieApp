@@ -1,4 +1,4 @@
-package com.example.movieapp.ui
+package com.example.movieapp.ui.activities
 
 import android.os.Bundle
 import android.text.Editable
@@ -72,6 +72,15 @@ open class HomePageUi : AppCompatActivity() {
                 }
                 R.id.upcoming_movie_item -> {
                     navigation.toBaseUpcomingMoviesFragment(binding.homeFrameLayout.id)
+                }
+                R.id.popular_series_item -> {
+                    navigation.toBasePopularSeriesFragment(binding.homeFrameLayout.id)
+                }
+                R.id.imdb_series_item -> {
+                    navigation.toBaseImdbSeriesFragment(binding.homeFrameLayout.id)
+                }
+                R.id.airing_series_item -> {
+                    navigation.toBaseAiringSeriesFragment(binding.homeFrameLayout.id)
                 }
             }
             true

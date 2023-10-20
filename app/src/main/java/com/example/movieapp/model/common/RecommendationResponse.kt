@@ -1,5 +1,6 @@
-package com.example.movieapp.model
+package com.example.movieapp.model.common
 
+import com.example.movieapp.model.common.RecommendationItem
 import com.google.gson.annotations.SerializedName
 
 data class RecommendationResponse(

@@ -1,7 +1,7 @@
 package com.example.movieapp.utils
 
 import com.example.movieapp.repository.movie.MovieDataSource
-import com.example.movieapp.ui.MovieDetailsUi
+import com.example.movieapp.ui.activities.MovieDetailsUi
 import com.example.movieapp.ui.fragments.series.HomeSeriesList
 
 enum class Tags{

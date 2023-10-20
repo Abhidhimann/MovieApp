@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:context=".ui.MovieDetailsUi">
+        tools:context=".ui.activities.MovieDetailsUi">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -230,7 +230,7 @@
 <!--            android:layout_marginStart="10dp"-->
 <!--            android:layout_marginTop="7dp"-->
 <!--            android:layout_marginEnd="10dp"-->
-<!--            android:name="com.example.movieapp.ui.fragments.Recommendation"-->
+<!--            android:name="com.example.movieapp.ui.fragments.common.Recommendation"-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
 <!--            tools:layout="@layout/recommendation_layout" />-->

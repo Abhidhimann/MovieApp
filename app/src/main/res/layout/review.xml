@@ -38,7 +38,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="4"
             android:text="@string/tempText"
             android:textColor="@color/white" />
 

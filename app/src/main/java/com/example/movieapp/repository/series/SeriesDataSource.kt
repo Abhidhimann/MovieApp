@@ -4,14 +4,9 @@ import android.util.Log
 import com.example.movieapp.model.tvSeries.SeriesItemListResponse
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.CustomeApiFailedException
-import com.example.movieapp.utils.Tags
 import com.example.movieapp.api.TvApiInterface
-import com.example.movieapp.model.RecommendationResponse
-import com.example.movieapp.model.ReviewResponse
-import com.example.movieapp.model.movies.MovieDetails
-import com.example.movieapp.model.movies.MovieGenresResponse
-import com.example.movieapp.model.movies.MovieImagesResponse
-import com.example.movieapp.model.movies.MoviesItemListResponse
+import com.example.movieapp.model.common.RecommendationResponse
+import com.example.movieapp.model.common.ReviewResponse
 import com.example.movieapp.model.tvSeries.SeriesDetails
 import com.example.movieapp.model.tvSeries.SeriesGenresResponse
 import com.example.movieapp.model.tvSeries.SeriesImagesResponse
@@ -66,9 +61,9 @@ class SeriesDataSource(private val apiService: TvApiInterface) {
             apiService.getImdbTopRatedTvSeries(Api.API_KEY.getValue(), page)
         })
 
-    suspend fun getUpComingSeries(page: Int): SeriesItemListResponse =
+    suspend fun getAiringSeries(page: Int): SeriesItemListResponse =
         getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
-            apiService.getUpComingTvSeries(Api.API_KEY.getValue(), page)
+            apiService.getAiringTvSeries(Api.API_KEY.getValue(), page)
         })
 
     suspend fun getSeriesByGenre(genreId: Int, page: Int): SeriesItemListResponse =

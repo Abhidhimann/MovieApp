@@ -5,7 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.databinding.ReviewBinding
-import com.example.movieapp.model.Review
+import com.example.movieapp.model.common.Review
+
 
 class ReviewAdaptor : RecyclerView.Adapter<ReviewAdaptor.ReviewViewHolder>() {
 
@@ -46,6 +47,7 @@ class ReviewAdaptor : RecyclerView.Adapter<ReviewAdaptor.ReviewViewHolder>() {
             binding.reviewAuthor.text = review.author
             binding.reviewContent.text = review.createdAt.substringBefore("T")
             binding.reviewContent.text = review.content
+            showLessReviewContent() // line count issue here :(
         }
 
         fun showFullReviewContent() {
@@ -66,4 +68,6 @@ class ReviewAdaptor : RecyclerView.Adapter<ReviewAdaptor.ReviewViewHolder>() {
             }
         }
     }
+
+
 }

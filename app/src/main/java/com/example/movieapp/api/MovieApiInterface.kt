@@ -1,6 +1,8 @@
 package com.example.movieapp.api
 
 import com.example.movieapp.model.*
+import com.example.movieapp.model.common.RecommendationResponse
+import com.example.movieapp.model.common.ReviewResponse
 import com.example.movieapp.model.movies.*
 import retrofit2.Response
 import retrofit2.http.GET

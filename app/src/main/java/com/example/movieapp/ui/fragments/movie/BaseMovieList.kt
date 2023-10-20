@@ -27,7 +27,6 @@ private const val MoviesType = "movieType"
  * then we have to use 3 different model and then will see what viewModel to use according to argument
  * that will be difficult to manage, so then it will be better to use 3 fragment ( maybe can use one base class as parent)
  */
-
 class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
 
     private lateinit var moviesType: String

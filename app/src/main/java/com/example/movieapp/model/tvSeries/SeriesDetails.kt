@@ -1,7 +1,7 @@
 package com.example.movieapp.model.tvSeries
 
-import com.example.movieapp.model.RecommendationItem
-import com.example.movieapp.model.Review
+import com.example.movieapp.model.common.RecommendationItem
+import com.example.movieapp.model.common.Review
 import com.example.movieapp.model.movies.MovieGenre
 import com.google.gson.annotations.SerializedName
 

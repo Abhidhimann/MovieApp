@@ -27,8 +27,8 @@
                 android:id="@+id/imdb_series_item"
                 android:title="@string/imdbSeries" />
             <item
-                android:id="@+id/upcoming_series_item"
-                android:title="@string/upcomingSeries" />
+                android:id="@+id/airing_series_item"
+                android:title="@string/airingSeries" />
         </menu>
     </item>
 

@@ -1,5 +1,6 @@
-package com.example.movieapp.ui
+package com.example.movieapp.ui.activities
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -139,6 +140,11 @@ class MovieDetailsUi : AppCompatActivity() {
         )
             ?.let { recommendationListAdaptor.setRecommendationList(it) }
         recommendationListAdaptor.notifyDataSetChanged()
+
+        if( viewModel.listLastIndex > recommendationList!!.size){
+            binding.recommendedNext.isClickable = false
+            binding.recommendedNext.setTextColor(Color.WHITE)
+        }
     }
 
     override fun onDestroy() {

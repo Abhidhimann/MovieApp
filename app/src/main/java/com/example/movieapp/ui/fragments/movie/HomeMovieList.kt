@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.fragments.movie
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -45,7 +46,7 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list) {
         binding.rcMovieList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcMovieList.adapter = adaptor
         setMovieListObserver()
-        viewModel.getTrendingMovies(viewModel.initialPage)
+        viewModel.getTrendingMovies(viewModel.currentPage)
     }
 
     private fun setMovieListObserver(){
@@ -68,8 +69,12 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list) {
             if (viewModel.listLastIndex + itemCount > viewModel.trendingMovies.value?.movieList?.size!!) {
                 viewModel.listInitialIndex = 0
                 viewModel.listLastIndex = 0
-                viewModel.getTrendingMovies(++viewModel.initialPage)
+                viewModel.getTrendingMovies(++viewModel.currentPage)
             } else {
+                if (viewModel.currentPage==viewModel.trendingMovies.value?.totalPages){
+                    binding.homeMovieListNext.setTextColor(Color.WHITE)
+                    binding.homeMovieListNext.isClickable = false
+                }
                 loadItems()
             }
         }

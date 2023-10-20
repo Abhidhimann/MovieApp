@@ -1,7 +1,7 @@
 package com.example.movieapp.model.movies
 
-import com.example.movieapp.model.RecommendationItem
-import com.example.movieapp.model.Review
+import com.example.movieapp.model.common.RecommendationItem
+import com.example.movieapp.model.common.Review
 import com.google.gson.annotations.SerializedName
 
 data class MovieDetails(

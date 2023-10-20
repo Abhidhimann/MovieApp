@@ -12,8 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
 import com.example.movieapp.R
 import com.example.movieapp.databinding.HomeTrendingListViewBinding
-import com.example.movieapp.model.RecommendationItem
-import com.example.movieapp.ui.MovieDetailsUi
+import com.example.movieapp.model.common.RecommendationItem
+import com.example.movieapp.ui.activities.MovieDetailsUi
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.Tags

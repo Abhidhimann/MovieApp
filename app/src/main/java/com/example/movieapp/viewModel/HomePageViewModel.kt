@@ -2,12 +2,12 @@ package com.example.movieapp.viewModel
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.movieapp.model.RecommendationResponse
+import com.example.movieapp.model.common.RecommendationResponse
 import com.example.movieapp.repository.movie.MovieDataRepository
 import com.example.movieapp.utils.Result
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel(private val repository: MovieDataRepository): ViewModel() {
+class HomePageViewModel(private val repository: MovieDataRepository): ViewModel() {
 
     private var _trending = MutableLiveData<RecommendationResponse>()
     val trending: LiveData<RecommendationResponse>
@@ -35,11 +35,11 @@ class MainActivityViewModel(private val repository: MovieDataRepository): ViewMo
         }
     }
 }
-class MainActivityViewModelFactory(private val repository: MovieDataRepository) :
+class HomePageViewModelFactory(private val repository: MovieDataRepository) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainActivityViewModel::class.java)) { //If the modelClass is not compatible with HomePageViewModel, it throws an IllegalArgumentException with the message "Unknown ViewModel class." This is a safety check to ensure that you only create instances of the expected ViewModel class.
-            return MainActivityViewModel(repository) as T
+        if (modelClass.isAssignableFrom(HomePageViewModel::class.java)) { //If the modelClass is not compatible with HomePageViewModel, it throws an IllegalArgumentException with the message "Unknown ViewModel class." This is a safety check to ensure that you only create instances of the expected ViewModel class.
+            return HomePageViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

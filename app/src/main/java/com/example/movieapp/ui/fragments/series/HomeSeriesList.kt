@@ -1,6 +1,7 @@
 package com.example.movieapp.ui.fragments.series
 
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -43,16 +44,20 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list) {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(Tags.SERIES_LIST_FRAGMENT.getTag(), "Series List View Destroyed")
+        Log.i(getClassTag(), "Series List View Destroyed")
     }
 
     private fun nextSeriesList() {
         binding.homeSeriesListNext.setOnClickListener {
-            if (viewModel.listLastIndex + itemCount > viewModel.trendingSeries.value?.SeriesList?.size!!) {
+            if (viewModel.listLastIndex + itemCount > viewModel.trendingSeries.value?.seriesList?.size!!) {
                 viewModel.listInitialIndex = 0
                 viewModel.listLastIndex = 0
-                viewModel.getTrendingMovies(++viewModel.initialPage)
+                viewModel.getTrendingMovies(++viewModel.currentPage)
             } else {
+                if (viewModel.currentPage==viewModel.trendingSeries.value?.totalPages){
+                    binding.homeSeriesListNext.setTextColor(Color.WHITE)
+                    binding.homeSeriesListNext.isClickable = false
+                }
                 loadItems()
             }
         }
@@ -62,13 +67,13 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list) {
         adaptor = SeriesCardAdaptor()
         binding.rcSeriesList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcSeriesList.adapter = adaptor
-        viewModel.getTrendingMovies(viewModel.initialPage)
+        viewModel.getTrendingMovies(viewModel.currentPage)
 
         viewModel.trendingSeries.observe(viewLifecycleOwner) {
             viewModel.listInitialIndex = viewModel.listLastIndex
             viewModel.listLastIndex += itemCount
             adaptor.setList(
-                it.SeriesList.subList(
+                it.seriesList.subList(
                     viewModel.listInitialIndex,
                     viewModel.listLastIndex
                 )
@@ -80,7 +85,7 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list) {
     private fun loadItems() {
         viewModel.listInitialIndex = viewModel.listLastIndex
         viewModel.listLastIndex += itemCount
-        viewModel.trendingSeries.value?.SeriesList?.subList(
+        viewModel.trendingSeries.value?.seriesList?.subList(
             viewModel.listInitialIndex,
             viewModel.listLastIndex
         )

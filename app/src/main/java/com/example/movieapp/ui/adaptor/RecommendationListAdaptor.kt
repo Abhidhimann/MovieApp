@@ -2,19 +2,16 @@ package com.example.movieapp.ui.adaptor
 
 import android.content.Intent
 import android.content.Intent.*
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.movieapp.databinding.RecommendedMovieTvCardBinding
-import com.example.movieapp.model.RecommendationItem
-import com.example.movieapp.ui.MovieDetailsUi
-import com.example.movieapp.ui.TvSeriesDetailsUi
+import com.example.movieapp.model.common.RecommendationItem
+import com.example.movieapp.ui.activities.MovieDetailsUi
+import com.example.movieapp.ui.activities.TvSeriesDetailsUi
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
-import com.example.movieapp.utils.Tags
-import com.example.movieapp.utils.getClassTag
 import com.squareup.picasso.Picasso
 
 class RecommendationListAdaptor :

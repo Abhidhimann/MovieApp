@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.databinding.ListItemCardBinding
 import com.example.movieapp.model.tvSeries.SeriesItem
-import com.example.movieapp.ui.TvSeriesDetailsUi
+import com.example.movieapp.ui.activities.TvSeriesDetailsUi
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
 import com.squareup.picasso.Picasso

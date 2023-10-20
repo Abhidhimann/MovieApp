@@ -2,7 +2,7 @@ package com.example.movieapp.repository.movie
 
 import com.example.movieapp.model.movies.MovieDetails
 import com.example.movieapp.model.movies.MoviesItemListResponse
-import com.example.movieapp.model.RecommendationResponse
+import com.example.movieapp.model.common.RecommendationResponse
 import com.example.movieapp.utils.Result
 import kotlinx.coroutines.*
 import kotlin.math.min

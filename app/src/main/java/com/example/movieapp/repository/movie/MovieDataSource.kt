@@ -2,7 +2,8 @@ package com.example.movieapp.repository.movie
 
 import android.util.Log
 import com.example.movieapp.api.MovieApiInterface
-import com.example.movieapp.model.*
+import com.example.movieapp.model.common.RecommendationResponse
+import com.example.movieapp.model.common.ReviewResponse
 import com.example.movieapp.model.movies.*
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.CustomeApiFailedException

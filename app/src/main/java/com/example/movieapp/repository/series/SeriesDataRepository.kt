@@ -1,6 +1,6 @@
 package com.example.movieapp.repository.series
 
-import com.example.movieapp.model.RecommendationResponse
+import com.example.movieapp.model.common.RecommendationResponse
 import com.example.movieapp.model.tvSeries.SeriesDetails
 import com.example.movieapp.model.tvSeries.SeriesItemListResponse
 import com.example.movieapp.utils.Result
@@ -45,10 +45,10 @@ class SeriesDataRepository(private val dataSource: SeriesDataSource) {
         }
     }
 
-    suspend fun getUpcomingSeries(page: Int): Result<SeriesItemListResponse>{
+    suspend fun getAiringSeries(page: Int): Result<SeriesItemListResponse>{
         return withContext(Dispatchers.IO) {
             try {
-                val response = dataSource.getUpComingSeries(page)
+                val response = dataSource.getAiringSeries(page)
                 Result.Success(response)
             } catch (e: Exception) {
                 Result.Error(e)
@@ -77,10 +77,10 @@ class SeriesDataRepository(private val dataSource: SeriesDataSource) {
                 val responseDeff = async {
                     dataSource.getSeriesDetails(movieId)
                 }
-                val reviewsOnMoviesDeff = async {
+                val reviewsOnSeriesDeff = async {
                     dataSource.getReviewsOnSeries(movieId)
                 }
-                val movieImagesDeff = async {
+                val SeriesImagesDeff = async {
                     dataSource.getSeriesImages(movieId)
                 }
 
@@ -88,16 +88,16 @@ class SeriesDataRepository(private val dataSource: SeriesDataSource) {
                     dataSource.getSeriesRecommendations(movieId)
                 }
 
-                awaitAll(responseDeff,reviewsOnMoviesDeff,movieImagesDeff,recommendationsDeff)  // time = max of 4
-                val movieDetails = responseDeff.await()
-                val reviews = reviewsOnMoviesDeff.await().reviews
-                val imagesUrl = movieImagesDeff.await().images
+                awaitAll(responseDeff,reviewsOnSeriesDeff,SeriesImagesDeff,recommendationsDeff)  // time = max of 4
+                val seriesDetails = responseDeff.await()
+                val reviews = reviewsOnSeriesDeff.await().reviews
+                val imagesUrl = SeriesImagesDeff.await().images
                 val recommendations = recommendationsDeff.await()
-                movieDetails.setReviews(reviews.take(min(4, reviews.size)))
+                seriesDetails.setReviews(reviews.take(min(4, reviews.size)))
 //  only taking 5 images & 4 reviews
-                movieDetails.setSeriesImages(imagesUrl.take(min(5, imagesUrl.size)).map { it.url })
-                movieDetails.setRecommendationList(recommendations.recommendationList)
-                Result.Success(movieDetails)
+                seriesDetails.setSeriesImages(imagesUrl.take(min(5, imagesUrl.size)).map { it.url })
+                seriesDetails.setRecommendationList(recommendations.recommendationList)
+                Result.Success(seriesDetails)
             } catch (e: Exception) {
                 Result.Error(e)
             }

@@ -1,4 +1,4 @@
-package com.example.movieapp.ui.fragments
+package com.example.movieapp.ui.fragments.common
 
 import android.os.Bundle
 import android.util.Log
@@ -14,15 +14,15 @@ import com.example.movieapp.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.adaptor.HomeImageSliderAdaptor
 import com.example.movieapp.ui.navigation.FragmentNavigation
 import com.example.movieapp.utils.Tags
-import com.example.movieapp.viewModel.MainActivityViewModel
-import com.example.movieapp.viewModel.MainActivityViewModelFactory
+import com.example.movieapp.viewModel.HomePageViewModel
+import com.example.movieapp.viewModel.HomePageViewModelFactory
 import kotlin.math.min
 
 class Home : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var navigation: FragmentNavigation
     private lateinit var imageSliderAdaptor: HomeImageSliderAdaptor
-    private lateinit var viewModel: MainActivityViewModel
+    private lateinit var viewModel: HomePageViewModel
     private val trendingItems = 10
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,8 +33,8 @@ class Home : Fragment(R.layout.fragment_home) {
         navigation = FragmentNavigation(childFragmentManager)
 
         val factory =
-            MainActivityViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi)))
-        viewModel = ViewModelProvider(this, factory).get(MainActivityViewModel::class.java)
+            HomePageViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi)))
+        viewModel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
 
         initImageSlider()
         displayMovieList()
@@ -61,13 +61,9 @@ class Home : Fragment(R.layout.fragment_home) {
     private fun switchBetweenMovieAndTvSeriesList(){
         binding.movieList.setOnClickListener {
            displayMovieList()
-            it.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.green))
-            binding.tvSeriesList.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.colorPrimary))
         }
         binding.tvSeriesList.setOnClickListener {
             displayTvList()
-            it.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.green))
-            binding.movieList.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.colorPrimary))
         }
     }
 
@@ -75,12 +71,18 @@ class Home : Fragment(R.layout.fragment_home) {
         navigation.toMovieListFragment(binding.containerMovie.id)
         binding.containerTv.visibility = View.GONE
         binding.containerMovie.visibility = View.VISIBLE
+
+        binding.movieList.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.green))
+        binding.tvSeriesList.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.colorPrimary))
     }
 
     private fun displayTvList(){
         navigation.toTvSeriesFragment(binding.containerTv.id)
         binding.containerMovie.visibility = View.GONE
         binding.containerTv.visibility = View.VISIBLE
+
+        binding.tvSeriesList.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.green))
+        binding.movieList.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.colorPrimary))
     }
 
 }

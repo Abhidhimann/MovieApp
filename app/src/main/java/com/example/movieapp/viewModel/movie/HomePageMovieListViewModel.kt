@@ -24,12 +24,12 @@ class HomePageMovieListViewModel(private val repository: MovieDataRepository) : 
         get() = _loadingState
 
 
-    var initialPage = 1
+    var currentPage = 1
     var listInitialIndex = 0
     var listLastIndex = 0
 
     fun allIndexToInitial(){
-        initialPage = 1
+        currentPage = 1
         listLastIndex = 0
         listInitialIndex = 0
     }

@@ -1,6 +1,8 @@
 package com.example.movieapp.api
 
 import com.example.movieapp.model.*
+import com.example.movieapp.model.common.RecommendationResponse
+import com.example.movieapp.model.common.ReviewResponse
 import com.example.movieapp.model.tvSeries.*
 import retrofit2.Response
 import retrofit2.http.GET
@@ -32,8 +34,8 @@ interface TvApiInterface {
         @Query("page") page: Int
     ): Response<SeriesItemListResponse>
 
-    @GET("tv/upcoming")
-    suspend fun getUpComingTvSeries(
+    @GET("tv/on_the_air")
+    suspend fun getAiringTvSeries(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
     ): Response<SeriesItemListResponse>
