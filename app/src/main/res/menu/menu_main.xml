@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item
+        android:id="@+id/home_item"
+        android:title="@string/home" />
+    <item android:title="@string/movies">
+        <menu tools:showIn="">
+            <item
+                android:id="@+id/popular_movie_item"
+                android:title="@string/popularMovies" />
+            <item
+                android:id="@+id/imdb_movie_item"
+                android:title="@string/ImdbRatedMovies" />
+            <item
+                android:id="@+id/upcoming_movie_item"
+                android:title="@string/UpcomingMovies" />
+        </menu>
+    </item>
+    <item android:title="@string/tvSeries">
+        <menu>
+            <item
+                android:id="@+id/popular_series_item"
+                android:title="@string/popularSeries" />
+            <item
+                android:id="@+id/imdb_series_item"
+                android:title="@string/imdbSeries" />
+            <item
+                android:id="@+id/upcoming_series_item"
+                android:title="@string/upcomingSeries" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/lessBlack"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".ui.fragments.Home">
+
+        <!--    <androidx.viewpager2.widget.ViewPager2-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="250dp" />-->
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:textColor="@color/white"
+            android:id="@+id/imageSlider"
+            android:layout_width="match_parent"
+            android:layout_height="320dp" />
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/imageSliderRV"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="250dp" />-->
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/trending"
+            android:textSize="30sp"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/movieList"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_width="114dp"
+                android:padding="10dp"
+                android:text="@string/movies"
+                android:backgroundTint="@color/colorPrimary"
+                android:textAllCaps="false"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/tvSeriesList"
+                android:layout_width="114dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:padding="10dp"
+                android:text="@string/tvSeries"
+                android:textAllCaps="false"
+                android:textSize="18sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <FrameLayout
+            android:id="@+id/container_movie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:id="@+id/container_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!--    <androidx.recyclerview.widget.RecyclerView-->
+        <!--        android:id="@+id/RcMovieTv"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginTop="20dp" />-->
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
