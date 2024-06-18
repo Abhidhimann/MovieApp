@@ -3,6 +3,7 @@ package com.example.movieapp.repository.series
 import com.example.movieapp.model.common.RecommendationResponse
 import com.example.movieapp.model.tvSeries.SeriesDetails
 import com.example.movieapp.model.tvSeries.SeriesItemListResponse
+import com.example.movieapp.model.tvSeries.TvSeasonDetails
 import com.example.movieapp.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -109,6 +110,17 @@ class SeriesDataRepository(private val dataSource: SeriesDataSource) {
             try {
                 val trendingRecommendation = dataSource.getTrendingRecommendation()
                 Result.Success(trendingRecommendation)
+            }catch (e: Exception){
+                Result.Error(e)
+            }
+        }
+    }
+
+    suspend fun getTvSeasonDetails(seriesId: Long, seasonNumber: Int): Result<TvSeasonDetails>{
+        return withContext(Dispatchers.IO){
+            try {
+                val tvSeasonDetails = dataSource.getSeasonDetails(seriesId, seasonNumber)
+                Result.Success(tvSeasonDetails)
             }catch (e: Exception){
                 Result.Error(e)
             }

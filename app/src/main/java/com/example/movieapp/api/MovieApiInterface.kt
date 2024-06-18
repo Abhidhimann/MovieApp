@@ -34,7 +34,7 @@ interface MovieApiInterface {
         @Query("page") page: Int
     ): Response<MoviesItemListResponse>
 
-    @GET("movie/upcoming")
+    @GET("movie/upcomin")
     suspend fun getUpComingMovies(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int

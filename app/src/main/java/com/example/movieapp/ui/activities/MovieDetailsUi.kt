@@ -26,7 +26,7 @@ import com.squareup.picasso.Picasso
 import kotlin.math.min
 
 // Don't know if this is ok will check
-class MovieDetailsUi : AppCompatActivity() {
+class MovieDetailsUi : BaseActivity() {
 
     private lateinit var binding: ActivityTvMovieDetailsLayoutBinding
     private lateinit var viewModel: MovieDetailsViewModel
@@ -41,7 +41,7 @@ class MovieDetailsUi : AppCompatActivity() {
         setContentView(binding.root)
 
         val factory =
-            MovieDetailsViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi)))
+            MovieDetailsViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi())))
         viewModel = ViewModelProvider(this, factory).get(MovieDetailsViewModel::class.java)
 
         Log.i(Tags.MOVIE_DETAILS_UI.getTag(), "Movie Details Created")
@@ -58,6 +58,7 @@ class MovieDetailsUi : AppCompatActivity() {
         initRecommendationList()
         initMovieDetailsBinding()
         nextRecommendationList()
+        initShimmerLoading()
     }
 
     private fun initMovieDetailsBinding() {
@@ -98,7 +99,7 @@ class MovieDetailsUi : AppCompatActivity() {
                 recommendationListAdaptor.setRecommendationList(
                     it.getRecommendationList().subList(
                         viewModel.listInitialIndex,
-                        viewModel.listLastIndex
+                        min(viewModel.listLastIndex, it.getRecommendationList().size)
                     )
                 )
                 recommendationListAdaptor.notifyDataSetChanged()
@@ -140,12 +141,29 @@ class MovieDetailsUi : AppCompatActivity() {
         )
             ?.let { recommendationListAdaptor.setRecommendationList(it) }
         recommendationListAdaptor.notifyDataSetChanged()
-
         if( viewModel.listLastIndex > recommendationList!!.size){
-            binding.recommendedNext.isClickable = false
-            binding.recommendedNext.setTextColor(Color.WHITE)
+            binding.recommendedNext.visibility = View.GONE
         }
     }
+
+    private fun initShimmerLoading(){
+        startShimmerLoading()
+        viewModel.loadingState.observe(this){
+            if (it==false){
+                binding.detailsShimmerContainer.stopShimmer()
+                binding.detailsShimmerContainer.visibility = View.GONE
+                binding.mainLayout.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun startShimmerLoading(){
+        binding.detailsShimmerContainer.visibility = View.VISIBLE
+        binding.mainLayout.visibility = View.GONE
+        binding.detailsShimmerContainer.startShimmer()
+    }
+
+
 
     override fun onDestroy() {
         super.onDestroy()

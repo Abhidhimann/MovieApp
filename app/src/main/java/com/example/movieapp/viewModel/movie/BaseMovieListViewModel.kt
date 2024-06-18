@@ -1,4 +1,4 @@
-package com.example.movieapp.viewModel
+package com.example.movieapp.viewModel.movie
 
 import android.util.Log
 import androidx.lifecycle.*
@@ -6,6 +6,7 @@ import com.example.movieapp.model.movies.MoviesItemListResponse
 import com.example.movieapp.repository.movie.MovieDataRepository
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.Result
+import com.example.movieapp.utils.getClassTag
 import kotlinx.coroutines.launch
 
 class BaseMovieListViewModel(private val repository: MovieDataRepository) : ViewModel() {
@@ -14,8 +15,8 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
     val moviesList: LiveData<MoviesItemListResponse>
         get() = _moviesList
 
-    private val _errorState = MutableLiveData<String>()
-    val errorState: LiveData<String>
+    private val _errorState = MutableLiveData<Boolean>()
+    val errorState: LiveData<Boolean>
         get() = _errorState
 
     private val _loadingState = MutableLiveData(true)
@@ -32,7 +33,12 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
         listInitialIndex = 0
     }
 
+    private fun startLoading(){
+        _loadingState.value = true
+    }
+
     fun processMoviesType(moviesType: String, page: Int) {
+        startLoading()
         when (moviesType) {
             Constants.MoviesType.POPULAR_MOVIES.value -> {
                 getPopularMovies(page)
@@ -53,9 +59,8 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
                 _loadingState.value = false
             }
             is Result.Error -> {
-                _errorState.value = result.exception?.message
-                Log.i("Abhi", "errpr")
-                // ui change according to error state
+                _loadingState.value = false
+                _errorState.value = true
             }
         }
     }
@@ -67,8 +72,9 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
                 _loadingState.value = false
             }
             is Result.Error -> {
-                _errorState.value = result.exception?.message
-                Log.i("Abhi", "errpr")
+                _loadingState.value = false
+                _errorState.value = true
+                Log.i(getClassTag(), result.exception.toString())
                 // ui change according to error state
             }
         }
@@ -81,9 +87,9 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
                 _loadingState.value = false
             }
             is Result.Error -> {
-                _errorState.value = result.exception?.message
-                Log.i("Abhi", "errpr")
-                // ui change according to error state
+                _loadingState.value = false
+                _errorState.value = true
+                Log.i(getClassTag(), result.exception.toString())
             }
         }
     }

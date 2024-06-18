@@ -19,7 +19,7 @@ class MovieDataSource(private val apiService: MovieApiInterface) {
     private suspend inline fun <reified T> getDataFromApiWithRetry(
         crossinline apiCall: suspend () -> Response<T>,
         retryCount: Int = 3,
-        retryLimitSec: Long = 2000L,
+        retryLimitSec: Long = 3000L,
         tag: String
     ): T = withContext(Dispatchers.IO) {
         var currentRetry = 0
@@ -50,7 +50,7 @@ class MovieDataSource(private val apiService: MovieApiInterface) {
             apiService.getPopularMovies(Api.API_KEY.getValue(), page)
         })
 
-    suspend fun getTrendingMoviesInWeek(page: Int): MoviesItemListResponse =
+    suspend fun getTrendingMoviesInWeek(page: Int): MoviesItemListResponse=
         getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
             apiService.getTrendingMoviesInWeek(Api.API_KEY.getValue(), page)
         })

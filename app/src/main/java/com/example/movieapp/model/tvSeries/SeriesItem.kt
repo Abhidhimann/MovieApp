@@ -12,5 +12,7 @@ data class SeriesItem(
     @SerializedName("poster_path")
     val posterImg: String,
     @SerializedName("first_air_date")
-    val releaseDate: String
+    val releaseDate: String,
+    @SerializedName("number_of_seasons")
+    val seasonNumber: String
 )

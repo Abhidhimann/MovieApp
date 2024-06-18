@@ -1,263 +1,306 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/lessBlack"
-    android:layout_height="match_parent">
+    android:clickable="false"
+    android:orientation="vertical"
+    tools:context=".ui.activities.MovieDetailsUi">
 
-    <LinearLayout
-        android:id="@+id/movieDrawerLayout"
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/detailsShimmerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context=".ui.activities.MovieDetailsUi">
+        android:visibility="gone">
 
-        <androidx.cardview.widget.CardView
+        <include layout="@layout/tv_movie_details_shimmer" />
+
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/lessBlack">
+
+        <LinearLayout
+            android:id="@+id/movieDrawerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="10dp"
-            app:cardBackgroundColor="@color/lessBlack">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/movieImage"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:layout_margin="10dp"
-                android:background="@color/white"
-                android:scaleType="centerCrop" />
+                android:layout_height="wrap_content"
+                android:elevation="10dp"
+                app:cardBackgroundColor="@color/lessBlack">
 
-            <ImageView
-                android:id="@+id/moviePlayIcon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:alpha="0.5"
-                android:src="@drawable/play_icon"
-                app:tint="@color/black" />
-        </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:id="@+id/movieImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/white"
+                    android:scaleType="centerCrop" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/moviePlayIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:alpha="0.5"
+                    android:src="@drawable/play_icon"
+                    app:tint="@color/black" />
+            </androidx.cardview.widget.CardView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="end">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rated"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/movieRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="7"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/movieTotalVotes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/12 rated"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/movieTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="40dp"
+                android:text="Mission: Impossible -Dead"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/length"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/movieLength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/genre"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/movieGenres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="24dp"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/released"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/movieReleasedDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/original_title"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/movieOriginalTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="24dp"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/description"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/movieOverview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="24dp"
+                android:textColor="@color/white"
+                tools:text="@tools:sample/lorem/random" />
+
+            <LinearLayout
+                android:id="@+id/tvSeason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="Seasons"
+                    android:src="@drawable/menu_seasons"
+                    app:tint="@color/white" />
+
+                <Spinner
+                    android:id="@+id/seasonsSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/seasonArrowMore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/down_arrow_more"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/seasonArrowLess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:src="@drawable/review_up_arrow"
+                    app:tint="@color/white" />
+            </LinearLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/movieImagesViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/movieReviewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Reviews"
+                android:textColor="@color/white"
+                android:textSize="24dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/movieReviewRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
-                android:gravity="end">
-
-                <TextView
-                    android:textColor="@color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rated" />
-
-                <TextView
-                    android:textColor="@color/white"
-                    android:id="@+id/movieRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="7"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:textColor="@color/white"
-                    android:id="@+id/movieTotalVotes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="/12 rated" />
-
-            </LinearLayout>
-        </RelativeLayout>
-
-        <TextView
-            android:textColor="@color/white"
-            android:id="@+id/movieTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="40dp"
-            android:text="Mission: Impossible -Dead"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp">
+                android:nestedScrollingEnabled="false" />
 
             <TextView
-                android:textColor="@color/white"
+                android:id="@+id/movieRecommendation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/length" />
-
-            <TextView
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/recommendation"
                 android:textColor="@color/white"
-                android:id="@+id/movieLength"
-                android:layout_width="wrap_content"
+                android:textSize="24sp" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommendedListRC"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="141 min" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp">
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="10dp"
+                android:nestedScrollingEnabled="false" />
 
             <TextView
-                android:textColor="@color/white"
+                android:id="@+id/recommendedNext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/genre" />
+                android:layout_gravity="end"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/next"
+                android:textColor="@color/blue"
+                android:textSize="20sp" />
 
-            <TextView
-                android:textColor="@color/white"
-                android:id="@+id/movieGenres"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="24dp"
-                android:text="Adcen" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp">
-
-            <TextView
-                android:textColor="@color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/released" />
-
-            <TextView
-                android:textColor="@color/white"
-                android:id="@+id/movieReleasedDate"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="2012-1213" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp">
-
-            <TextView
-                android:textColor="@color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/original_title" />
-
-            <TextView
-                android:textColor="@color/white"
-                android:id="@+id/movieOriginalTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="24dp"
-                android:text="Ther" />
-        </LinearLayout>
-
-        <TextView
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:text="@string/description" />
-
-        <TextView
-            android:textColor="@color/white"
-            android:id="@+id/movieOverview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="24dp"
-            android:text="Ther" />
-
-        <androidx.viewpager.widget.ViewPager
-            android:textColor="@color/white"
-            android:id="@+id/movieImagesViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="320dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp" />
-
-        <TextView
-            android:textColor="@color/white"
-            android:id="@+id/movieReviewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:text="Reviews"
-            android:textSize="24dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/movieReviewRv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
-            android:nestedScrollingEnabled="false" />
-
-        <TextView
-            android:textColor="@color/white"
-            android:id="@+id/movieRecommendation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/recommendation"
-            android:textSize="24sp" />
-
-<!--        <androidx.fragment.app.FragmentContainerView-->
-<!--            android:id="@+id/recommendedContainer"-->
-<!--            android:layout_marginStart="10dp"-->
-<!--            android:layout_marginTop="7dp"-->
-<!--            android:layout_marginEnd="10dp"-->
-<!--            android:name="com.example.movieapp.ui.fragments.common.Recommendation"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            tools:layout="@layout/recommendation_layout" />-->
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recommendedListRC"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="10dp"
-            android:nestedScrollingEnabled="false" />
-
-        <TextView
-            android:id="@+id/recommendedNext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="5dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:textSize="20sp"
-            android:text="@string/next"
-            android:textColor="@color/blue" />
-
-
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>

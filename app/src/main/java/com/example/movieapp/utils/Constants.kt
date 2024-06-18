@@ -4,7 +4,8 @@ enum class Constants(private val value: String) {
     MOVIE_ID("MOVIE_ID"),
     MOVIE("movie"),
     TV_SERIES("tv"),
-    TV_SERIES_ID("TV_SERIES_ID");
+    TV_SERIES_ID("TV_SERIES_ID"),
+    ERROR_PAGE("ERROR_PAGE");
 
     fun getValue(): String {
         return value

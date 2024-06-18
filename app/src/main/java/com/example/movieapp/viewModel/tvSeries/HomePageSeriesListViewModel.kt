@@ -32,7 +32,12 @@ class HomePageSeriesListViewModel(private val repository: SeriesDataRepository) 
         listInitialIndex = 0
     }
 
+    private fun startLoading(){
+        _loadingState.value = true
+    }
+
     fun getTrendingMovies(page: Int) = viewModelScope.launch {
+        startLoading()
         when (val result = repository.getTrendingMoviesInWeek(page)) {
             is Result.Success -> {
                 _trendingSeries.value = result.data

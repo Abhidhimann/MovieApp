@@ -83,4 +83,11 @@ interface TvApiInterface {
     suspend fun getTrendingRecommendation(
         @Query("api_key") apiKey: String
     ): Response<RecommendationResponse>
+
+    @GET("tv/{series_id}/season/{season_number}")
+    suspend fun getSeasonDetails(
+        @Path("series_id") id: Long,
+        @Path("seasons_number") seasonNumber: Int,
+        @Query("api_key") apiKey: String
+    ): Response<TvSeasonDetails>
 }

@@ -31,5 +31,10 @@
     <string name="recommendation">Recommendations</string>
     <string name="no_recommendation">No Recommendations</string>
     <string name="no_reviews">No Reviews</string>
+    <string name="alertDialogTitle">No Internet Connection</string>
+    <string name="alertDialogMsg">Please connection to stable internet and try again.</string>
+    <string name="alertDialogPositionBtn">Exit App</string>
+    <string name="alertDialogNegativeBtn">Retry</string>
+    <string name="ErrorPageMsg">Opps! Something went wrong</string>
 
 </resources>

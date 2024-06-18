@@ -1,7 +1,9 @@
 package com.example.movieapp.ui.adaptor.series
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.databinding.ListItemCardBinding
@@ -9,6 +11,7 @@ import com.example.movieapp.model.tvSeries.SeriesItem
 import com.example.movieapp.ui.activities.TvSeriesDetailsUi
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
+import com.example.movieapp.utils.getClassTag
 import com.squareup.picasso.Picasso
 
 class SeriesCardAdaptor: RecyclerView.Adapter<SeriesCardAdaptor.SeriesCardViewHolder>() {
@@ -30,16 +33,16 @@ class SeriesCardAdaptor: RecyclerView.Adapter<SeriesCardAdaptor.SeriesCardViewHo
         }
     }
 
-    fun setList(newMovieItemList: List<SeriesItem>) {
+    fun setList(newSeriesItemList: List<SeriesItem>) {
         initialSeriesItemList.clear()
-        initialSeriesItemList.addAll(newMovieItemList)
+        initialSeriesItemList.addAll(newSeriesItemList)
     }
 
     inner class SeriesCardViewHolder(private val binding: ListItemCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(seriesItem: SeriesItem) {
-//        Log.i(getClassTag(), movieItem.toString())
+        Log.i(getClassTag(), "series is $seriesItem")
             Picasso.get().load(Api.POSTER_BASE_URL.getValue() + seriesItem.posterImg)
                 .into(binding.itemCardImage)
             binding.itemCardTitle.text = seriesItem.title

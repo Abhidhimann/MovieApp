@@ -39,25 +39,23 @@ class SearchMovieResult : Fragment(R.layout.fragment_movie_list) {
         Log.i(Tags.TEMP_TAG.getTag(), "Search Movie View Created with query: $query")
 
         val factory =
-            SearchMovieViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi)))
+            SearchMovieViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi())))
         viewModel = ViewModelProvider(this, factory).get(SearchMovieViewModel::class.java)
 
         viewModel.allIndexToInitial()
         initMovieList(query)
         nextMovieList(query)
+        initShimmerLoading()
     }
 
     private fun nextMovieList(query: String) {
         binding.homeMovieListNext.setOnClickListener {
-             if (viewModel.listLastIndex + itemCount > viewModel.moviesList.value?.movieList?.size!!) {
+            if (viewModel.listLastIndex + itemCount > viewModel.moviesList.value?.movieList?.size!!) {
                 viewModel.listInitialIndex = 0
                 viewModel.listLastIndex = 0
+                // condition if currentPage is last page
+                startShimmerLoading()
                 viewModel.getSearchedMovies(query, ++viewModel.currentPage)
-                 // condition if currentPage is last page
-                 if (viewModel.currentPage==viewModel.moviesList.value?.totalPages){
-                     binding.homeMovieListNext.setTextColor(Color.WHITE)
-                     binding.homeMovieListNext.isClickable = false
-                 }
             } else {
                 loadItems()
             }
@@ -87,6 +85,10 @@ class SearchMovieResult : Fragment(R.layout.fragment_movie_list) {
                     )
             )
             adaptor.notifyDataSetChanged()
+            // condition if currentPage is last page
+            if (viewModel.currentPage == it.totalPages) {
+                binding.homeMovieListNext.visibility = View.GONE
+            }
         }
     }
 
@@ -99,6 +101,23 @@ class SearchMovieResult : Fragment(R.layout.fragment_movie_list) {
         )
             ?.let { adaptor.setList(it) }
         adaptor.notifyDataSetChanged()
+    }
+
+    private fun initShimmerLoading() {
+        startShimmerLoading()
+        viewModel.loadingState.observe(viewLifecycleOwner) {
+            if (it == false) {
+                binding.shimmerListView.stopShimmer()
+                binding.shimmerListView.visibility = View.GONE
+                binding.mainLayout.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun startShimmerLoading() {
+        binding.shimmerListView.visibility = View.VISIBLE
+        binding.mainLayout.visibility = View.GONE
+        binding.shimmerListView.startShimmer()
     }
 
     override fun onDestroy() {

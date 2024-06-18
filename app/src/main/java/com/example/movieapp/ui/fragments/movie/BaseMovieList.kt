@@ -13,10 +13,11 @@ import com.example.movieapp.databinding.FragmentMovieListBinding
 import com.example.movieapp.repository.movie.MovieDataSource
 import com.example.movieapp.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.adaptor.movie.MovieCardAdaptor
+import com.example.movieapp.ui.navigation.FragmentNavigation
 
 import com.example.movieapp.utils.Tags
-import com.example.movieapp.viewModel.BaseMovieListViewModeFactory
-import com.example.movieapp.viewModel.BaseMovieListViewModel
+import com.example.movieapp.viewModel.movie.BaseMovieListViewModeFactory
+import com.example.movieapp.viewModel.movie.BaseMovieListViewModel
 
 
 private const val MoviesType = "movieType"
@@ -46,12 +47,14 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
 
         // will change imp imp imp
         val factory =
-            BaseMovieListViewModeFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi)))
+            BaseMovieListViewModeFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi())))
         viewModel = ViewModelProvider(this, factory).get(BaseMovieListViewModel::class.java)
 
         viewModel.allIndexToInitial()
         initMovieList()
         nextMovieList()
+        initShimmerLoading()
+        errorStateObserver()
     }
 
     private fun nextMovieList() {
@@ -59,6 +62,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
             if (viewModel.listLastIndex + itemCount > viewModel.moviesList.value?.movieList?.size!!) {
                 viewModel.listInitialIndex = 0
                 viewModel.listLastIndex = 0
+                startShimmerLoading()
                 viewModel.processMoviesType(moviesType, ++viewModel.currentPage)
             } else {
                 if (viewModel.currentPage==viewModel.moviesList.value?.totalPages){
@@ -82,7 +86,6 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
         viewModel.moviesList.observe(viewLifecycleOwner) {
             viewModel.listInitialIndex = viewModel.listLastIndex
             viewModel.listLastIndex += itemCount
-            Log.i(Tags.TEMP_TAG.getTag(), "whyyy " + viewModel.listLastIndex.toString())
             adaptor.setList(
                 it.movieList.subList(
                     viewModel.listInitialIndex,
@@ -90,6 +93,10 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
                 )
             )
             adaptor.notifyDataSetChanged()
+
+            if (viewModel.currentPage == it.totalPages) {
+                binding.homeMovieListNext.visibility = View.GONE
+            }
         }
     }
 
@@ -102,11 +109,37 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
         )
             ?.let { adaptor.setList(it) }
         adaptor.notifyDataSetChanged()
+
+    }
+
+    private fun initShimmerLoading(){
+        startShimmerLoading()
+        viewModel.loadingState.observe(viewLifecycleOwner){
+            if (it==false){
+                binding.shimmerListView.stopShimmer()
+                binding.shimmerListView.visibility = View.GONE
+                binding.mainLayout.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun startShimmerLoading(){
+        binding.shimmerListView.visibility = View.VISIBLE
+        binding.mainLayout.visibility = View.GONE
+        binding.shimmerListView.startShimmer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.i(Tags.TEMP_TAG.getTag(), "Base Movie List View Destroyed with movie type: $moviesType")
+    }
+
+    private fun errorStateObserver(){
+        viewModel.errorState.observe(viewLifecycleOwner){
+            if (it){
+                FragmentNavigation(childFragmentManager).toErrorActivity(requireContext())
+            }
+        }
     }
 
     companion object {

@@ -47,12 +47,13 @@ class BaseSeriesList: Fragment(R.layout.fragment_series_list) {
 
         // will change imp imp imp
         val factory =
-            BaseSeriesListViewModeFactory(SeriesDataRepository(SeriesDataSource(MovieApiClient.tvSeriesApi)))
+            BaseSeriesListViewModeFactory(SeriesDataRepository(SeriesDataSource(MovieApiClient.tvSeriesApi())))
         viewModel = ViewModelProvider(this, factory).get(BaseSeriesListViewModel::class.java)
 
         viewModel.allIndexToInitial()
         initSeriesList()
         nextSeriesList()
+        initShimmerLoading()
     }
 
     private fun nextSeriesList() {
@@ -60,12 +61,9 @@ class BaseSeriesList: Fragment(R.layout.fragment_series_list) {
             if (viewModel.listLastIndex + itemCount > viewModel.seriesList.value?.seriesList?.size!!) {
                 viewModel.listInitialIndex = 0
                 viewModel.listLastIndex = 0
+                startShimmerLoading()
                 viewModel.processSeriesType(seriesType, ++viewModel.currentPage)
             } else {
-                if (viewModel.currentPage==viewModel.seriesList.value?.totalPages){
-                    binding.homeSeriesListNext.setTextColor(Color.WHITE)
-                    binding.homeSeriesListNext.isClickable = false
-                }
                 loadItems()
             }
         }
@@ -91,6 +89,9 @@ class BaseSeriesList: Fragment(R.layout.fragment_series_list) {
                 )
             )
             adaptor.notifyDataSetChanged()
+            if (viewModel.currentPage == it.totalPages) {
+                binding.homeSeriesListNext.visibility = View.GONE
+            }
         }
     }
 
@@ -103,6 +104,23 @@ class BaseSeriesList: Fragment(R.layout.fragment_series_list) {
         )
             ?.let { adaptor.setList(it) }
         adaptor.notifyDataSetChanged()
+    }
+
+    private fun initShimmerLoading(){
+        startShimmerLoading()
+        viewModel.loadingState.observe(viewLifecycleOwner){
+            if (it==false){
+                binding.shimmerListView.stopShimmer()
+                binding.shimmerListView.visibility = View.GONE
+                binding.mainLayout.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun startShimmerLoading(){
+        binding.shimmerListView.visibility = View.VISIBLE
+        binding.mainLayout.visibility = View.GONE
+        binding.shimmerListView.startShimmer()
     }
 
     override fun onDestroy() {

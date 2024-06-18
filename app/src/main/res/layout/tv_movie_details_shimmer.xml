@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@color/lessBlack"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/movieDrawerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            app:cardBackgroundColor="@color/lessBlack">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_margin="10dp"
+                android:background="@color/grey"
+                android:scaleType="centerCrop" />
+
+        </androidx.cardview.widget.CardView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="end">
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="40dp"
+            android:textSize="30sp"
+            android:background="@color/grey"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:background="@color/grey" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:background="@color/grey" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:background="@color/grey" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:background="@color/grey" />
+        </LinearLayout>
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/grey" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="320dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/grey"
+            android:layout_marginEnd="10dp" />
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/grey"
+            android:textSize="24dp" />
+
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@color/grey"
+            android:textSize="24sp" />
+
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:textSize="20sp"
+            android:background="@color/grey"
+            android:textColor="@color/blue" />
+
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

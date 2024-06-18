@@ -13,13 +13,14 @@ import com.example.movieapp.api.MovieApiClient
 import com.example.movieapp.databinding.FragmentSeriesListBinding
 import com.example.movieapp.repository.series.SeriesDataRepository
 import com.example.movieapp.repository.series.SeriesDataSource
+import com.example.movieapp.ui.activities.BaseActivity
 import com.example.movieapp.ui.adaptor.series.SeriesCardAdaptor
-import com.example.movieapp.utils.Tags
+import com.example.movieapp.utils.RetryFunctionality
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.tvSeries.HomePageSeriesListViewModel
 import com.example.movieapp.viewModel.tvSeries.HomePageSeriesListViewModelFactory
 
-class HomeSeriesList : Fragment(R.layout.fragment_series_list) {
+class HomeSeriesList : Fragment(R.layout.fragment_series_list),RetryFunctionality {
     private lateinit var binding: FragmentSeriesListBinding
     private lateinit var adaptor: SeriesCardAdaptor
     private lateinit var viewModel: HomePageSeriesListViewModel
@@ -30,16 +31,19 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSeriesListBinding.bind(view)
         Log.i(getClassTag(), "Series List View Created")
+        (activity as BaseActivity).activeFrames.add(this)
 
         // will change imp imp imp
         val factory =
             HomePageSeriesListViewModelFactory(
-                SeriesDataRepository(SeriesDataSource((MovieApiClient.tvSeriesApi)))
+                SeriesDataRepository(SeriesDataSource((MovieApiClient.tvSeriesApi())))
             )
         viewModel = ViewModelProvider(this, factory).get(HomePageSeriesListViewModel::class.java)
 
+        viewModel.allIndexToInitial()
         initSeriesList()
         nextSeriesList()
+        initShimmerLoading()
     }
 
     override fun onDestroy() {
@@ -52,12 +56,9 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list) {
             if (viewModel.listLastIndex + itemCount > viewModel.trendingSeries.value?.seriesList?.size!!) {
                 viewModel.listInitialIndex = 0
                 viewModel.listLastIndex = 0
+                startShimmerLoading()
                 viewModel.getTrendingMovies(++viewModel.currentPage)
             } else {
-                if (viewModel.currentPage==viewModel.trendingSeries.value?.totalPages){
-                    binding.homeSeriesListNext.setTextColor(Color.WHITE)
-                    binding.homeSeriesListNext.isClickable = false
-                }
                 loadItems()
             }
         }
@@ -68,10 +69,12 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list) {
         binding.rcSeriesList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcSeriesList.adapter = adaptor
         viewModel.getTrendingMovies(viewModel.currentPage)
+        setSeriesObserver()
+    }
 
+    private fun setSeriesObserver(){
         viewModel.trendingSeries.observe(viewLifecycleOwner) {
-            viewModel.listInitialIndex = viewModel.listLastIndex
-            viewModel.listLastIndex += itemCount
+            viewModel.listLastIndex = itemCount
             adaptor.setList(
                 it.seriesList.subList(
                     viewModel.listInitialIndex,
@@ -79,6 +82,10 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list) {
                 )
             )
             adaptor.notifyDataSetChanged()
+            // condition if we can go next
+            if (viewModel.currentPage == it.totalPages) {
+                binding.homeSeriesListNext.visibility = View.GONE
+            }
         }
     }
 
@@ -91,6 +98,27 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list) {
         )
             ?.let { adaptor.setList(it) }
         adaptor.notifyDataSetChanged()
+    }
+
+    private fun initShimmerLoading(){
+        startShimmerLoading()
+        viewModel.loadingState.observe(viewLifecycleOwner){
+            if (it==false){
+                binding.shimmerListView.stopShimmer()
+                binding.shimmerListView.visibility = View.GONE
+                binding.mainLayout.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun startShimmerLoading(){
+        binding.shimmerListView.visibility = View.VISIBLE
+        binding.mainLayout.visibility = View.GONE
+        binding.shimmerListView.startShimmer()
+    }
+
+    override fun retryWhenInternetIsAvailable() {
+        viewModel.getTrendingMovies(viewModel.currentPage)
     }
 
 }

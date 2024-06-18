@@ -1,15 +1,12 @@
 package com.example.movieapp.repository.series
 
 import android.util.Log
-import com.example.movieapp.model.tvSeries.SeriesItemListResponse
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.CustomeApiFailedException
 import com.example.movieapp.api.TvApiInterface
 import com.example.movieapp.model.common.RecommendationResponse
 import com.example.movieapp.model.common.ReviewResponse
-import com.example.movieapp.model.tvSeries.SeriesDetails
-import com.example.movieapp.model.tvSeries.SeriesGenresResponse
-import com.example.movieapp.model.tvSeries.SeriesImagesResponse
+import com.example.movieapp.model.tvSeries.*
 import com.example.movieapp.utils.getClassTag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -105,4 +102,9 @@ class SeriesDataSource(private val apiService: TvApiInterface) {
         getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getTrendingRecommendation(Api.API_KEY.getValue())
         })
+
+    suspend fun getSeasonDetails(id: Long, seasonNum: Int): TvSeasonDetails =
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
+        apiService.getSeasonDetails(id, seasonNum, Api.API_KEY.getValue())
+    })
 }

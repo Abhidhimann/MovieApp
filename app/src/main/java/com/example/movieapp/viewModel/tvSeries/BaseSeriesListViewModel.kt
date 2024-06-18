@@ -27,6 +27,10 @@ class BaseSeriesListViewModel(private val repository: SeriesDataRepository): Vie
     var listInitialIndex = 0
     var listLastIndex = 0
 
+    private fun startLoading(){
+        _loadingState.value = true
+    }
+
     fun allIndexToInitial(){
         currentPage = 1
         listLastIndex = 0
@@ -34,6 +38,7 @@ class BaseSeriesListViewModel(private val repository: SeriesDataRepository): Vie
     }
 
     fun processSeriesType(seriesType: String, page: Int) {
+        startLoading()
         when (seriesType) {
             Constants.SeriesType.POPULAR_SERIES.value -> {
                 getPopularSeries(page)

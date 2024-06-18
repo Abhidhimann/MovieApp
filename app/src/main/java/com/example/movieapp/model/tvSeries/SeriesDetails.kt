@@ -26,6 +26,8 @@ data class SeriesDetails(
     val length: Int,
     @SerializedName("genres")
     val genres: List<MovieGenre>,
+    @SerializedName("seasons")
+    val seasons: List<TvSeasonDetails>,
     private var images: List<String>,  // these we will set later by different apis
     private var reviews: List<Review>,
     private var recommendationList: List<RecommendationItem>

@@ -1,8 +1,13 @@
 package com.example.movieapp.ui.adaptor
 
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.databinding.ReviewBinding
 import com.example.movieapp.model.common.Review
@@ -11,6 +16,7 @@ import com.example.movieapp.model.common.Review
 class ReviewAdaptor : RecyclerView.Adapter<ReviewAdaptor.ReviewViewHolder>() {
 
     private val initialReviewList = mutableListOf<Review>()
+    private var reviewLines = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -45,18 +51,31 @@ class ReviewAdaptor : RecyclerView.Adapter<ReviewAdaptor.ReviewViewHolder>() {
         val reviewLess = binding.reviewLess
         fun bind(review: Review) {
             binding.reviewAuthor.text = review.author
-            binding.reviewContent.text = review.createdAt.substringBefore("T")
+            binding.reviewCreatedDate.text = review.createdAt.substringBefore("T")
             binding.reviewContent.text = review.content
-            showLessReviewContent() // line count issue here :(
+            showLessReviewContent()
         }
 
         fun showFullReviewContent() {
             binding.reviewContent.maxLines = Int.MAX_VALUE
+            binding.reviewContent.alpha = 1f
         }
 
-        fun showLessReviewContent() {
-            binding.reviewContent.maxLines = 4
+        fun showLessReviewContent() { // line count issue here :( getLineCount was not working
+                Handler(Looper.getMainLooper()).postDelayed({
+                    reviewLines = binding.reviewContent.lineCount
+                    if (reviewLines < 8){
+                        showFullReviewContent()
+                        binding.reviewLess.visibility = View.GONE
+                        binding.reviewMore.visibility = View.GONE
+                        binding.reviewContent.alpha = 0.7f
+                    } else {
+                        binding.reviewContent.maxLines = 7
+                        binding.reviewContent.alpha = 0.7f
+                    }
+                }, 100)
         }
+
 
         fun toggleMovieReview() {
             if (binding.reviewMore.visibility == View.VISIBLE) {

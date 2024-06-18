@@ -1,8 +1,12 @@
 package com.example.movieapp.ui.navigation
 
+import android.content.Context
+import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.example.movieapp.ui.activities.HomePageUi
+import com.example.movieapp.ui.fragments.common.ErrorFragment
 import com.example.movieapp.ui.fragments.common.Home
 import com.example.movieapp.ui.fragments.movie.HomeMovieList
 import com.example.movieapp.ui.fragments.series.HomeSeriesList
@@ -45,11 +49,22 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
     }
 
     fun toMovieListFragment(containerId: Int) {
-        navigateToFragmentOnHomePage(homeMovieList, containerId)
+        navigateToFragmentMain(homeMovieList, containerId)
     }
 
     fun toTvSeriesFragment(containerId: Int) {
-        navigateToFragmentOnHomePage(homeSeriesList, containerId)
+        navigateToFragmentMain(homeSeriesList, containerId)
+    }
+
+    fun toErrorActivity(context: Context){
+        val intent = Intent(context, HomePageUi::class.java)
+        intent.putExtra(Constants.ERROR_PAGE.getValue(),true)
+        context.startActivity(intent)
+    }
+
+    fun toErrorFragment(containerId: Int){
+
+        navigateToFragmentMain(errorFragment, containerId )
     }
 
 
@@ -62,9 +77,9 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
     // if you want to add to backstack then before replace you have to give
     // login if fragment is already there then show it
 
-    private fun navigateToFragmentOnHomePage(fragment: Fragment, containerId: Int) {
-        fragmentManager.beginTransaction().replace(containerId, fragment).commit()
-    }
+//    private fun navigateToFragmentOnHomePage(fragment: Fragment, containerId: Int) {
+//        fragmentManager.beginTransaction().replace(containerId, fragment).commit()
+//    }
 
     companion object {
         val homeFragment = Home()
@@ -83,5 +98,7 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
             BaseSeriesList.newInstance(Constants.SeriesType.IMDB_RATED_SERIES.value)
         val baseAiringSeriesList =
             BaseSeriesList.newInstance(Constants.SeriesType.AIRING_SERIES.value)
+
+        val errorFragment = ErrorFragment()
     }
 }

@@ -14,9 +14,11 @@ import com.example.movieapp.R
 import com.example.movieapp.databinding.HomeTrendingListViewBinding
 import com.example.movieapp.model.common.RecommendationItem
 import com.example.movieapp.ui.activities.MovieDetailsUi
+import com.example.movieapp.ui.activities.TvSeriesDetailsUi
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.Tags
+import com.example.movieapp.utils.getClassTag
 import com.squareup.picasso.Picasso
 import java.util.*
 
@@ -53,11 +55,15 @@ class HomeImageSliderAdaptor(private val context: Context): PagerAdapter() {
 
     private fun onViewClickListener(recommendationItem: RecommendationItem){
         binding.root.setOnClickListener {
+            Log.i(getClassTag(),recommendationItem.mediaType)
             if(recommendationItem.mediaType == Constants.MOVIE.getValue()){
-                Log.i(Tags.TEMP_TAG.getTag(),recommendationItem.mediaType)
                 val intent = Intent(context, MovieDetailsUi::class.java)
                 intent.putExtra(Constants.MOVIE_ID.getValue(),recommendationItem.id)
                 context.startActivity(intent)
+            } else {
+                val intent = Intent(binding.root.context, TvSeriesDetailsUi::class.java)
+                intent.putExtra(Constants.TV_SERIES_ID.getValue(),recommendationItem.id)
+                binding.root.context.startActivity(intent)
             }
         }
     }

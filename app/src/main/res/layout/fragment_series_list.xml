@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/lessBlack"
     tools:context=".ui.fragments.series.HomeSeriesList">
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerListView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                    <include layout="@layout/item_card_shimmer" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/lessBlack"
+        android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,5 +87,6 @@
             android:text="@string/next"
             android:textColor="@color/blue" />
     </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>
 

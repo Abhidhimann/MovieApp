@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.fragments.common
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,14 +12,17 @@ import com.example.movieapp.api.MovieApiClient
 import com.example.movieapp.databinding.FragmentHomeBinding
 import com.example.movieapp.repository.movie.MovieDataSource
 import com.example.movieapp.repository.movie.MovieDataRepository
+import com.example.movieapp.ui.activities.BaseActivity
 import com.example.movieapp.ui.adaptor.HomeImageSliderAdaptor
 import com.example.movieapp.ui.navigation.FragmentNavigation
+import com.example.movieapp.utils.RetryFunctionality
 import com.example.movieapp.utils.Tags
+import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.HomePageViewModel
 import com.example.movieapp.viewModel.HomePageViewModelFactory
 import kotlin.math.min
 
-class Home : Fragment(R.layout.fragment_home) {
+class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var navigation: FragmentNavigation
     private lateinit var imageSliderAdaptor: HomeImageSliderAdaptor
@@ -29,17 +33,16 @@ class Home : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         Log.i(Tags.TEMP_TAG.getTag(),"Home Fragment Created")
         binding = FragmentHomeBinding.bind(view)
-
+        (activity as BaseActivity).activeFrames.add(this)
         navigation = FragmentNavigation(childFragmentManager)
 
         val factory =
-            HomePageViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi)))
+            HomePageViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi())))
         viewModel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
 
         initImageSlider()
         displayMovieList()
         switchBetweenMovieAndTvSeriesList()
-
     }
 
     private fun initImageSlider(){
@@ -83,6 +86,10 @@ class Home : Fragment(R.layout.fragment_home) {
 
         binding.tvSeriesList.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.green))
         binding.movieList.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.colorPrimary))
+    }
+
+    override fun retryWhenInternetIsAvailable() {
+        viewModel.getTrendingRecommendation()
     }
 
 }
