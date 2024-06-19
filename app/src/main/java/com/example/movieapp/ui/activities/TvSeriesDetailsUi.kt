@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.activities
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,14 +21,18 @@ import com.example.movieapp.repository.series.SeriesDataSource
 import com.example.movieapp.ui.adaptor.RecommendationListAdaptor
 import com.example.movieapp.ui.adaptor.ReviewAdaptor
 import com.example.movieapp.ui.adaptor.SliderImagesAdaptor
+import com.example.movieapp.ui.adaptor.series.EpisodeDetailsCardAdaptor
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
+import com.example.movieapp.utils.tempTag
 import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModel
 import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModelFactory
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.squareup.picasso.Picasso
 import kotlin.math.min
+
 
 class TvSeriesDetailsUi : BaseActivity() {
 
@@ -35,6 +41,9 @@ class TvSeriesDetailsUi : BaseActivity() {
     private lateinit var sliderImagesAdaptor: SliderImagesAdaptor
     private lateinit var reviewAdaptor: ReviewAdaptor
     private lateinit var recommendationListAdaptor: RecommendationListAdaptor
+    private lateinit var seriesEpisodeListViewAdaptor: EpisodeDetailsCardAdaptor
+    private lateinit var tvSeasonsAdaptor: ArrayAdapter<TvSeasonDetails>
+    private var tvSeasonsSelectedItemPos = -1
 
     private val recommendedItemCount = 6
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +77,7 @@ class TvSeriesDetailsUi : BaseActivity() {
         initMovieDetailsBinding()
         nextRecommendationList()
         initShimmerLoading()
+        seasonDetailsMoreArrowListener()
     }
 
     private fun initMovieDetailsBinding() {
@@ -111,42 +121,80 @@ class TvSeriesDetailsUi : BaseActivity() {
                 )
                 recommendationListAdaptor.notifyDataSetChanged()
             }
-//            if (it.seasons.isNotEmpty()) {
-//                val adapter = object : ArrayAdapter<String>(
-//                    this,
-//                ) {
-//                    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-//                        val view = super.getView(position, convertView, parent)
-//                        val textView = view.findViewById<TextView>(R.id.spinnerItemText)
-//                        textView.setTextColor(getColor(android.R.color.white)) // Text color
-//                        return view
-//                    }
-//
-//                    override fun getDropDownView(
-//                        position: Int,
-//                        convertView: View?,
-//                        parent: ViewGroup
-//                    ): View {
-//                        val view = super.getDropDownView(position, convertView, parent)
-//                        val textView = view.findViewById<TextView>(R.id.spinnerItemText)
-//                        textView.setTextColor(resources.getColor(android.R.color.white)) // Text color
-//                        return view
-//                    }
-//                }
-//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//                binding.seasonsSpinner.adapter = adapter
-//                binding.seasonsSpinner.onItemSelectedListener = object :
-//                    AdapterView.OnItemSelectedListener {
-//                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//
-//                    }
-//
-//                    override fun onNothingSelected(p0: AdapterView<*>?) {
-//                    }
-//
-//                }
-//            }
+            if (it.seasons.isNotEmpty()) {
+                initSeriesSeasonSpinner(it.seasons)
+                episodeDetailsListViewInit()
+            }
         }
+    }
+
+    private fun initSeriesSeasonSpinner(tvSeasons: List<TvSeasonDetails>) {
+        Log.i(tempTag(), "tv seasons are $tvSeasons")
+        tvSeasonsAdaptor = object :
+            ArrayAdapter<TvSeasonDetails>(this, R.layout.custom_spinner_item, tvSeasons) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view: View = convertView ?: layoutInflater.inflate(
+                    R.layout.custom_spinner_item,
+                    parent,
+                    false
+                )
+                getItem(position)?.let {
+                    // can make a fun like bind(view, data)
+                    val textView = view.findViewById<TextView>(R.id.seasonTitle)
+                    textView.text = it.name
+                }
+                return view
+            }
+
+            override fun getDropDownView(
+                position: Int,
+                convertView: View?,
+                parent: ViewGroup
+            ): View {
+                val view: View = convertView ?: layoutInflater.inflate(
+                    R.layout.custom_spinner_item,
+                    parent,
+                    false
+                )
+                getItem(position)?.let {
+                    // can make a fun like bind(view, data)
+                    val textView = view.findViewById<TextView>(R.id.seasonTitle)
+                    textView.text = it.name
+                    textView.setPadding(8,8,20,8)
+                    if (tvSeasonsSelectedItemPos == position) {
+                        textView.setBackgroundResource(R.color.green)
+                    }
+                }
+                return view
+            }
+        }
+        binding.seasonsSpinner.adapter = tvSeasonsAdaptor
+        binding.seasonsSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    val seasonDetails: TvSeasonDetails =
+                        p0?.getItemAtPosition(p2) as TvSeasonDetails
+                    Log.i(tempTag(), "epidsoes are ${seasonDetails.episodes}")
+                    binding.seasonEpisodeDetails.visibility = View.VISIBLE
+                    tvSeasonsSelectedItemPos = p2
+                    seriesEpisodeListViewAdaptor.setList((1..seasonDetails.episodes).toList())
+                    seriesEpisodeListViewAdaptor.notifyDataSetChanged()
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            }
+    }
+
+    private fun seasonDetailsMoreArrowListener(){
+        binding.seasonArrowMore.setOnClickListener {
+            binding.seasonsSpinner.performClick()
+        }
+    }
+
+    private fun episodeDetailsListViewInit() {
+        seriesEpisodeListViewAdaptor = EpisodeDetailsCardAdaptor()
+        binding.seasonEpisodeDetails.layoutManager = FlexboxLayoutManager(this)
+        binding.seasonEpisodeDetails.adapter = seriesEpisodeListViewAdaptor
     }
 
     private fun initReviewRecycleView() {
@@ -200,7 +248,7 @@ class TvSeriesDetailsUi : BaseActivity() {
         }
     }
 
-    private fun initSeasonsSpinner(){
+    private fun initSeasonsSpinner() {
 
     }
 

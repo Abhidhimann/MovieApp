@@ -15,4 +15,5 @@
     <color name="blue">#045CDF</color>
     <color name="lessBlack">#0E0E0E</color>
     <color name="grey">#808080</color>
+    <color name="dark_grey">#424246</color>
 </resources>

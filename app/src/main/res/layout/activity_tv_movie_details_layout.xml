@@ -204,7 +204,7 @@
 
             <LinearLayout
                 android:id="@+id/tvSeason"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp">
@@ -217,11 +217,13 @@
                     app:tint="@color/white" />
 
                 <Spinner
+                    android:layout_gravity="center"
                     android:id="@+id/seasonsSpinner"
                     android:layout_width="wrap_content"
+                    android:background="@color/lessBlack"
+                    tools:listitem="@layout/custom_spinner_item"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:textSize="16sp" />
+                    android:layout_marginStart="5dp" />
 
                 <ImageView
                     android:id="@+id/seasonArrowMore"
@@ -229,15 +231,21 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/down_arrow_more"
                     app:tint="@color/white" />
-
-                <ImageView
-                    android:id="@+id/seasonArrowLess"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:src="@drawable/review_up_arrow"
-                    app:tint="@color/white" />
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/seasonEpisodeDetails"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:horizontalSpacing="6dp"
+                android:padding="4dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="2dp"
+                tools:listitem="@layout/episode_card_view"
+                android:layout_marginEnd="10dp"
+                android:verticalSpacing="6dp" />
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/movieImagesViewPager"

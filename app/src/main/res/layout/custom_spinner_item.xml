@@ -1,0 +1,24 @@
+<!-- res/layout/custom_spinner_item.xml -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/seasonTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lessBlack"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="8dp"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        tools:text="Seasons" />
+</LinearLayout>
+

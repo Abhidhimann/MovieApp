@@ -53,12 +53,17 @@ class MovieDetailsUi : BaseActivity() {
             // show error page
         }
 
+        initView()
         initMovieImagesRecycleView()
         initReviewRecycleView()
         initRecommendationList()
         initMovieDetailsBinding()
         nextRecommendationList()
         initShimmerLoading()
+    }
+
+    private fun initView() {
+        binding.tvSeason.visibility = View.GONE
     }
 
     private fun initMovieDetailsBinding() {
