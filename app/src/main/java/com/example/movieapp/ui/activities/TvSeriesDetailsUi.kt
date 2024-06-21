@@ -1,17 +1,18 @@
 package com.example.movieapp.ui.activities
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
 import com.example.movieapp.api.MovieApiClient
 import com.example.movieapp.databinding.ActivityTvMovieDetailsLayoutBinding
@@ -30,6 +31,8 @@ import com.example.movieapp.utils.tempTag
 import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModel
 import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModelFactory
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.squareup.picasso.Picasso
 import kotlin.math.min
 
@@ -43,6 +46,7 @@ class TvSeriesDetailsUi : BaseActivity() {
     private lateinit var recommendationListAdaptor: RecommendationListAdaptor
     private lateinit var seriesEpisodeListViewAdaptor: EpisodeDetailsCardAdaptor
     private lateinit var tvSeasonsAdaptor: ArrayAdapter<TvSeasonDetails>
+    private var pageItemSize = -1
     private var tvSeasonsSelectedItemPos = -1
 
     private val recommendedItemCount = 6
@@ -78,13 +82,19 @@ class TvSeriesDetailsUi : BaseActivity() {
         nextRecommendationList()
         initShimmerLoading()
         seasonDetailsMoreArrowListener()
+        lifecycle.addObserver(binding.videoWebView)
     }
 
     private fun initMovieDetailsBinding() {
         viewModel.seriesDetails.observe(this) { it ->
             Log.i(Tags.TEMP_TAG.getTag(), it.toString())
-            Picasso.get().load(Api.POSTER_BASE_URL.getValue() + it.posterImg)
-                .into(binding.movieImage)
+            binding.videoWebView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                    it.getYouTubeTrailer().trailerKey.let { key->
+                        youTubePlayer.cueVideo(key, 0f)
+                    }
+                }
+            })
             binding.movieTitle.text = it.title
             binding.movieGenres.text = it.genres.joinToString(", ") { genre -> genre.name }
             binding.movieLength.text = it.length.toString().plus(" min")
@@ -98,6 +108,8 @@ class TvSeriesDetailsUi : BaseActivity() {
             } else {
                 sliderImagesAdaptor.setImageList(it.getSeriesImages())
                 sliderImagesAdaptor.notifyDataSetChanged()
+                pageItemSize = it.getSeriesImages().size
+                pageChangeListener()
             }
 
             if (it.getReviews().isEmpty()) {
@@ -160,7 +172,7 @@ class TvSeriesDetailsUi : BaseActivity() {
                     // can make a fun like bind(view, data)
                     val textView = view.findViewById<TextView>(R.id.seasonTitle)
                     textView.text = it.name
-                    textView.setPadding(8,8,20,8)
+                    textView.setPadding(8, 8, 20, 8)
                     if (tvSeasonsSelectedItemPos == position) {
                         textView.setBackgroundResource(R.color.green)
                     }
@@ -185,7 +197,49 @@ class TvSeriesDetailsUi : BaseActivity() {
             }
     }
 
-    private fun seasonDetailsMoreArrowListener(){
+    private fun pageChangeListener() {
+        updateDots(0)
+        Log.i(tempTag(), "Coming here with $pageItemSize")
+        binding.movieImagesViewPager.addOnPageChangeListener(object :
+            ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                updateDots(position)
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
+    }
+
+    private fun updateDots(currentPosition: Int) {
+        if (pageItemSize == -1) return
+        binding.trendingDotsLayout.removeAllViews()
+        val dots = arrayOfNulls<ImageView>(pageItemSize)
+
+        for (i in dots.indices) {
+            dots[i] = ImageView(this)
+            val inActiveDotWidthHeight = 15
+            val activeDotWidthHeight = 20
+            val params = LinearLayout.LayoutParams(
+                if (i == currentPosition) activeDotWidthHeight else inActiveDotWidthHeight,
+                if (i == currentPosition) activeDotWidthHeight else inActiveDotWidthHeight
+            )
+            params.setMargins(10, 0, 10, 0)
+            dots[i]?.layoutParams = params
+            dots[i]?.setImageResource(
+                if (i == currentPosition) R.drawable.active_dot else R.drawable.inactive_dot
+            )
+            binding.trendingDotsLayout.addView(dots[i])
+        }
+    }
+
+    private fun seasonDetailsMoreArrowListener() {
         binding.seasonArrowMore.setOnClickListener {
             binding.seasonsSpinner.performClick()
         }

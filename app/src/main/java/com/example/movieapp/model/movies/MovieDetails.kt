@@ -2,6 +2,7 @@ package com.example.movieapp.model.movies
 
 import com.example.movieapp.model.common.RecommendationItem
 import com.example.movieapp.model.common.Review
+import com.example.movieapp.model.common.Trailer
 import com.google.gson.annotations.SerializedName
 
 data class MovieDetails(
@@ -27,7 +28,8 @@ data class MovieDetails(
     val genres: List<MovieGenre>,
     private var images: List<String>,  // these we will set later by different apis
     private var reviews: List<Review>,
-    private var recommendationList: List<RecommendationItem>
+    private var recommendationList: List<RecommendationItem>,
+    private var youTubeTrailer: Trailer
 ){
     fun setMovieImages( movieImages: List<String>){
         this.images = movieImages
@@ -51,5 +53,13 @@ data class MovieDetails(
 
     fun getRecommendationList(): List<RecommendationItem>{
         return this.recommendationList
+    }
+
+    fun setYouTubeTrailer(trailer: Trailer){
+        this.youTubeTrailer = trailer
+    }
+
+    fun getYouTubeTrailer(): Trailer {
+        return this.youTubeTrailer
     }
 }

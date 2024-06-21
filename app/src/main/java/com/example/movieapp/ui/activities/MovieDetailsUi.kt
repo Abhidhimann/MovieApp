@@ -4,10 +4,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.webkit.WebViewClient
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
 import com.example.movieapp.api.MovieApiClient
 import com.example.movieapp.databinding.ActivityTvMovieDetailsLayoutBinding
@@ -20,8 +24,11 @@ import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
+import com.example.movieapp.utils.tempTag
 import com.example.movieapp.viewModel.MovieDetailsViewModel
 import com.example.movieapp.viewModel.MovieDetailsViewModelFactory
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.squareup.picasso.Picasso
 import kotlin.math.min
 
@@ -33,7 +40,7 @@ class MovieDetailsUi : BaseActivity() {
     private lateinit var reviewAdapter: ReviewAdaptor
     private lateinit var sliderImagesAdaptor: SliderImagesAdaptor
     private lateinit var recommendationListAdaptor: RecommendationListAdaptor
-
+    private var pageItemSize = -1
     private val recommendedItemCount = 6
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +67,7 @@ class MovieDetailsUi : BaseActivity() {
         initMovieDetailsBinding()
         nextRecommendationList()
         initShimmerLoading()
+        lifecycle.addObserver(binding.videoWebView)
     }
 
     private fun initView() {
@@ -69,8 +77,13 @@ class MovieDetailsUi : BaseActivity() {
     private fun initMovieDetailsBinding() {
         viewModel.movieDetails.observe(this) {
             Log.i(Tags.TEMP_TAG.getTag(), it.toString())
-            Picasso.get().load(Api.POSTER_BASE_URL.getValue() + it.posterImg)
-                .into(binding.movieImage)
+            binding.videoWebView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                    it.getYouTubeTrailer().trailerKey.let { key->
+                        youTubePlayer.cueVideo(key, 0f)
+                    }
+                }
+            })
             binding.movieTitle.text = it.title
             binding.movieGenres.text = it.genres.joinToString(", ") { genre -> genre.name }
             binding.movieLength.text = it.length.toString().plus(" min")
@@ -79,11 +92,13 @@ class MovieDetailsUi : BaseActivity() {
             binding.movieOverview.text = it.movieOverview
             binding.movieRating.text = String.format("%.2f", it.rating)
             binding.movieTotalVotes.text = "/".plus(it.totalVotes).plus(" rated")
-            if(it.getMovieImages().isEmpty()){
+            if (it.getMovieImages().isEmpty()) {
                 binding.movieImagesViewPager.visibility = View.GONE
-            }else{
+            } else {
                 sliderImagesAdaptor.setImageList(it.getMovieImages())
                 sliderImagesAdaptor.notifyDataSetChanged()
+                pageItemSize = it.getMovieImages().size
+                pageChangeListener()
             }
 
             // fun
@@ -109,6 +124,48 @@ class MovieDetailsUi : BaseActivity() {
                 )
                 recommendationListAdaptor.notifyDataSetChanged()
             }
+        }
+    }
+
+    private fun pageChangeListener() {
+        updateDots(0)
+        Log.i(tempTag(), "Coming here with $pageItemSize")
+        binding.movieImagesViewPager.addOnPageChangeListener(object :
+            ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                updateDots(position)
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
+    }
+
+    private fun updateDots(currentPosition: Int) {
+        if (pageItemSize == -1) return
+        binding.trendingDotsLayout.removeAllViews()
+        val dots = arrayOfNulls<ImageView>(pageItemSize)
+
+        for (i in dots.indices) {
+            dots[i] = ImageView(this)
+            val inActiveDotWidthHeight = 15
+            val activeDotWidthHeight = 20
+            val params = LinearLayout.LayoutParams(
+                if (i == currentPosition) activeDotWidthHeight else inActiveDotWidthHeight,
+                if (i == currentPosition) activeDotWidthHeight else inActiveDotWidthHeight
+            )
+            params.setMargins(10, 0, 10, 0)
+            dots[i]?.layoutParams = params
+            dots[i]?.setImageResource(
+                if (i == currentPosition) R.drawable.active_dot else R.drawable.inactive_dot
+            )
+            binding.trendingDotsLayout.addView(dots[i])
         }
     }
 
@@ -146,15 +203,15 @@ class MovieDetailsUi : BaseActivity() {
         )
             ?.let { recommendationListAdaptor.setRecommendationList(it) }
         recommendationListAdaptor.notifyDataSetChanged()
-        if( viewModel.listLastIndex > recommendationList!!.size){
+        if (viewModel.listLastIndex > recommendationList!!.size) {
             binding.recommendedNext.visibility = View.GONE
         }
     }
 
-    private fun initShimmerLoading(){
+    private fun initShimmerLoading() {
         startShimmerLoading()
-        viewModel.loadingState.observe(this){
-            if (it==false){
+        viewModel.loadingState.observe(this) {
+            if (it == false) {
                 binding.detailsShimmerContainer.stopShimmer()
                 binding.detailsShimmerContainer.visibility = View.GONE
                 binding.mainLayout.visibility = View.VISIBLE
@@ -162,16 +219,16 @@ class MovieDetailsUi : BaseActivity() {
         }
     }
 
-    private fun startShimmerLoading(){
+    private fun startShimmerLoading() {
         binding.detailsShimmerContainer.visibility = View.VISIBLE
         binding.mainLayout.visibility = View.GONE
         binding.detailsShimmerContainer.startShimmer()
     }
 
 
-
     override fun onDestroy() {
         super.onDestroy()
+        binding.videoWebView.release()
         Log.i(getClassTag(), "Movie Details Destroyed")
     }
 

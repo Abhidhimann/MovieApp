@@ -3,6 +3,7 @@ package com.example.movieapp.api
 import com.example.movieapp.model.*
 import com.example.movieapp.model.common.RecommendationResponse
 import com.example.movieapp.model.common.ReviewResponse
+import com.example.movieapp.model.common.VideoResponse
 import com.example.movieapp.model.tvSeries.*
 import retrofit2.Response
 import retrofit2.http.GET
@@ -58,6 +59,13 @@ interface TvApiInterface {
         @Path("series_id") id: Long,
         @Query("api_key") apiKey: String
     ): Response<SeriesImagesResponse>
+
+    @GET("tv/{series_id}/videos")
+    suspend fun getSeriesVideos(
+        @Path("series_id") id: Long,
+        @Query("api_key") apiKey: String
+    ): Response<VideoResponse>
+
 
     @GET("tv/{series_id}/reviews")
     suspend fun getReviewsOnTvSeries(

@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.movieapp.api.MovieApiInterface
 import com.example.movieapp.model.common.RecommendationResponse
 import com.example.movieapp.model.common.ReviewResponse
+import com.example.movieapp.model.common.VideoResponse
 import com.example.movieapp.model.movies.*
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.CustomeApiFailedException
@@ -88,6 +89,11 @@ class MovieDataSource(private val apiService: MovieApiInterface) {
     suspend fun getMovieImages(movieId: Long): MovieImagesResponse =
         getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
             apiService.getMovieImages(movieId,Api.API_KEY.getValue())
+        })
+
+    suspend fun getMovieVideos(movieId: Long): VideoResponse =
+        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+            apiService.getMovieVideos(movieId,Api.API_KEY.getValue())
         })
 
     suspend fun getMoviesRecommendations(movieId: Long): RecommendationResponse =

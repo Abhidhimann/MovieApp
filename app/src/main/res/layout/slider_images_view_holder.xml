@@ -27,17 +27,6 @@
                 android:contentDescription="@string/movie_descriptive_images"
                 android:scaleType="centerCrop"
                 tools:ignore="MissingConstraints" />
-
-            <LinearLayout
-                android:id="@+id/dotsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:background="@color/lessBlack"
-                android:gravity="center_horizontal|center_vertical"
-                android:orientation="horizontal">
-
-                <!-- Add dots dynamically based on the number of images -->
-            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

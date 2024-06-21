@@ -21,8 +21,8 @@ import com.example.movieapp.viewModel.tvSeries.BaseSeriesListViewModel
 private const val SeriesType = "seriesType"
 
 /**
- * Imp here I'm using one fragment as 3 with the help of argument
- * But if I want to manage fragment state ( like next(3) page will be saved) will switching
+ * Imp here I'm using one fragment as 3 views with the help of argument
+ * But if I want to manage fragment states ( like next 3 pages saving) while switching
  * then we have to use 3 different model and then will see what viewModel to use according to argument
  * that will be difficult to manage, so deduction: it is much much better to use 3 fragment and 3 viewModel
  * in 1-1 relationship ( maybe can use one base class as parent)

@@ -48,7 +48,6 @@ class HomeImageSliderAdaptor(private val context: Context): PagerAdapter() {
         bind(initRecommendationList[position])
 
         Objects.requireNonNull(container).addView(binding.root)
-        updateDots(position)
         onViewClickListener(initRecommendationList[position])
         return binding.root
     }
@@ -65,28 +64,6 @@ class HomeImageSliderAdaptor(private val context: Context): PagerAdapter() {
                 intent.putExtra(Constants.TV_SERIES_ID.getValue(),recommendationItem.id)
                 binding.root.context.startActivity(intent)
             }
-        }
-    }
-
-
-    private fun updateDots(currentPosition: Int) {
-        binding.trendingDotsLayout.removeAllViews()
-        val dots = arrayOfNulls<ImageView>(count)
-
-        for (i in dots.indices) {
-            dots[i] = ImageView(context)
-            val inActiveDotWidthHeight = 15 // Adjust the width and height of dots
-            val activeDotWidthHeight = 20
-            val params = LinearLayout.LayoutParams(
-                if (i == currentPosition) activeDotWidthHeight else inActiveDotWidthHeight,
-                if (i == currentPosition) activeDotWidthHeight else inActiveDotWidthHeight
-            )
-            params.setMargins(10, 5, 10, 0)
-            dots[i]?.layoutParams = params
-            dots[i]?.setImageResource(
-                if (i == currentPosition) R.drawable.active_dot else R.drawable.inactive_dot
-            )
-            binding.trendingDotsLayout.addView(dots[i])
         }
     }
 

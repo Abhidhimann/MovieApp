@@ -34,26 +34,14 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:elevation="10dp"
                 app:cardBackgroundColor="@color/lessBlack">
 
-                <ImageView
-                    android:id="@+id/movieImage"
+                <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                    android:id="@+id/videoWebView"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:layout_margin="10dp"
-                    android:background="@color/white"
-                    android:scaleType="centerCrop" />
-
-                <ImageView
-                    android:id="@+id/moviePlayIcon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:alpha="0.5"
-                    android:src="@drawable/play_icon"
-                    app:tint="@color/black" />
+                    android:layout_height="260dp" />
             </androidx.cardview.widget.CardView>
 
             <RelativeLayout
@@ -217,13 +205,13 @@
                     app:tint="@color/white" />
 
                 <Spinner
-                    android:layout_gravity="center"
                     android:id="@+id/seasonsSpinner"
                     android:layout_width="wrap_content"
-                    android:background="@color/lessBlack"
-                    tools:listitem="@layout/custom_spinner_item"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp" />
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:background="@color/lessBlack"
+                    tools:listitem="@layout/custom_spinner_item" />
 
                 <ImageView
                     android:id="@+id/seasonArrowMore"
@@ -236,16 +224,16 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/seasonEpisodeDetails"
                 android:layout_width="match_parent"
-                android:visibility="gone"
-                android:orientation="horizontal"
                 android:layout_height="wrap_content"
-                android:horizontalSpacing="6dp"
-                android:padding="4dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="2dp"
-                tools:listitem="@layout/episode_card_view"
                 android:layout_marginEnd="10dp"
-                android:verticalSpacing="6dp" />
+                android:horizontalSpacing="6dp"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                android:verticalSpacing="6dp"
+                android:visibility="gone"
+                tools:listitem="@layout/episode_card_view" />
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/movieImagesViewPager"
@@ -255,6 +243,14 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:textColor="@color/white" />
+
+            <LinearLayout
+                android:id="@+id/trendingDotsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/lessBlack"
+                android:gravity="center_horizontal|center_vertical"
+                android:orientation="horizontal" />
 
             <TextView
                 android:id="@+id/movieReviewTitle"
@@ -284,7 +280,6 @@
                 android:text="@string/recommendation"
                 android:textColor="@color/white"
                 android:textSize="24sp" />
-
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recommendedListRC"

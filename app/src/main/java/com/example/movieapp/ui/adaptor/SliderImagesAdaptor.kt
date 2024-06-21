@@ -16,11 +16,10 @@ import com.example.movieapp.utils.Tags
 import com.squareup.picasso.Picasso
 import java.util.*
 
-class SliderImagesAdaptor(private val context: Context): PagerAdapter() {
+class SliderImagesAdaptor(private val context: Context) : PagerAdapter() {
 
     private val initialImagesList = mutableListOf<String>()
     private lateinit var binding: SliderImagesViewHolderBinding
-    private lateinit var dotsLayout: LinearLayout
 
     override fun getCount(): Int {
         return initialImagesList.size
@@ -31,11 +30,10 @@ class SliderImagesAdaptor(private val context: Context): PagerAdapter() {
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        binding = SliderImagesViewHolderBinding.inflate(LayoutInflater.from(context), container, false)
+        binding =
+            SliderImagesViewHolderBinding.inflate(LayoutInflater.from(context), container, false)
         bind(initialImagesList[position])
         Objects.requireNonNull(container).addView(binding.root)
-
-        updateDots(position)
         return binding.root
     }
 
@@ -43,34 +41,13 @@ class SliderImagesAdaptor(private val context: Context): PagerAdapter() {
         container.removeView(`object` as ConstraintLayout)
     }
 
-    fun bind(seriesImages: String){
+    fun bind(seriesImages: String) {
         Log.i(Tags.TEMP_TAG.getTag(), Api.POSTER_BASE_URL.getValue() + seriesImages)
         Picasso.get().load(Api.POSTER_BASE_URL.getValue() + seriesImages)
             .into(binding.imagesView)
     }
 
-    private fun updateDots(currentPosition: Int) {
-        binding.dotsLayout.removeAllViews()
-        val dots = arrayOfNulls<ImageView>(count)
-
-        for (i in dots.indices) {
-            dots[i] = ImageView(context)
-            val inActiveDotWidthHeight = 15 // Adjust the width and height of dots
-            val activeDotWidthHeight = 20
-            val params = LinearLayout.LayoutParams(
-                if (i == currentPosition) activeDotWidthHeight else inActiveDotWidthHeight,
-                if (i == currentPosition) activeDotWidthHeight else inActiveDotWidthHeight
-            )
-            params.setMargins(10, 0, 10, 10)
-            dots[i]?.layoutParams = params
-            dots[i]?.setImageResource(
-                if (i == currentPosition) R.drawable.active_dot else R.drawable.inactive_dot
-            )
-            binding.dotsLayout.addView(dots[i])
-        }
-    }
-
-    fun setImageList(newImagesList: List<String>){
+    fun setImageList(newImagesList: List<String>) {
         initialImagesList.clear()
         initialImagesList.addAll(newImagesList)
     }

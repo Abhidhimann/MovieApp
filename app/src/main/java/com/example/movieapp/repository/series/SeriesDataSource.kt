@@ -6,6 +6,7 @@ import com.example.movieapp.utils.CustomeApiFailedException
 import com.example.movieapp.api.TvApiInterface
 import com.example.movieapp.model.common.RecommendationResponse
 import com.example.movieapp.model.common.ReviewResponse
+import com.example.movieapp.model.common.VideoResponse
 import com.example.movieapp.model.tvSeries.*
 import com.example.movieapp.utils.getClassTag
 import kotlinx.coroutines.Dispatchers
@@ -73,24 +74,29 @@ class SeriesDataSource(private val apiService: TvApiInterface) {
             apiService.searchTvSeries(Api.API_KEY.getValue(), query, page)
         })
 
-    suspend fun getSeriesDetails(movieId: Long): SeriesDetails =
+    suspend fun getSeriesDetails(seriesId: Long): SeriesDetails =
         getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
-            apiService.getTvSeriesDetails(apiKey = Api.API_KEY.getValue(), id = movieId)
+            apiService.getTvSeriesDetails(apiKey = Api.API_KEY.getValue(), id = seriesId)
         })
 
-    suspend fun getReviewsOnSeries(movieId: Long): ReviewResponse =
+    suspend fun getReviewsOnSeries(seriesId: Long): ReviewResponse =
         getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
-            apiService.getReviewsOnTvSeries(movieId,Api.API_KEY.getValue())
+            apiService.getReviewsOnTvSeries(seriesId,Api.API_KEY.getValue())
         })
 
-    suspend fun getSeriesImages(movieId: Long): SeriesImagesResponse =
+    suspend fun getSeriesImages(seriesId: Long): SeriesImagesResponse =
         getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
-            apiService.getTvSeriesImages(movieId,Api.API_KEY.getValue())
+            apiService.getTvSeriesImages(seriesId,Api.API_KEY.getValue())
         })
 
-    suspend fun getSeriesRecommendations(movieId: Long): RecommendationResponse =
+    suspend fun getSeriesVideos(seriesId: Long): VideoResponse =
         getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
-            apiService.getRecommendationsByTvSeries(movieId,Api.API_KEY.getValue())
+            apiService.getSeriesVideos(seriesId,Api.API_KEY.getValue())
+        })
+
+    suspend fun getSeriesRecommendations(seriesId: Long): RecommendationResponse =
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
+            apiService.getRecommendationsByTvSeries(seriesId,Api.API_KEY.getValue())
         })
 
     suspend fun getSeriesGenreList(): SeriesGenresResponse =

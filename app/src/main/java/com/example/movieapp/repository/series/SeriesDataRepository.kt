@@ -14,7 +14,7 @@ import kotlin.math.min
 class SeriesDataRepository(private val dataSource: SeriesDataSource) {
 
     suspend fun getTrendingMoviesInWeek(page: Int): Result<SeriesItemListResponse> {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             try {
                 val response = dataSource.getTrendingSeriesInWeek(page)
                 Result.Success(response)
@@ -35,7 +35,7 @@ class SeriesDataRepository(private val dataSource: SeriesDataSource) {
         }
     }
 
-    suspend fun getImdbRatedSeries(page: Int): Result<SeriesItemListResponse>{
+    suspend fun getImdbRatedSeries(page: Int): Result<SeriesItemListResponse> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = dataSource.getImdbTopRatedSeries(page)
@@ -46,7 +46,7 @@ class SeriesDataRepository(private val dataSource: SeriesDataSource) {
         }
     }
 
-    suspend fun getAiringSeries(page: Int): Result<SeriesItemListResponse>{
+    suspend fun getAiringSeries(page: Int): Result<SeriesItemListResponse> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = dataSource.getAiringSeries(page)
@@ -57,10 +57,10 @@ class SeriesDataRepository(private val dataSource: SeriesDataSource) {
         }
     }
 
-    suspend fun searchSeries(query: String ,page: Int): Result<SeriesItemListResponse>{
+    suspend fun searchSeries(query: String, page: Int): Result<SeriesItemListResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = dataSource.searchSeries(query,page)
+                val response = dataSource.searchSeries(query, page)
                 Result.Success(response)
             } catch (e: Exception) {
                 Result.Error(e)
@@ -69,35 +69,46 @@ class SeriesDataRepository(private val dataSource: SeriesDataSource) {
     }
 
 
-
-
-    suspend fun getSeriesDetails(movieId: Long): Result<SeriesDetails> {
+    suspend fun getSeriesDetails(seriesId: Long): Result<SeriesDetails> {
         return withContext(Dispatchers.IO) {
             try {
                 // 3 independent network calls
                 val responseDeff = async {
-                    dataSource.getSeriesDetails(movieId)
+                    dataSource.getSeriesDetails(seriesId)
                 }
                 val reviewsOnSeriesDeff = async {
-                    dataSource.getReviewsOnSeries(movieId)
+                    dataSource.getReviewsOnSeries(seriesId)
                 }
-                val SeriesImagesDeff = async {
-                    dataSource.getSeriesImages(movieId)
+                val seriesImagesDeff = async {
+                    dataSource.getSeriesImages(seriesId)
+                }
+
+                val seriesVideosDeff = async {
+                    dataSource.getSeriesVideos(seriesId)
                 }
 
                 val recommendationsDeff = async {
-                    dataSource.getSeriesRecommendations(movieId)
+                    dataSource.getSeriesRecommendations(seriesId)
                 }
 
-                awaitAll(responseDeff,reviewsOnSeriesDeff,SeriesImagesDeff,recommendationsDeff)  // time = max of 4
+                awaitAll(
+                    responseDeff,
+                    reviewsOnSeriesDeff,
+                    seriesImagesDeff,
+                    recommendationsDeff,
+                    seriesVideosDeff
+                )  // time = max of 4
+
                 val seriesDetails = responseDeff.await()
                 val reviews = reviewsOnSeriesDeff.await().reviews
-                val imagesUrl = SeriesImagesDeff.await().images
+                val imagesUrl = seriesImagesDeff.await().images
                 val recommendations = recommendationsDeff.await()
+                val trailer = seriesVideosDeff.await().trailers[0]
                 seriesDetails.setReviews(reviews.take(min(4, reviews.size)))
 //  only taking 5 images & 4 reviews
                 seriesDetails.setSeriesImages(imagesUrl.take(min(5, imagesUrl.size)).map { it.url })
                 seriesDetails.setRecommendationList(recommendations.recommendationList)
+                seriesDetails.setYouTubeTrailer(trailer)
                 Result.Success(seriesDetails)
             } catch (e: Exception) {
                 Result.Error(e)
@@ -105,23 +116,23 @@ class SeriesDataRepository(private val dataSource: SeriesDataSource) {
         }
     }
 
-    suspend fun getTrendingRecommendation(): Result<RecommendationResponse>{
-        return withContext(Dispatchers.IO){
+    suspend fun getTrendingRecommendation(): Result<RecommendationResponse> {
+        return withContext(Dispatchers.IO) {
             try {
                 val trendingRecommendation = dataSource.getTrendingRecommendation()
                 Result.Success(trendingRecommendation)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Result.Error(e)
             }
         }
     }
 
-    suspend fun getTvSeasonDetails(seriesId: Long, seasonNumber: Int): Result<TvSeasonDetails>{
-        return withContext(Dispatchers.IO){
+    suspend fun getTvSeasonDetails(seriesId: Long, seasonNumber: Int): Result<TvSeasonDetails> {
+        return withContext(Dispatchers.IO) {
             try {
                 val tvSeasonDetails = dataSource.getSeasonDetails(seriesId, seasonNumber)
                 Result.Success(tvSeasonDetails)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Result.Error(e)
             }
         }

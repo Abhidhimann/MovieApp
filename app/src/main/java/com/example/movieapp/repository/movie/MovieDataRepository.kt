@@ -9,8 +9,8 @@ import kotlin.math.min
 
 class MovieDataRepository(private val dataSource: MovieDataSource) {
 
-    suspend fun getTrendingMoviesInWeek(page: Int): Result<MoviesItemListResponse>{
-        return withContext(Dispatchers.IO){
+    suspend fun getTrendingMoviesInWeek(page: Int): Result<MoviesItemListResponse> {
+        return withContext(Dispatchers.IO) {
             try {
                 val response = dataSource.getTrendingMoviesInWeek(page)
                 Result.Success(response)
@@ -31,7 +31,7 @@ class MovieDataRepository(private val dataSource: MovieDataSource) {
         }
     }
 
-    suspend fun getImdbRatedMovies(page: Int): Result<MoviesItemListResponse>{
+    suspend fun getImdbRatedMovies(page: Int): Result<MoviesItemListResponse> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = dataSource.getImdbTopRatedMovies(page)
@@ -42,7 +42,7 @@ class MovieDataRepository(private val dataSource: MovieDataSource) {
         }
     }
 
-    suspend fun getUpcomingMovies(page: Int): Result<MoviesItemListResponse>{
+    suspend fun getUpcomingMovies(page: Int): Result<MoviesItemListResponse> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = dataSource.getUpComingMovies(page)
@@ -53,18 +53,16 @@ class MovieDataRepository(private val dataSource: MovieDataSource) {
         }
     }
 
-    suspend fun searchMovie(query: String ,page: Int): Result<MoviesItemListResponse>{
+    suspend fun searchMovie(query: String, page: Int): Result<MoviesItemListResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = dataSource.searchMovie(query,page)
+                val response = dataSource.searchMovie(query, page)
                 Result.Success(response)
             } catch (e: Exception) {
                 Result.Error(e)
             }
         }
     }
-
-
 
 
     suspend fun getMovieDetails(movieId: Long): Result<MovieDetails> {
@@ -85,15 +83,27 @@ class MovieDataRepository(private val dataSource: MovieDataSource) {
                     dataSource.getMoviesRecommendations(movieId)
                 }
 
-                awaitAll(responseDeff,reviewsOnMoviesDeff,movieImagesDeff,recommendationsDeff)  // time = max of 4
+                val movieVideosDeff = async {
+                    dataSource.getMovieVideos(movieId)
+                }
+
+                awaitAll(
+                    responseDeff,
+                    reviewsOnMoviesDeff,
+                    movieImagesDeff,
+                    recommendationsDeff,
+                    movieVideosDeff
+                )  // time = max of 4
                 val movieDetails = responseDeff.await()
                 val reviews = reviewsOnMoviesDeff.await().reviews
                 val imagesUrl = movieImagesDeff.await().images
                 val recommendations = recommendationsDeff.await()
+                val trailer = movieVideosDeff.await().trailers[0]
                 movieDetails.setReviews(reviews.take(min(4, reviews.size)))
 //  only taking 5 images & 4 reviews
                 movieDetails.setMovieImages(imagesUrl.take(min(5, imagesUrl.size)).map { it.url })
                 movieDetails.setRecommendationList(recommendations.recommendationList)
+                movieDetails.setYouTubeTrailer(trailer)
                 Result.Success(movieDetails)
             } catch (e: Exception) {
                 Result.Error(e)
@@ -101,17 +111,16 @@ class MovieDataRepository(private val dataSource: MovieDataSource) {
         }
     }
 
-    suspend fun getTrendingRecommendation(): Result<RecommendationResponse>{
-        return withContext(Dispatchers.IO){
+    suspend fun getTrendingRecommendation(): Result<RecommendationResponse> {
+        return withContext(Dispatchers.IO) {
             try {
                 val trendingRecommendation = dataSource.getTrendingRecommendation()
                 Result.Success(trendingRecommendation)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Result.Error(e)
             }
         }
     }
-
 
 
 }
