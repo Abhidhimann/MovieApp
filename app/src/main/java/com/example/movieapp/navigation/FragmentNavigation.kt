@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.movieapp.ui.activities.HomePageUi
 import com.example.movieapp.ui.fragments.common.ErrorFragment
 import com.example.movieapp.ui.fragments.common.Home
+import com.example.movieapp.ui.fragments.common.TrendingPaging
 import com.example.movieapp.ui.fragments.movie.HomeMovieList
 import com.example.movieapp.ui.fragments.series.HomeSeriesList
 import com.example.movieapp.ui.fragments.movie.BaseMovieList
@@ -46,6 +47,10 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
 
     fun toBaseAiringSeriesFragment(containerId: Int) {
         navigateToFragmentMain(baseAiringSeriesList, containerId)
+    }
+
+    fun toTrendingPagingFragment(containerId: Int) {
+        navigateToFragmentMain(trendingPaging, containerId)
     }
 
     fun toMovieListFragment(containerId: Int) {
@@ -98,6 +103,7 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
             BaseSeriesList.newInstance(Constants.SeriesType.IMDB_RATED_SERIES.value)
         val baseAiringSeriesList =
             BaseSeriesList.newInstance(Constants.SeriesType.AIRING_SERIES.value)
+        val trendingPaging = TrendingPaging()
 
         val errorFragment = ErrorFragment()
     }

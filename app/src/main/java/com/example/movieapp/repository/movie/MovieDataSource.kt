@@ -110,6 +110,11 @@ class MovieDataSource(private val apiService: MovieApiInterface) {
         getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
             apiService.getTrendingRecommendation(Api.API_KEY.getValue())
         })
+
+    suspend fun getTrendingRecommendationByPage(page: Int): RecommendationResponse =
+        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+            apiService.getTrendingRecommendationByPage(Api.API_KEY.getValue(), page)
+        })
 }
 
 //    suspend fun getPopularMovies(page: Int): MoviesItemListResponse = withContext(Dispatchers.IO) {

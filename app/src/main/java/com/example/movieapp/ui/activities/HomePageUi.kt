@@ -27,6 +27,7 @@ class HomePageUi : BaseActivity() {
         showSearchBar()
         searchBarListener()
         initErrorPage()
+        binding.navView.
     }
 
     private fun searchBarListener(){
@@ -81,6 +82,9 @@ class HomePageUi : BaseActivity() {
                 }
                 R.id.airing_series_item -> {
                     navigation.toBaseAiringSeriesFragment(binding.homeFrameLayout.id)
+                }
+                R.id.paging_recommendation -> {
+                    navigation.toTrendingPagingFragment(binding.homeFrameLayout.id)
                 }
             }
             true

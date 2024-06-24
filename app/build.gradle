@@ -68,6 +68,9 @@ dependencies {
     // for youTube video
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0'
 
+    // paging
+    implementation "androidx.paging:paging-runtime-ktx:3.3.0"
+
 
     // tests
     testImplementation 'org.mockito:mockito-core:3.12.4'

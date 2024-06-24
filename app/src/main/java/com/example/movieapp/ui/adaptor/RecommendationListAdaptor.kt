@@ -57,7 +57,7 @@ class RecommendationListAdaptor :
             Picasso.get().load(Api.POSTER_BASE_URL.getValue() + recommendationItem.posterImg)
                 .into(binding.recommendedImage)
             binding.recommendedTitle.text = recommendationItem.title
-            binding.recommendedYear.text = recommendationItem.postingDate.substringBefore("-")
+            binding.recommendedYear.text = recommendationItem.postingDate?.substringBefore("-")
             binding.recommendedRating.text = "- ".plus(recommendationItem.rating.toInt())
             binding.recommendedMovieTV.text = recommendationItem.mediaType.uppercase()
         }

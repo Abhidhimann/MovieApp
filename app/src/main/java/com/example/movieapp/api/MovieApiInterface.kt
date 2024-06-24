@@ -35,7 +35,7 @@ interface MovieApiInterface {
         @Query("page") page: Int
     ): Response<MoviesItemListResponse>
 
-    @GET("movie/upcomin")
+    @GET("movie/upcoming")
     suspend fun getUpComingMovies(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
@@ -89,6 +89,12 @@ interface MovieApiInterface {
     @GET("trending/all/week?language=en-US")
     suspend fun getTrendingRecommendation(
         @Query("api_key") apiKey: String
+    ): Response<RecommendationResponse>
+
+    @GET("trending/all/week?language=en-US")
+    suspend fun getTrendingRecommendationByPage(
+        @Query("api_key") apiKey: String,
+        @Query("page") page: Int
     ): Response<RecommendationResponse>
 
 }

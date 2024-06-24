@@ -22,6 +22,6 @@ data class RecommendationItem(
 ){
     val title: String
         get() = movieTitle ?: TvSeriesTitle
-    val postingDate: String
+    val postingDate: String?
         get() = releaseDate?: airingDate
 }

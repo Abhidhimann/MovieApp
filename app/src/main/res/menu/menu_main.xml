@@ -29,6 +29,9 @@
             <item
                 android:id="@+id/airing_series_item"
                 android:title="@string/airingSeries" />
+            <item
+                android:id="@+id/paging_recommendation"
+                android:title="List Using Paging" />
         </menu>
     </item>
 
