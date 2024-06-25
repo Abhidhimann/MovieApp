@@ -1,6 +1,5 @@
 package com.example.movieapp.ui.fragments.movie
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,14 +7,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.api.MovieApiClient
+import com.example.movieapp.data.datasource.MovieDataSource
+import com.example.movieapp.data.datasource.SeriesDataSource
+import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.data.repository.common.SearchRepository
 import com.example.movieapp.databinding.FragmentMovieListBinding
-import com.example.movieapp.repository.movie.MovieDataSource
-import com.example.movieapp.repository.movie.MovieDataRepository
-import com.example.movieapp.ui.adaptor.movie.MovieCardAdaptor
+import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
 import com.example.movieapp.utils.Tags
-import com.example.movieapp.viewModel.SearchMovieViewModel
-import com.example.movieapp.viewModel.SearchMovieViewModelFactory
+import com.example.movieapp.viewModel.movie.SearchMovieViewModel
+import com.example.movieapp.viewModel.movie.SearchMovieViewModelFactory
 
 private const val SEARCHED_QUERY = "searched_Query"
 
@@ -39,7 +39,12 @@ class SearchMovieResult : Fragment(R.layout.fragment_movie_list) {
         Log.i(Tags.TEMP_TAG.getTag(), "Search Movie View Created with query: $query")
 
         val factory =
-            SearchMovieViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi())))
+            SearchMovieViewModelFactory(
+                SearchRepository(
+                    MovieDataSource(MovieApiClient.movieApi()),
+                    SeriesDataSource(MovieApiClient.tvSeriesApi())
+                )
+            )
         viewModel = ViewModelProvider(this, factory).get(SearchMovieViewModel::class.java)
 
         viewModel.allIndexToInitial()
@@ -55,7 +60,7 @@ class SearchMovieResult : Fragment(R.layout.fragment_movie_list) {
                 viewModel.listLastIndex = 0
                 // condition if currentPage is last page
                 startShimmerLoading()
-                viewModel.getSearchedMovies(query, ++viewModel.currentPage)
+                viewModel.searchMovies(query, ++viewModel.currentPage)
             } else {
                 loadItems()
             }
@@ -67,7 +72,7 @@ class SearchMovieResult : Fragment(R.layout.fragment_movie_list) {
         binding.rcMovieList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcMovieList.adapter = adaptor
         setMovieListObserver()
-        viewModel.getSearchedMovies(query, viewModel.currentPage)
+        viewModel.searchMovies(query, viewModel.currentPage)
     }
 
     private fun setMovieListObserver() {

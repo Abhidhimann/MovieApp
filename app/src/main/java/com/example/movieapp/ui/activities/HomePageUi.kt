@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import com.example.movieapp.R
 import com.example.movieapp.databinding.ActivityMainBinding
-import com.example.movieapp.ui.navigation.FragmentNavigation
+import com.example.movieapp.navigation.FragmentNavigation
 import com.example.movieapp.utils.Constants
 
 class HomePageUi : BaseActivity() {
@@ -27,14 +27,14 @@ class HomePageUi : BaseActivity() {
         showSearchBar()
         searchBarListener()
         initErrorPage()
-        binding.navView.
     }
 
-    private fun searchBarListener(){
+    private fun searchBarListener() {
         binding.toolBar.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // do nothing
             }
+
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.toolBar.searchMain.setColorFilter(
                     ContextCompat.getColor(
@@ -43,6 +43,7 @@ class HomePageUi : BaseActivity() {
                     )
                 )
             }
+
             override fun afterTextChanged(p0: Editable?) {
             }
         })
@@ -59,32 +60,43 @@ class HomePageUi : BaseActivity() {
         initDrawerNavigation()
     }
 
-    private fun initDrawerNavigation(){
+    private fun initDrawerNavigation() {
         binding.navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.home_item -> {
                     navigation.toHomeFragment(binding.homeFrameLayout.id)
                 }
+
                 R.id.popular_movie_item -> {
                     navigation.toBasePopularMoviesFragment(binding.homeFrameLayout.id)
                 }
+
                 R.id.imdb_movie_item -> {
                     navigation.toBaseImdbMoviesFragment(binding.homeFrameLayout.id)
                 }
+
                 R.id.upcoming_movie_item -> {
                     navigation.toBaseUpcomingMoviesFragment(binding.homeFrameLayout.id)
                 }
+
                 R.id.popular_series_item -> {
                     navigation.toBasePopularSeriesFragment(binding.homeFrameLayout.id)
                 }
+
                 R.id.imdb_series_item -> {
                     navigation.toBaseImdbSeriesFragment(binding.homeFrameLayout.id)
                 }
+
                 R.id.airing_series_item -> {
                     navigation.toBaseAiringSeriesFragment(binding.homeFrameLayout.id)
                 }
+
                 R.id.paging_recommendation -> {
                     navigation.toTrendingPagingFragment(binding.homeFrameLayout.id)
+                }
+
+                R.id.saved_item -> {
+                    navigation.toSavedItemFragment(binding.homeFrameLayout.id)
                 }
             }
             true
@@ -99,7 +111,7 @@ class HomePageUi : BaseActivity() {
         }
     }
 
-    private fun afterEditingOnSearchBar(){
+    private fun afterEditingOnSearchBar() {
         if (binding.toolBar.searchEditText.visibility == View.VISIBLE) {
             if (binding.toolBar.searchEditText.text.toString().length < 3) {
                 binding.toolBar.searchEditText.error = "Enter at-least 3 digits"
@@ -113,7 +125,7 @@ class HomePageUi : BaseActivity() {
 
     }
 
-    private fun searchBarCancelButtonInit(){
+    private fun searchBarCancelButtonInit() {
         if (binding.toolBar.searchEditText.visibility == View.GONE) {
             binding.toolBar.searchEditText.visibility = View.VISIBLE
             binding.toolBar.searchTempSpace.visibility = View.GONE
@@ -138,8 +150,8 @@ class HomePageUi : BaseActivity() {
 
     }
 
-    private fun initErrorPage(){
-        if (intent.getBooleanExtra(Constants.ERROR_PAGE.getValue(), false)){
+    private fun initErrorPage() {
+        if (intent.getBooleanExtra(Constants.ERROR_PAGE.getValue(), false)) {
             navigation.toErrorFragment(binding.homeFrameLayout.id)
         }
     }

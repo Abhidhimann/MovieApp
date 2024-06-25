@@ -1,7 +1,9 @@
 package com.example.movieapp.model.movies
 
-import com.example.movieapp.model.common.RecommendationItem
-import com.example.movieapp.model.common.Review
+import com.example.movieapp.data.remote.model.common.RecommendationItem
+import com.example.movieapp.data.remote.model.common.Review
+import com.example.movieapp.data.remote.model.movies.MovieDetails
+import com.example.movieapp.data.remote.model.movies.MovieGenre
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

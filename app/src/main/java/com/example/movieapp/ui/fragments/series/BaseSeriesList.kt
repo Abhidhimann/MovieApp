@@ -1,6 +1,5 @@
 package com.example.movieapp.ui.fragments.series
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,11 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.api.MovieApiClient
+import com.example.movieapp.data.datasource.SavedItemLocalDataSource
+import com.example.movieapp.data.remote.network.MovieApiClient
 import com.example.movieapp.databinding.FragmentSeriesListBinding
-import com.example.movieapp.repository.series.SeriesDataRepository
-import com.example.movieapp.repository.series.SeriesDataSource
-import com.example.movieapp.ui.adaptor.series.SeriesCardAdaptor
+import com.example.movieapp.data.repository.series.SeriesDataRepository
+import com.example.movieapp.data.datasource.SeriesDataSource
+import com.example.movieapp.data.local.database.AppDatabase
+import com.example.movieapp.ui.adapter.series.SeriesCardAdaptor
 import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.tvSeries.BaseSeriesListViewModeFactory
@@ -28,7 +29,7 @@ private const val SeriesType = "seriesType"
  * in 1-1 relationship ( maybe can use one base class as parent)
  */
 
-class BaseSeriesList: Fragment(R.layout.fragment_series_list) {
+class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
 
     private lateinit var seriesType: String
     private lateinit var binding: FragmentSeriesListBinding
@@ -47,7 +48,15 @@ class BaseSeriesList: Fragment(R.layout.fragment_series_list) {
 
         // will change imp imp imp
         val factory =
-            BaseSeriesListViewModeFactory(SeriesDataRepository(SeriesDataSource(MovieApiClient.tvSeriesApi())))
+            BaseSeriesListViewModeFactory(
+                SeriesDataRepository(
+                    SeriesDataSource(MovieApiClient.tvSeriesApi()),
+                    SavedItemLocalDataSource(
+                        AppDatabase.getDatabase(requireContext()).savedItemDao()
+                    )
+                )
+            )
+
         viewModel = ViewModelProvider(this, factory).get(BaseSeriesListViewModel::class.java)
 
         viewModel.allIndexToInitial()
@@ -106,10 +115,10 @@ class BaseSeriesList: Fragment(R.layout.fragment_series_list) {
         adaptor.notifyDataSetChanged()
     }
 
-    private fun initShimmerLoading(){
+    private fun initShimmerLoading() {
         startShimmerLoading()
-        viewModel.loadingState.observe(viewLifecycleOwner){
-            if (it==false){
+        viewModel.loadingState.observe(viewLifecycleOwner) {
+            if (it == false) {
                 binding.shimmerListView.stopShimmer()
                 binding.shimmerListView.visibility = View.GONE
                 binding.mainLayout.visibility = View.VISIBLE
@@ -117,7 +126,7 @@ class BaseSeriesList: Fragment(R.layout.fragment_series_list) {
         }
     }
 
-    private fun startShimmerLoading(){
+    private fun startShimmerLoading() {
         binding.shimmerListView.visibility = View.VISIBLE
         binding.mainLayout.visibility = View.GONE
         binding.shimmerListView.startShimmer()

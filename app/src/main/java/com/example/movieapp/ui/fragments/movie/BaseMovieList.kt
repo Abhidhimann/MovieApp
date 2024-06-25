@@ -8,12 +8,14 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.api.MovieApiClient
+import com.example.movieapp.data.remote.network.MovieApiClient
 import com.example.movieapp.databinding.FragmentMovieListBinding
-import com.example.movieapp.repository.movie.MovieDataSource
-import com.example.movieapp.repository.movie.MovieDataRepository
-import com.example.movieapp.ui.adaptor.movie.MovieCardAdaptor
-import com.example.movieapp.ui.navigation.FragmentNavigation
+import com.example.movieapp.data.datasource.MovieDataSource
+import com.example.movieapp.data.datasource.SavedItemLocalDataSource
+import com.example.movieapp.data.local.database.AppDatabase
+import com.example.movieapp.data.repository.movie.MovieDataRepository
+import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
+import com.example.movieapp.navigation.FragmentNavigation
 
 import com.example.movieapp.utils.Tags
 import com.example.movieapp.viewModel.movie.BaseMovieListViewModeFactory
@@ -47,8 +49,16 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
 
         // will change imp imp imp
         val factory =
-            BaseMovieListViewModeFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi())))
-        viewModel = ViewModelProvider(this, factory).get(BaseMovieListViewModel::class.java)
+            BaseMovieListViewModeFactory(
+                MovieDataRepository(
+                    MovieDataSource(MovieApiClient.movieApi()), SavedItemLocalDataSource(
+                        AppDatabase.getDatabase(requireContext()).savedItemDao()
+                    )
+                )
+            )
+        viewModel = ViewModelProvider(
+            this, factory
+        ).get(BaseMovieListViewModel::class.java)
 
         viewModel.allIndexToInitial()
         initMovieList()
@@ -65,7 +75,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
                 startShimmerLoading()
                 viewModel.processMoviesType(moviesType, ++viewModel.currentPage)
             } else {
-                if (viewModel.currentPage==viewModel.moviesList.value?.totalPages){
+                if (viewModel.currentPage == viewModel.moviesList.value?.totalPages) {
                     binding.homeMovieListNext.setTextColor(Color.WHITE)
                     binding.homeMovieListNext.isClickable = false
                 }
@@ -112,10 +122,10 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
 
     }
 
-    private fun initShimmerLoading(){
+    private fun initShimmerLoading() {
         startShimmerLoading()
-        viewModel.loadingState.observe(viewLifecycleOwner){
-            if (it==false){
+        viewModel.loadingState.observe(viewLifecycleOwner) {
+            if (it == false) {
                 binding.shimmerListView.stopShimmer()
                 binding.shimmerListView.visibility = View.GONE
                 binding.mainLayout.visibility = View.VISIBLE
@@ -123,7 +133,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
         }
     }
 
-    private fun startShimmerLoading(){
+    private fun startShimmerLoading() {
         binding.shimmerListView.visibility = View.VISIBLE
         binding.mainLayout.visibility = View.GONE
         binding.shimmerListView.startShimmer()
@@ -134,9 +144,9 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
         Log.i(Tags.TEMP_TAG.getTag(), "Base Movie List View Destroyed with movie type: $moviesType")
     }
 
-    private fun errorStateObserver(){
-        viewModel.errorState.observe(viewLifecycleOwner){
-            if (it){
+    private fun errorStateObserver() {
+        viewModel.errorState.observe(viewLifecycleOwner) {
+            if (it) {
                 FragmentNavigation(childFragmentManager).toErrorActivity(requireContext())
             }
         }

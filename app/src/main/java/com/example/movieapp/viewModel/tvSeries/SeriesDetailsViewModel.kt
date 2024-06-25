@@ -2,10 +2,10 @@ package com.example.movieapp.viewModel.tvSeries
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.movieapp.model.tvSeries.SeriesDetails
-import com.example.movieapp.repository.movie.MovieDataRepository
-import com.example.movieapp.repository.series.SeriesDataRepository
+import com.example.movieapp.data.remote.model.tvSeries.SeriesDetails
+import com.example.movieapp.data.repository.series.SeriesDataRepository
 import com.example.movieapp.utils.Result
+import com.example.movieapp.utils.tempTag
 import kotlinx.coroutines.launch
 
 class SeriesDetailsViewModel(private val repository: SeriesDataRepository): ViewModel() {
@@ -21,13 +21,31 @@ class SeriesDetailsViewModel(private val repository: SeriesDataRepository): View
     val loadingState: LiveData<Boolean>
         get() = _loadingState
 
+    private val _isSeriesSaved = MutableLiveData<Boolean>()
+    val isSeriesSaved: LiveData<Boolean> = _isSeriesSaved
+
     var listInitialIndex = 0
     var listLastIndex = 0
+
+    fun saveSeries(seriesDetails: SeriesDetails) = viewModelScope.launch {
+        Log.i(tempTag(), "saving movie item")
+        repository.saveSeries(seriesDetails)
+        isSeriesSaved(seriesDetails.id)
+    }
+
+    fun deleteSeries(seriesDetails: SeriesDetails) = viewModelScope.launch {
+        repository.deleteSeries(seriesDetails)
+        isSeriesSaved(seriesDetails.id)
+    }
+
+    fun isSeriesSaved(seriesId: Long) = viewModelScope.launch {
+        _isSeriesSaved.postValue(repository.isSeriesSaved(seriesId))
+    }
 
     fun getSeriesDetails(movieId: Long) = viewModelScope.launch {
         when (val result = repository.getSeriesDetails(movieId)) {
             is Result.Success -> {
-                _seriesDetails.value = result.data
+                _seriesDetails.value = result.data!!
                 _loadingState.value = false
             }
             is Result.Error -> {

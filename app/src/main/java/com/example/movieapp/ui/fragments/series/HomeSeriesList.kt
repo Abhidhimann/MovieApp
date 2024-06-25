@@ -1,7 +1,6 @@
 package com.example.movieapp.ui.fragments.series
 
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,18 +8,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.api.MovieApiClient
+import com.example.movieapp.data.datasource.SavedItemLocalDataSource
+import com.example.movieapp.data.remote.network.MovieApiClient
 import com.example.movieapp.databinding.FragmentSeriesListBinding
-import com.example.movieapp.repository.series.SeriesDataRepository
-import com.example.movieapp.repository.series.SeriesDataSource
+import com.example.movieapp.data.repository.series.SeriesDataRepository
+import com.example.movieapp.data.datasource.SeriesDataSource
+import com.example.movieapp.data.local.database.AppDatabase
 import com.example.movieapp.ui.activities.BaseActivity
-import com.example.movieapp.ui.adaptor.series.SeriesCardAdaptor
+import com.example.movieapp.ui.adapter.series.SeriesCardAdaptor
 import com.example.movieapp.utils.RetryFunctionality
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.tvSeries.HomePageSeriesListViewModel
 import com.example.movieapp.viewModel.tvSeries.HomePageSeriesListViewModelFactory
 
-class HomeSeriesList : Fragment(R.layout.fragment_series_list),RetryFunctionality {
+class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionality {
     private lateinit var binding: FragmentSeriesListBinding
     private lateinit var adaptor: SeriesCardAdaptor
     private lateinit var viewModel: HomePageSeriesListViewModel
@@ -36,7 +37,11 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list),RetryFunctionalit
         // will change imp imp imp
         val factory =
             HomePageSeriesListViewModelFactory(
-                SeriesDataRepository(SeriesDataSource((MovieApiClient.tvSeriesApi())))
+                SeriesDataRepository(
+                    SeriesDataSource((MovieApiClient.tvSeriesApi())), SavedItemLocalDataSource(
+                        AppDatabase.getDatabase(requireContext()).savedItemDao()
+                    )
+                )
             )
         viewModel = ViewModelProvider(this, factory).get(HomePageSeriesListViewModel::class.java)
 
@@ -72,7 +77,7 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list),RetryFunctionalit
         setSeriesObserver()
     }
 
-    private fun setSeriesObserver(){
+    private fun setSeriesObserver() {
         viewModel.trendingSeries.observe(viewLifecycleOwner) {
             viewModel.listLastIndex = itemCount
             adaptor.setList(
@@ -100,10 +105,10 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list),RetryFunctionalit
         adaptor.notifyDataSetChanged()
     }
 
-    private fun initShimmerLoading(){
+    private fun initShimmerLoading() {
         startShimmerLoading()
-        viewModel.loadingState.observe(viewLifecycleOwner){
-            if (it==false){
+        viewModel.loadingState.observe(viewLifecycleOwner) {
+            if (it == false) {
                 binding.shimmerListView.stopShimmer()
                 binding.shimmerListView.visibility = View.GONE
                 binding.mainLayout.visibility = View.VISIBLE
@@ -111,7 +116,7 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list),RetryFunctionalit
         }
     }
 
-    private fun startShimmerLoading(){
+    private fun startShimmerLoading() {
         binding.shimmerListView.visibility = View.VISIBLE
         binding.mainLayout.visibility = View.GONE
         binding.shimmerListView.startShimmer()

@@ -81,17 +81,46 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/movieTitle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="40dp"
-                android:text="Mission: Impossible -Dead"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:layout_marginEnd="10dp"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/movieTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="0.9"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    tools:text="Mission: Impossible Ghost " />
+
+                <ImageView
+                    android:id="@+id/saveItem"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="6dp"
+                    android:gravity="end"
+                    android:src="@drawable/unsaved_item_icon"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/unSaveItem"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="6dp"
+                    android:gravity="end"
+                    android:src="@drawable/saved_item_icon"
+                    android:visibility="gone"
+                    app:tint="@color/white" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -105,6 +134,10 @@
                     android:layout_height="wrap_content"
                     android:text="@string/length"
                     android:textColor="@color/white" />
+
+                <Space
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/movieLength"
@@ -124,6 +157,10 @@
                     android:layout_height="wrap_content"
                     android:text="@string/genre"
                     android:textColor="@color/white" />
+
+                <Space
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/movieGenres"
@@ -145,6 +182,10 @@
                     android:text="@string/released"
                     android:textColor="@color/white" />
 
+                <Space
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:id="@+id/movieReleasedDate"
                     android:layout_width="wrap_content"
@@ -163,6 +204,10 @@
                     android:layout_height="wrap_content"
                     android:text="@string/original_title"
                     android:textColor="@color/white" />
+
+                <Space
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/movieOriginalTitle"

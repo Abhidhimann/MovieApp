@@ -6,42 +6,36 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.api.MovieApiClient
-import com.example.movieapp.databinding.FragmentMovieListBinding
-import com.example.movieapp.databinding.TempLayoutBinding
-import com.example.movieapp.repository.movie.MovieDataRepository
-import com.example.movieapp.repository.movie.MovieDataSource
-import com.example.movieapp.ui.adaptor.TrendingPagingAdaptor
-import com.example.movieapp.ui.adaptor.movie.MovieCardAdaptor
-import com.example.movieapp.ui.navigation.FragmentNavigation
+import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.databinding.CommonTvSeriesCardLayoutBinding
+import com.example.movieapp.data.datasource.MovieDataSource
+import com.example.movieapp.ui.adapter.TrendingPagingAdaptor
 import com.example.movieapp.viewModel.TrendingPagingViewModel
 import com.example.movieapp.viewModel.TrendingPagingViewModelFactory
-import com.example.movieapp.viewModel.movie.BaseMovieListViewModeFactory
-import com.example.movieapp.viewModel.movie.BaseMovieListViewModel
 
-class TrendingPaging : Fragment(R.layout.temp_layout) {
+class TrendingPaging : Fragment(R.layout.common_tv_series_card_layout) {
 
-    private lateinit var binding: TempLayoutBinding
+    private lateinit var binding: CommonTvSeriesCardLayoutBinding
     private lateinit var adaptor: TrendingPagingAdaptor
     private lateinit var viewModel: TrendingPagingViewModel
     private val startingPage = 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = TempLayoutBinding.bind(view)
+        binding = CommonTvSeriesCardLayoutBinding.bind(view)
 
         // will change imp imp imp
         val factory =
             TrendingPagingViewModelFactory(MovieDataSource(MovieApiClient.movieApi()))
         viewModel = ViewModelProvider(this, factory)[TrendingPagingViewModel::class.java]
-        initMovieList()
+        initItemList()
     }
 
 
-    private fun initMovieList() {
+    private fun initItemList() {
         adaptor = TrendingPagingAdaptor()
-        binding.rcMovieList.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.rcMovieList.adapter = adaptor
+        binding.rcItemList.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rcItemList.adapter = adaptor
         setMovieListObserver()
     }
 

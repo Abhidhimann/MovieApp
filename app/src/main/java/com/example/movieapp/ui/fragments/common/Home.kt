@@ -1,6 +1,5 @@
 package com.example.movieapp.ui.fragments.common
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,16 +10,17 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
-import com.example.movieapp.api.MovieApiClient
+import com.example.movieapp.data.remote.network.MovieApiClient
 import com.example.movieapp.databinding.FragmentHomeBinding
-import com.example.movieapp.repository.movie.MovieDataSource
-import com.example.movieapp.repository.movie.MovieDataRepository
+import com.example.movieapp.data.datasource.MovieDataSource
+import com.example.movieapp.data.datasource.SavedItemLocalDataSource
+import com.example.movieapp.data.local.database.AppDatabase
+import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.activities.BaseActivity
-import com.example.movieapp.ui.adaptor.HomeImageSliderAdaptor
-import com.example.movieapp.ui.navigation.FragmentNavigation
+import com.example.movieapp.ui.adapter.HomeImageSliderAdaptor
+import com.example.movieapp.navigation.FragmentNavigation
 import com.example.movieapp.utils.RetryFunctionality
 import com.example.movieapp.utils.Tags
-import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.HomePageViewModel
 import com.example.movieapp.viewModel.HomePageViewModelFactory
 import kotlin.math.min
@@ -40,7 +40,13 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
         navigation = FragmentNavigation(childFragmentManager)
 
         val factory =
-            HomePageViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi())))
+            HomePageViewModelFactory(
+                MovieDataRepository(
+                    MovieDataSource(MovieApiClient.movieApi()), SavedItemLocalDataSource(
+                        AppDatabase.getDatabase(requireContext()).savedItemDao()
+                    )
+                )
+            )
         viewModel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
 
         initImageSlider()

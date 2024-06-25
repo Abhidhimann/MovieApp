@@ -14,16 +14,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
-import com.example.movieapp.api.MovieApiClient
+import com.example.movieapp.data.datasource.SavedItemLocalDataSource
+import com.example.movieapp.data.remote.network.MovieApiClient
 import com.example.movieapp.databinding.ActivityTvMovieDetailsLayoutBinding
-import com.example.movieapp.model.tvSeries.TvSeasonDetails
-import com.example.movieapp.repository.series.SeriesDataRepository
-import com.example.movieapp.repository.series.SeriesDataSource
-import com.example.movieapp.ui.adaptor.RecommendationListAdaptor
-import com.example.movieapp.ui.adaptor.ReviewAdaptor
-import com.example.movieapp.ui.adaptor.SliderImagesAdaptor
-import com.example.movieapp.ui.adaptor.series.EpisodeDetailsCardAdaptor
-import com.example.movieapp.utils.Api
+import com.example.movieapp.data.remote.model.tvSeries.TvSeasonDetails
+import com.example.movieapp.data.repository.series.SeriesDataRepository
+import com.example.movieapp.data.datasource.SeriesDataSource
+import com.example.movieapp.data.local.database.AppDatabase
+import com.example.movieapp.ui.adapter.RecommendationListAdaptor
+import com.example.movieapp.ui.adapter.ReviewAdaptor
+import com.example.movieapp.ui.adapter.SliderImagesAdaptor
+import com.example.movieapp.ui.adapter.series.EpisodeDetailsCardAdaptor
+import com.example.movieapp.utils.CommonUtil
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
@@ -33,7 +35,6 @@ import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModelFactory
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
-import com.squareup.picasso.Picasso
 import kotlin.math.min
 
 
@@ -61,6 +62,9 @@ class TvSeriesDetailsUi : BaseActivity() {
                     SeriesDataSource(
                         MovieApiClient.tvSeriesApi(
                         )
+                    ),
+                    SavedItemLocalDataSource(
+                        AppDatabase.getDatabase(this).savedItemDao()
                     )
                 )
             )
@@ -71,6 +75,7 @@ class TvSeriesDetailsUi : BaseActivity() {
         val seriesId = intent.getLongExtra(Constants.TV_SERIES_ID.getValue(), -999)
         if (seriesId != (-999).toLong()) {
             viewModel.getSeriesDetails(seriesId)
+            viewModel.isSeriesSaved(seriesId)
         } else {
             // show error page
         }
@@ -78,26 +83,59 @@ class TvSeriesDetailsUi : BaseActivity() {
         initMovieImagesPage()
         initReviewRecycleView()
         initRecommendationList()
-        initMovieDetailsBinding()
+        setSeriesDetailsData()
+        savedSeriesObserver()
         nextRecommendationList()
         initShimmerLoading()
         seasonDetailsMoreArrowListener()
         lifecycle.addObserver(binding.videoWebView)
+        saveItemListener()
+        unSaveItemListener()
     }
 
-    private fun initMovieDetailsBinding() {
+    private fun savedSeriesObserver() {
+        viewModel.isSeriesSaved.observe(this) {
+            if (it) {
+                binding.saveItem.visibility = View.GONE
+                binding.unSaveItem.visibility = View.VISIBLE
+            } else {
+                binding.saveItem.visibility = View.VISIBLE
+                binding.unSaveItem.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun saveItemListener() {
+        binding.saveItem.setOnClickListener {
+            viewModel.seriesDetails.value?.let { seriesDetails ->
+                viewModel.saveSeries(seriesDetails)
+                CommonUtil.shortToast(this, getString(R.string.series_saved))
+            }
+        }
+    }
+
+    private fun unSaveItemListener() {
+        binding.unSaveItem.setOnClickListener {
+            viewModel.seriesDetails.value?.let { seriesDetails ->
+                viewModel.deleteSeries(seriesDetails)
+                CommonUtil.shortToast(this, getString(R.string.remove_from_items))
+            }
+        }
+    }
+
+    private fun setSeriesDetailsData() {
         viewModel.seriesDetails.observe(this) { it ->
             Log.i(Tags.TEMP_TAG.getTag(), it.toString())
             binding.videoWebView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
                 override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                    it.getYouTubeTrailer().trailerKey.let { key->
+                    it.getYouTubeTrailer().trailerKey.let { key ->
                         youTubePlayer.cueVideo(key, 0f)
                     }
                 }
             })
             binding.movieTitle.text = it.title
             binding.movieGenres.text = it.genres.joinToString(", ") { genre -> genre.name }
-            binding.movieLength.text = it.length.toString().plus(" min")
+            binding.movieLength.text = it.runTimeDetails.averageRunTime.toString().plus(" min / ep")
             binding.movieReleasedDate.text = it.releaseDate
             binding.movieOriginalTitle.text = it.originalTitle
             binding.movieOverview.text = it.seriesOverview

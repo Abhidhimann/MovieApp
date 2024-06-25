@@ -21,8 +21,10 @@ class RetroFitClientHelper() {
 
 
         if (retrofit == null) {
-            retrofit = Retrofit.Builder().baseUrl(baseUrl).client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create(gson)).build()
+            retrofit = synchronized(this) {
+                Retrofit.Builder().baseUrl(baseUrl).client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson)).build()
+            }
         }
 
         return retrofit ?: throw IllegalStateException("Retrofit instance not initialized")

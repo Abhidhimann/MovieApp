@@ -1,9 +1,9 @@
 package com.example.movieapp.viewModel.movie
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.movieapp.model.movies.MovieItem
-import com.example.movieapp.model.movies.MoviesItemListResponse
-import com.example.movieapp.repository.movie.MovieDataRepository
+import com.example.movieapp.data.remote.model.movies.MovieItem
+import com.example.movieapp.data.remote.model.movies.MoviesItemListResponse
+import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.CustomeApiFailedException
 import com.example.movieapp.utils.getOrAwaitValue

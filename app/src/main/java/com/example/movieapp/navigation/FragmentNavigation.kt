@@ -1,4 +1,4 @@
-package com.example.movieapp.ui.navigation
+package com.example.movieapp.navigation
 
 import android.content.Context
 import android.content.Intent
@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.movieapp.ui.activities.HomePageUi
 import com.example.movieapp.ui.fragments.common.ErrorFragment
 import com.example.movieapp.ui.fragments.common.Home
+import com.example.movieapp.ui.fragments.common.SavedItemFragment
 import com.example.movieapp.ui.fragments.common.TrendingPaging
 import com.example.movieapp.ui.fragments.movie.HomeMovieList
 import com.example.movieapp.ui.fragments.series.HomeSeriesList
@@ -51,6 +52,9 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
 
     fun toTrendingPagingFragment(containerId: Int) {
         navigateToFragmentMain(trendingPaging, containerId)
+    }
+    fun toSavedItemFragment(containerId: Int) {
+        navigateToFragmentMain(savedItemFragment, containerId)
     }
 
     fun toMovieListFragment(containerId: Int) {
@@ -104,6 +108,7 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
         val baseAiringSeriesList =
             BaseSeriesList.newInstance(Constants.SeriesType.AIRING_SERIES.value)
         val trendingPaging = TrendingPaging()
+        val savedItemFragment = SavedItemFragment()
 
         val errorFragment = ErrorFragment()
     }

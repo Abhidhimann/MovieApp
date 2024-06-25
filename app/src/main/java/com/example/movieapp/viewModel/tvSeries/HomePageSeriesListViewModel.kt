@@ -2,8 +2,8 @@ package com.example.movieapp.viewModel.tvSeries
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.movieapp.model.tvSeries.SeriesItemListResponse
-import com.example.movieapp.repository.series.SeriesDataRepository
+import com.example.movieapp.data.remote.model.tvSeries.SeriesItemListResponse
+import com.example.movieapp.data.repository.series.SeriesDataRepository
 import com.example.movieapp.utils.Result
 import kotlinx.coroutines.launch
 

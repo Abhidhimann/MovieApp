@@ -35,6 +35,12 @@
     <string name="alertDialogMsg">Please connection to stable internet and try again.</string>
     <string name="alertDialogPositionBtn">Exit App</string>
     <string name="alertDialogNegativeBtn">Retry</string>
-    <string name="ErrorPageMsg">Opps! Something went wrong</string>
+    <string name="ErrorPageMsg">Opps! Something went wrong.</string>
+    <string name="saved_items">Saved Items</string>
+    <string name="movie_saved">Movie is saved</string>
+    <string name="series_saved">Series is saved</string>
+    <string name="remove_from_items">Remove from saved</string>
+    <string name="no_saved_items">No Saved Items</string>
+    <string name="subtitle">By Abhishek</string>
 
 </resources>

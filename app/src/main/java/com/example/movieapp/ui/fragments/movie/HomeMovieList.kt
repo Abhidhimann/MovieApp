@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.api.MovieApiClient
+import com.example.movieapp.data.remote.network.MovieApiClient
 import com.example.movieapp.databinding.FragmentMovieListBinding
-import com.example.movieapp.repository.movie.MovieDataSource
-import com.example.movieapp.repository.movie.MovieDataRepository
+import com.example.movieapp.data.datasource.MovieDataSource
+import com.example.movieapp.data.datasource.SavedItemLocalDataSource
+import com.example.movieapp.data.local.database.AppDatabase
+import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.activities.BaseActivity
-import com.example.movieapp.ui.adaptor.movie.MovieCardAdaptor
+import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
 import com.example.movieapp.utils.RetryFunctionality
 import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.tempTag
@@ -36,7 +38,13 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
 
         // will change imp imp imp
         val factory =
-            HomePageMovieListViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi())))
+            HomePageMovieListViewModelFactory(
+                MovieDataRepository(
+                    MovieDataSource(MovieApiClient.movieApi()), SavedItemLocalDataSource(
+                        AppDatabase.getDatabase(requireContext()).savedItemDao()
+                    )
+                )
+            )
         viewModel = ViewModelProvider(this, factory).get(HomePageMovieListViewModel::class.java)
 
         viewModel.allIndexToInitial()
@@ -78,7 +86,7 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
                 viewModel.listInitialIndex = 0
                 viewModel.listLastIndex = 0
                 startShimmerLoading()
-                Log.i("temp tag",viewModel.currentPage.toString())
+                Log.i("temp tag", viewModel.currentPage.toString())
                 viewModel.getTrendingMovies(++viewModel.currentPage)
             } else {
                 if (viewModel.currentPage == viewModel.trendingMovies.value?.totalPages) {

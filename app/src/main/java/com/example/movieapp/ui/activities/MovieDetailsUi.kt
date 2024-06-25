@@ -1,35 +1,33 @@
 package com.example.movieapp.ui.activities
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.WebViewClient
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
-import com.example.movieapp.api.MovieApiClient
+import com.example.movieapp.data.remote.network.MovieApiClient
 import com.example.movieapp.databinding.ActivityTvMovieDetailsLayoutBinding
-import com.example.movieapp.repository.movie.MovieDataSource
-import com.example.movieapp.repository.movie.MovieDataRepository
-import com.example.movieapp.ui.adaptor.ReviewAdaptor
-import com.example.movieapp.ui.adaptor.RecommendationListAdaptor
-import com.example.movieapp.ui.adaptor.SliderImagesAdaptor
-import com.example.movieapp.utils.Api
+import com.example.movieapp.data.datasource.MovieDataSource
+import com.example.movieapp.data.datasource.SavedItemLocalDataSource
+import com.example.movieapp.data.local.database.AppDatabase
+import com.example.movieapp.data.repository.movie.MovieDataRepository
+import com.example.movieapp.ui.adapter.ReviewAdaptor
+import com.example.movieapp.ui.adapter.RecommendationListAdaptor
+import com.example.movieapp.ui.adapter.SliderImagesAdaptor
+import com.example.movieapp.utils.CommonUtil
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.utils.tempTag
-import com.example.movieapp.viewModel.MovieDetailsViewModel
-import com.example.movieapp.viewModel.MovieDetailsViewModelFactory
+import com.example.movieapp.viewModel.movie.MovieDetailsViewModel
+import com.example.movieapp.viewModel.movie.MovieDetailsViewModelFactory
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
-import com.squareup.picasso.Picasso
 import kotlin.math.min
 
 // Don't know if this is ok will check
@@ -48,7 +46,13 @@ class MovieDetailsUi : BaseActivity() {
         setContentView(binding.root)
 
         val factory =
-            MovieDetailsViewModelFactory(MovieDataRepository(MovieDataSource(MovieApiClient.movieApi())))
+            MovieDetailsViewModelFactory(
+                MovieDataRepository(
+                    MovieDataSource(MovieApiClient.movieApi()), SavedItemLocalDataSource(
+                        AppDatabase.getDatabase(this).savedItemDao()
+                    )
+                )
+            )
         viewModel = ViewModelProvider(this, factory).get(MovieDetailsViewModel::class.java)
 
         Log.i(Tags.MOVIE_DETAILS_UI.getTag(), "Movie Details Created")
@@ -56,6 +60,7 @@ class MovieDetailsUi : BaseActivity() {
         val movieId = intent.getLongExtra(Constants.MOVIE_ID.getValue(), -999)
         if (movieId != (-999).toLong()) {
             viewModel.getMovieDetails(movieId)
+            viewModel.isMovieSaved(movieId)
         } else {
             // show error page
         }
@@ -64,23 +69,58 @@ class MovieDetailsUi : BaseActivity() {
         initMovieImagesRecycleView()
         initReviewRecycleView()
         initRecommendationList()
-        initMovieDetailsBinding()
+        setMovieDetailsData()
+        savedMovieObserver()
         nextRecommendationList()
         initShimmerLoading()
         lifecycle.addObserver(binding.videoWebView)
+        saveItemListener()
+        unSaveItemListener()
+    }
+
+    private fun savedMovieObserver() {
+        viewModel.isMovieSaved.observe(this) {
+            if (it) {
+                binding.saveItem.visibility = View.GONE
+                binding.unSaveItem.visibility = View.VISIBLE
+            } else {
+                binding.saveItem.visibility = View.VISIBLE
+                binding.unSaveItem.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun saveItemListener() {
+        binding.saveItem.setOnClickListener {
+            viewModel.movieDetails.value?.let { movieDetails ->
+                viewModel.saveMovie(movieDetails)
+                CommonUtil.shortToast(this, getString(R.string.movie_saved))
+            }
+        }
+    }
+
+    private fun unSaveItemListener() {
+        binding.unSaveItem.setOnClickListener {
+            viewModel.movieDetails.value?.let { movieDetails ->
+                viewModel.deleteMovie(movieDetails)
+                CommonUtil.shortToast(this, getString(R.string.remove_from_items))
+            }
+        }
     }
 
     private fun initView() {
         binding.tvSeason.visibility = View.GONE
     }
 
-    private fun initMovieDetailsBinding() {
+    private fun setMovieDetailsData() {
         viewModel.movieDetails.observe(this) {
             Log.i(Tags.TEMP_TAG.getTag(), it.toString())
             binding.videoWebView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
                 override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                    it.getYouTubeTrailer().trailerKey.let { key->
-                        youTubePlayer.cueVideo(key, 0f)
+                    it.getYouTubeTrailer()?.trailerKey.let { key ->
+                        if (key != null) {
+                            youTubePlayer.cueVideo(key!!, 0f)
+                        }
                     }
                 }
             })
@@ -231,6 +271,4 @@ class MovieDetailsUi : BaseActivity() {
         binding.videoWebView.release()
         Log.i(getClassTag(), "Movie Details Destroyed")
     }
-
-
 }

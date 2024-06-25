@@ -2,8 +2,8 @@ package com.example.movieapp.viewModel
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.movieapp.model.common.RecommendationResponse
-import com.example.movieapp.repository.movie.MovieDataRepository
+import com.example.movieapp.data.remote.model.common.RecommendationResponse
+import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.utils.Result
 import kotlinx.coroutines.launch
 

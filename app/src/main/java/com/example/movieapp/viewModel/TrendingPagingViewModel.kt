@@ -9,9 +9,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.liveData
-import com.example.movieapp.model.common.RecommendationItem
-import com.example.movieapp.repository.RecommendationPagingSource
-import com.example.movieapp.repository.movie.MovieDataSource
+import com.example.movieapp.data.remote.model.common.RecommendationItem
+import com.example.movieapp.data.datasource.RecommendationPagingSource
+import com.example.movieapp.data.datasource.MovieDataSource
 
 class TrendingPagingViewModel(private val dataSource: MovieDataSource) : ViewModel() {
     private val pageSize = 1
