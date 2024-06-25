@@ -13,7 +13,7 @@ import com.example.movieapp.ui.fragments.common.TrendingPaging
 import com.example.movieapp.ui.fragments.movie.HomeMovieList
 import com.example.movieapp.ui.fragments.series.HomeSeriesList
 import com.example.movieapp.ui.fragments.movie.BaseMovieList
-import com.example.movieapp.ui.fragments.movie.SearchMovieResult
+import com.example.movieapp.ui.fragments.movie.SearchResult
 import com.example.movieapp.ui.fragments.series.BaseSeriesList
 import com.example.movieapp.utils.Constants
 
@@ -24,7 +24,7 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
     }
 
     fun toSearchMovieFragment(query: String, containerId: Int) {
-        navigateToFragmentMain(SearchMovieResult.newInstance(query), containerId)
+        navigateToFragmentMain(SearchResult.newInstance(query), containerId)
     }
 
     fun toBasePopularMoviesFragment(containerId: Int) {

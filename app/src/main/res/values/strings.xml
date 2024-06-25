@@ -12,7 +12,7 @@
     <string name="trending">Trending</string>
     <string name="movies">Movies</string>
     <string name="search_movies_series">Search movies/series</string>
-    <string name="search">Search Movie Only</string>
+    <string name="search">Search...</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="movie_app">Movie App</string>

@@ -1,7 +1,6 @@
 package com.example.movieapp.viewModel.movie
 
 import androidx.lifecycle.*
-import com.example.movieapp.data.remote.model.common.RecommendationResponse
 import com.example.movieapp.data.remote.model.movies.MoviesItemListResponse
 import com.example.movieapp.data.remote.model.tvSeries.SeriesItemListResponse
 import com.example.movieapp.data.repository.common.SearchRepository
@@ -18,10 +17,6 @@ class SearchMovieViewModel(private val repository: SearchRepository) : ViewModel
     val seriesList: LiveData<SeriesItemListResponse>
         get() = _seriesList
 
-//    private var _searchedResult =
-//        MutableLiveData<Pair<RecommendationResponse, RecommendationResponse>>()
-//    val searchedResult: LiveData<Pair<RecommendationResponse, RecommendationResponse>> =
-//        _searchedResult
 
     private val _errorState = MutableLiveData<String>()
     val errorState: LiveData<String>
@@ -31,43 +26,26 @@ class SearchMovieViewModel(private val repository: SearchRepository) : ViewModel
     val loadingState: LiveData<Boolean>
         get() = _loadingState
 
-    var currentPage = 1
-    var listInitialIndex = 0
-    var listLastIndex = 0
+    var currentMoviePage = 1
+    var movieListInitialIndex = 0
+    var movieListLastIndex = 0
 
-    fun allIndexToInitial() {
-        currentPage = 1
-        listLastIndex = 0
-        listInitialIndex = 0
+    var currentSeriesPage = 1
+    var seriesListInitialIndex = 0
+    var seriesListLastIndex = 0
+
+    fun allMovieIndexToInitial() {
+        currentMoviePage = 1
+        movieListLastIndex = 0
+        movieListInitialIndex = 0
     }
 
-//    fun getSearchedMovies(query: String, page: Int) = viewModelScope.launch {
-//        when (val result = repository.searchMovie(query, page)) {
-//            is Result.Success -> {
-//                _moviesList.value = result.data!!
-//                _loadingState.value = false
-//            }
-//            is Result.Error -> {
-//                _errorState.value = result.exception?.message
-//                // ui change according to error state
-//            }
-//        }
-//    }
-//
-//    fun searchResult(query: String, page: Int) =
-//        viewModelScope.launch {
-//            when (val result = repository.searchResult(query, page, page)) {
-//                is Result.Success -> {
-//                    _searchedResult.value = result.data!!
-//                    _loadingState.value = false
-//                }
-//
-//                is Result.Error -> {
-//                    _errorState.value = result.exception?.message
-//                    // ui change according to error state
-//                }
-//            }
-//        }
+    fun allSeriesIndexToInitial() {
+        currentSeriesPage = 1
+        seriesListLastIndex = 0
+        seriesListInitialIndex = 0
+    }
+
 
 
     fun searchMovies(query: String, page: Int) = viewModelScope.launch {

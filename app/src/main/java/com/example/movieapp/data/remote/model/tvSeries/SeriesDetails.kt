@@ -35,7 +35,7 @@ data class SeriesDetails(
     private var images: List<String>,  // these we will set later by different apis
     private var reviews: List<Review>,
     private var recommendationList: List<RecommendationItem>,
-    private var youTubeTrailer: Trailer,
+    private var youTubeTrailer: Trailer?,
 ) {
     fun setSeriesImages(movieImages: List<String>) {
         this.images = movieImages
@@ -61,11 +61,11 @@ data class SeriesDetails(
         return this.recommendationList
     }
 
-    fun setYouTubeTrailer(trailer: Trailer){
+    fun setYouTubeTrailer(trailer: Trailer?){
         this.youTubeTrailer = trailer
     }
 
-    fun getYouTubeTrailer(): Trailer {
+    fun getYouTubeTrailer(): Trailer? {
         return this.youTubeTrailer
     }
 

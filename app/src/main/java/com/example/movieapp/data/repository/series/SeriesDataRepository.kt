@@ -96,7 +96,7 @@ class SeriesDataRepository(private val seriesDataSource: SeriesDataSource, priva
                 val reviews = reviewsOnSeriesDeff.await().reviews
                 val imagesUrl = seriesImagesDeff.await().images
                 val recommendations = recommendationsDeff.await()
-                val trailer = seriesVideosDeff.await().trailers[0]
+                val trailer = seriesVideosDeff.await().trailers.getOrNull(0)
                 seriesDetails.setReviews(reviews.take(min(4, reviews.size)))
 //  only taking 5 images & 4 reviews
                 seriesDetails.setSeriesImages(imagesUrl.take(min(5, imagesUrl.size)).map { it.url })

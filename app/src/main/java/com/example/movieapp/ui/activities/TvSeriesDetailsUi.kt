@@ -128,8 +128,10 @@ class TvSeriesDetailsUi : BaseActivity() {
             Log.i(Tags.TEMP_TAG.getTag(), it.toString())
             binding.videoWebView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
                 override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                    it.getYouTubeTrailer().trailerKey.let { key ->
-                        youTubePlayer.cueVideo(key, 0f)
+                    it.getYouTubeTrailer()?.trailerKey.let { key ->
+                        if (key != null) {
+                            youTubePlayer.cueVideo(key, 0f)
+                        }
                     }
                 }
             })

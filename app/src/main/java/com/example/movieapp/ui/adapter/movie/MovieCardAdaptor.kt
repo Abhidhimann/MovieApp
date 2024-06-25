@@ -1,6 +1,7 @@
 package com.example.movieapp.ui.adapter.movie
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.example.movieapp.data.remote.model.movies.MovieItem
 import com.example.movieapp.ui.activities.MovieDetailsUi
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
+import com.example.movieapp.utils.getClassTag
 import com.squareup.picasso.Picasso
 
 // Although Movie and Series Card adaptor could be combine, but they are kind of main components
@@ -42,7 +44,7 @@ class MovieCardAdaptor : RecyclerView.Adapter<MovieCardAdaptor.MovieCardViewHold
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movieItem: MovieItem) {
-//            Log.i("Movie item bind", movieItem.toString())
+            Log.i(getClassTag(), "movie is $movieItem")
             Picasso.get().load(Api.POSTER_BASE_URL.getValue() + movieItem.posterImg)
                 .into(binding.itemCardImage)
             binding.itemCardTitle.text = movieItem.title
