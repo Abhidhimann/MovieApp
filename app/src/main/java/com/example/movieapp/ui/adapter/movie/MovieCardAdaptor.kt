@@ -62,6 +62,7 @@ class MovieCardAdaptor : RecyclerView.Adapter<MovieCardAdaptor.MovieCardViewHold
         fun goToMovieDetails(movieItem: MovieItem){
             val intent = Intent(binding.root.context, MovieDetailsUi::class.java)
             intent.putExtra(Constants.MOVIE_ID.getValue(),movieItem.id)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             binding.root.context.startActivity(intent)
         }
     }

@@ -14,7 +14,7 @@ import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.getClassTag
 import com.squareup.picasso.Picasso
 
-class SeriesCardAdaptor: RecyclerView.Adapter<SeriesCardAdaptor.SeriesCardViewHolder>() {
+class SeriesCardAdaptor : RecyclerView.Adapter<SeriesCardAdaptor.SeriesCardViewHolder>() {
     private val initialSeriesItemList = mutableListOf<SeriesItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesCardViewHolder {
@@ -42,15 +42,16 @@ class SeriesCardAdaptor: RecyclerView.Adapter<SeriesCardAdaptor.SeriesCardViewHo
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(seriesItem: SeriesItem) {
-        Log.i(getClassTag(), "series is $seriesItem")
+            Log.i(getClassTag(), "series is $seriesItem")
             Picasso.get().load(Api.POSTER_BASE_URL.getValue() + seriesItem.posterImg)
                 .into(binding.itemCardImage)
-            if (!seriesItem.posterImg.isNullOrEmpty()){
+            if (!seriesItem.posterImg.isNullOrEmpty()) {
                 Picasso.get().load(Api.POSTER_BASE_URL.getValue() + seriesItem.posterImg)
                     .into(binding.itemCardImage)
             } else {
                 Picasso.get().load(
-                    R.drawable.image_not_found)
+                    R.drawable.image_not_found
+                )
                     .into(binding.itemCardImage)
             }
             binding.itemCardTitle.text = seriesItem.title
@@ -58,9 +59,10 @@ class SeriesCardAdaptor: RecyclerView.Adapter<SeriesCardAdaptor.SeriesCardViewHo
             binding.itemCardRating.text = seriesItem.rating.toInt().toString()
         }
 
-        fun goToSeriesDetails(movieItem: SeriesItem){
+        fun goToSeriesDetails(movieItem: SeriesItem) {
             val intent = Intent(binding.root.context, TvSeriesDetailsUi::class.java)
-            intent.putExtra(Constants.TV_SERIES_ID.getValue(),movieItem.id)
+            intent.putExtra(Constants.TV_SERIES_ID.getValue(), movieItem.id)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             binding.root.context.startActivity(intent)
         }
     }

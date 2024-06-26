@@ -72,7 +72,6 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
     }
 
     fun toErrorFragment(containerId: Int){
-
         navigateToFragmentMain(errorFragment, containerId )
     }
 
@@ -80,15 +79,12 @@ class FragmentNavigation(private val fragmentManager: FragmentManager) {
     private fun navigateToFragmentMain(fragment: Fragment, containerId: Int) {
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         transaction.replace(containerId, fragment)
-        // here not adding to backstack, don't want last state to be saved
+//         here not adding to backstack, don't want last state to be saved
+//         transaction.addToBackStack(null)
         transaction.commit()
     }
-    // if you want to add to backstack then before replace you have to give
-    // login if fragment is already there then show it
-
-//    private fun navigateToFragmentOnHomePage(fragment: Fragment, containerId: Int) {
-//        fragmentManager.beginTransaction().replace(containerId, fragment).commit()
-//    }
+    // if you want to add to backstack then before replace you have check
+    // if fragment is already there then show it
 
     companion object {
         val homeFragment = Home()

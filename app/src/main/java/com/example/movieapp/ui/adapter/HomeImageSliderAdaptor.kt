@@ -54,10 +54,12 @@ class HomeImageSliderAdaptor(private val context: Context): PagerAdapter() {
             if(recommendationItem.mediaType == Constants.MOVIE.getValue()){
                 val intent = Intent(context, MovieDetailsUi::class.java)
                 intent.putExtra(Constants.MOVIE_ID.getValue(),recommendationItem.id)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 context.startActivity(intent)
             } else {
                 val intent = Intent(binding.root.context, TvSeriesDetailsUi::class.java)
                 intent.putExtra(Constants.TV_SERIES_ID.getValue(),recommendationItem.id)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 binding.root.context.startActivity(intent)
             }
         }
