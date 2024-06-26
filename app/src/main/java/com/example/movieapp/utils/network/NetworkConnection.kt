@@ -20,7 +20,7 @@ class NetworkConnection(context: Context) : LiveData<Boolean>() {
     }
 
     private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     override fun onActive() {
         super.onActive()

@@ -2,9 +2,6 @@ package com.example.movieapp.data.repository.series
 
 import com.example.movieapp.data.datasource.SavedItemLocalDataSource
 import com.example.movieapp.data.datasource.SeriesDataSource
-import com.example.movieapp.data.remote.model.common.RecommendationResponse
-import com.example.movieapp.data.remote.model.movies.MovieDetails
-import com.example.movieapp.data.remote.model.movies.MovieDetails.Companion.toSavedItemEntity
 import com.example.movieapp.data.remote.model.tvSeries.SeriesDetails
 import com.example.movieapp.data.remote.model.tvSeries.SeriesDetails.Companion.toSavedItemEntity
 import com.example.movieapp.data.remote.model.tvSeries.SeriesItemListResponse
@@ -18,7 +15,7 @@ import kotlin.math.min
 
 class SeriesDataRepository(private val seriesDataSource: SeriesDataSource, private val savedItemLocalDataSource: SavedItemLocalDataSource) {
 
-    suspend fun getTrendingMoviesInWeek(page: Int): Result<SeriesItemListResponse> {
+    suspend fun getTrendingSeriesInWeek(page: Int): Result<SeriesItemListResponse> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = seriesDataSource.getTrendingSeriesInWeek(page)

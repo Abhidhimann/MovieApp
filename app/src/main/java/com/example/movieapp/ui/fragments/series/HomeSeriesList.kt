@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
 import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentSeriesListBinding
 import com.example.movieapp.data.repository.series.SeriesDataRepository
 import com.example.movieapp.data.datasource.SeriesDataSource
@@ -34,11 +34,11 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
         Log.i(getClassTag(), "Series List View Created")
         (activity as BaseActivity).activeFrames.add(this)
 
-        // will change imp imp imp
+        // will change to hilt
         val factory =
             HomePageSeriesListViewModelFactory(
                 SeriesDataRepository(
-                    SeriesDataSource((MovieApiClient.tvSeriesApi())), SavedItemLocalDataSource(
+                    SeriesDataSource((ApiClient.tvSeriesApi())), SavedItemLocalDataSource(
                         AppDatabase.getDatabase(requireContext()).savedItemDao()
                     )
                 )

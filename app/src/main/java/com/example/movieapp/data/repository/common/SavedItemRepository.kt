@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
+
+// can also make interface in domain/ i.e. SavedItemRepository then implement it SavedItemRepositoryImpl
 class SavedItemRepository(private val dataSource: SavedItemLocalDataSource) {
 
     // better to change SavedItemEntity -> ToSavedItemModel or use same ToRecommendationItem
@@ -16,10 +18,6 @@ class SavedItemRepository(private val dataSource: SavedItemLocalDataSource) {
         dataSource.getAllSavedItemList()
             .map { list -> list.map { RecommendationItem.fromSavedItemEntity(it) } }
 
-
-    suspend fun insertSavedItem(item: SavedItemEntity) = withContext(Dispatchers.IO) {
-        dataSource.insertSavedItem(item)
-    }
 
     suspend fun deleteSavedItem(item: SavedItemEntity) = withContext(Dispatchers.IO) {
         dataSource.insertSavedItem(item)

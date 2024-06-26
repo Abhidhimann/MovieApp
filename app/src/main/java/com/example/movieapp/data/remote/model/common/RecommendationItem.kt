@@ -14,7 +14,7 @@ data class RecommendationItem(
     @SerializedName("vote_average")
     val rating: Float,
     @SerializedName("poster_path")
-    val posterImg: String,
+    val posterImg: String?,
     @SerializedName("release_date")
     val releaseDate: String?,
     @SerializedName("first_air_date")
@@ -48,7 +48,7 @@ data class RecommendationItem(
                 rating = this.rating,
                 releaseDate = this.postingDate ?: "",
                 mediaType = this.mediaType,
-                thumbnail = this.posterImg
+                thumbnail = this.posterImg?: ""
             )
         }
     }

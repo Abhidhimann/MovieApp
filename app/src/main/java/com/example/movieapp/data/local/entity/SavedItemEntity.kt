@@ -3,7 +3,6 @@ package com.example.movieapp.data.local.entity
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.room.util.TableInfo
 import com.google.gson.annotations.SerializedName
 
 @Entity(

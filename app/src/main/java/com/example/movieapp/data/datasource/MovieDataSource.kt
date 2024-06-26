@@ -10,8 +10,8 @@ import com.example.movieapp.data.remote.model.movies.MovieGenresResponse
 import com.example.movieapp.data.remote.model.movies.MovieImagesResponse
 import com.example.movieapp.data.remote.model.movies.MoviesItemListResponse
 import com.example.movieapp.utils.Api
-import com.example.movieapp.utils.CustomeApiFailedException
-import com.example.movieapp.utils.Tags
+import com.example.movieapp.utils.CustomApiFailedException
+import com.example.movieapp.utils.getClassTag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -45,77 +45,77 @@ class MovieDataSource(private val apiService: MovieApiService) {
             delay(retryLimitSec)
         }
 
-        throw CustomeApiFailedException("movie api request failed after $retryCount attempts")
+        throw CustomApiFailedException("movie api request failed after $retryCount attempts")
     }
 
 
     suspend fun getPopularMovies(page: Int): MoviesItemListResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getPopularMovies(Api.API_KEY.getValue(), page)
         })
 
     suspend fun getTrendingMoviesInWeek(page: Int): MoviesItemListResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getTrendingMoviesInWeek(Api.API_KEY.getValue(), page)
         })
 
     suspend fun getImdbTopRatedMovies(page: Int): MoviesItemListResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getImdbTopRatedMovies(Api.API_KEY.getValue(), page)
         })
 
     suspend fun getUpComingMovies(page: Int): MoviesItemListResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getUpComingMovies(Api.API_KEY.getValue(), page)
         })
 
     suspend fun getMoviesByGenre(genreId: Int, page: Int): MoviesItemListResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getMoviesByGenre(Api.API_KEY.getValue(), genreId, page)
         })
 
     suspend fun searchMovie(query: String, page: Int): MoviesItemListResponse =
-    getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+    getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
         apiService.searchMovie(Api.API_KEY.getValue(), query, page)
     })
 
     suspend fun getMovieDetails(movieId: Long): MovieDetails =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getMovieDetails(apiKey = Api.API_KEY.getValue(), id = movieId)
         })
 
     suspend fun getReviewsOnMovie(movieId: Long): ReviewResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getReviewsOnMovie(movieId,Api.API_KEY.getValue())
         })
 
     suspend fun getMovieImages(movieId: Long): MovieImagesResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getMovieImages(movieId,Api.API_KEY.getValue())
         })
 
     suspend fun getMovieVideos(movieId: Long): VideoResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getMovieVideos(movieId,Api.API_KEY.getValue())
         })
 
     suspend fun getMoviesRecommendations(movieId: Long): RecommendationResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getRecommendationsByMovie(movieId,Api.API_KEY.getValue())
         })
 
     suspend fun getMovieGenreList(): MovieGenresResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getMoviesGenres(Api.API_KEY.getValue())
         })
 
     suspend fun getTrendingRecommendation(): RecommendationResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getTrendingRecommendation(Api.API_KEY.getValue())
         })
 
     suspend fun getTrendingRecommendationByPage(page: Int): RecommendationResponse =
-        getDataFromApiWithRetry(tag = Tags.MOVIE_DATA_SOURCE.getTag(), apiCall = {
+        getDataFromApiWithRetry(tag = getClassTag(), apiCall = {
             apiService.getTrendingRecommendationByPage(Api.API_KEY.getValue(), page)
         })
 }

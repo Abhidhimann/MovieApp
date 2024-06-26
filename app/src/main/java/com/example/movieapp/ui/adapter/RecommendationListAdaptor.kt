@@ -53,7 +53,6 @@ class RecommendationListAdaptor :
         ViewHolder(binding.root) {
 
         fun bind(recommendationItem: RecommendationItem) {
-//            Log.i(getClassTag(), recommendationItem.toString())
             Picasso.get().load(Api.POSTER_BASE_URL.getValue() + recommendationItem.posterImg)
                 .into(binding.recommendedImage)
             binding.recommendedTitle.text = recommendationItem.title
@@ -63,7 +62,6 @@ class RecommendationListAdaptor :
         }
 
         fun goToMediaTypeDetails(recommendationItem: RecommendationItem) {
-//            Log.i(getClassTag(),recommendationItem.mediaType)
             if (recommendationItem.mediaType == Constants.MOVIE.getValue()) {
                 val intent = Intent(binding.root.context, MovieDetailsUi::class.java)
                 intent.putExtra(Constants.MOVIE_ID.getValue(), recommendationItem.id)

@@ -8,13 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
 import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentSeriesListBinding
 import com.example.movieapp.data.repository.series.SeriesDataRepository
 import com.example.movieapp.data.datasource.SeriesDataSource
 import com.example.movieapp.data.local.database.AppDatabase
 import com.example.movieapp.ui.adapter.series.SeriesCardAdaptor
-import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.tvSeries.BaseSeriesListViewModeFactory
 import com.example.movieapp.viewModel.tvSeries.BaseSeriesListViewModel
@@ -46,11 +45,11 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
         }
         Log.i(getClassTag(), "Base Series List View Created with movie type: $seriesType")
 
-        // will change imp imp imp
+        // will change to hilt
         val factory =
             BaseSeriesListViewModeFactory(
                 SeriesDataRepository(
-                    SeriesDataSource(MovieApiClient.tvSeriesApi()),
+                    SeriesDataSource(ApiClient.tvSeriesApi()),
                     SavedItemLocalDataSource(
                         AppDatabase.getDatabase(requireContext()).savedItemDao()
                     )
@@ -90,7 +89,6 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
         viewModel.seriesList.observe(viewLifecycleOwner) {
             viewModel.listInitialIndex = viewModel.listLastIndex
             viewModel.listLastIndex += itemCount
-            Log.i(Tags.TEMP_TAG.getTag(), "whyyy " + viewModel.listLastIndex.toString())
             adaptor.setList(
                 it.seriesList.subList(
                     viewModel.listInitialIndex,
@@ -132,19 +130,7 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
         binding.shimmerListView.startShimmer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i(getClassTag(), "Base Series List View Destroyed with movie type: $seriesType")
-    }
-
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param seriesType Parameter 1.
-         * @return A new instance of fragment BaseMovieList.
-         */
         @JvmStatic
         fun newInstance(seriesType: String) =
             BaseSeriesList().apply {

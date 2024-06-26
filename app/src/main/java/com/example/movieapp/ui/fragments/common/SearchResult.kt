@@ -1,4 +1,4 @@
-package com.example.movieapp.ui.fragments.movie
+package com.example.movieapp.ui.fragments.common
 
 import android.os.Bundle
 import android.util.Log
@@ -9,12 +9,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
 import com.example.movieapp.data.datasource.MovieDataSource
 import com.example.movieapp.data.datasource.SeriesDataSource
-import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.data.repository.common.SearchRepository
 import com.example.movieapp.databinding.SearchResultLayoutBinding
 import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
 import com.example.movieapp.ui.adapter.series.SeriesCardAdaptor
-import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.movie.SearchMovieViewModel
 import com.example.movieapp.viewModel.movie.SearchMovieViewModelFactory
@@ -44,8 +43,8 @@ class SearchResult : Fragment(R.layout.search_result_layout) {
         val factory =
             SearchMovieViewModelFactory(
                 SearchRepository(
-                    MovieDataSource(MovieApiClient.movieApi()),
-                    SeriesDataSource(MovieApiClient.tvSeriesApi())
+                    MovieDataSource(ApiClient.movieApi()),
+                    SeriesDataSource(ApiClient.tvSeriesApi())
                 )
             )
         viewModel = ViewModelProvider(this, factory).get(SearchMovieViewModel::class.java)
@@ -91,7 +90,7 @@ class SearchResult : Fragment(R.layout.search_result_layout) {
 
     private fun setMovieListObserver() {
         viewModel.moviesList.observe(viewLifecycleOwner) {
-            if (it.movieList.isNullOrEmpty()){
+            if (it.movieList.isNullOrEmpty()) {
                 binding.movieTitle.visibility = View.GONE
                 binding.movieListNext.visibility = View.GONE
                 binding.divider.visibility = View.GONE
@@ -119,7 +118,7 @@ class SearchResult : Fragment(R.layout.search_result_layout) {
 
     private fun setSeriesListObserver() {
         viewModel.seriesList.observe(viewLifecycleOwner) {
-            if (it.seriesList.isNullOrEmpty()){
+            if (it.seriesList.isNullOrEmpty()) {
                 binding.seriesTitle.visibility = View.GONE
                 binding.seriesListNext.visibility = View.GONE
                 binding.divider.visibility = View.GONE
@@ -198,24 +197,12 @@ class SearchResult : Fragment(R.layout.search_result_layout) {
         binding.shimmerListView.startShimmer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i(Tags.TEMP_TAG.getTag(), "Search Movie Result fragment destroyed")
-    }
-
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param query Parameter 1.
-         * @return A new instance of fragment BaseMovieList.
-         */
         @JvmStatic
-        fun newInstance(query: String) =
+        fun newInstance(searchedQuery: String) =
             SearchResult().apply {
                 arguments = Bundle().apply {
-                    putString(SEARCHED_QUERY, query)
+                    putString(SEARCHED_QUERY, searchedQuery)
                 }
             }
     }

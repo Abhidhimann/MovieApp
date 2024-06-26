@@ -24,7 +24,7 @@ class SavedItemFragment : Fragment(R.layout.common_tv_series_card_layout) {
         super.onViewCreated(view, savedInstanceState)
         binding = CommonTvSeriesCardLayoutBinding.bind(view)
 
-        // change this imp
+        // change this using hilt
         val factory =
             SavedItemsViewModelFactory(
                 SavedItemRepository(

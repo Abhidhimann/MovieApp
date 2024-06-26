@@ -5,7 +5,7 @@ import com.example.movieapp.data.remote.model.movies.MovieItem
 import com.example.movieapp.data.remote.model.movies.MoviesItemListResponse
 import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.utils.Constants
-import com.example.movieapp.utils.CustomeApiFailedException
+import com.example.movieapp.utils.CustomApiFailedException
 import com.example.movieapp.utils.getOrAwaitValue
 import junit.framework.TestCase.*
 import kotlinx.coroutines.Dispatchers
@@ -16,12 +16,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.concurrent.TimeoutException
 
 class BaseMovieListViewModelTest {
@@ -71,7 +68,7 @@ class BaseMovieListViewModelTest {
     @Test
     fun `getPopularMovies error`() = runTest {
         Mockito.`when`(repository.getPopularMovies(initialPage))
-            .thenReturn(Result.Error(CustomeApiFailedException("sdf")))
+            .thenReturn(Result.Error(CustomApiFailedException("sdf")))
 
         viewModel.processMoviesType(popularMovies, initialPage)
         testDispatcher.scheduler.advanceUntilIdle()
@@ -100,7 +97,7 @@ class BaseMovieListViewModelTest {
     @Test
     fun `getImdbRatedMovies error`() = runTest {
         Mockito.`when`(repository.getImdbRatedMovies(initialPage))
-            .thenReturn(Result.Error(CustomeApiFailedException("sdf")))
+            .thenReturn(Result.Error(CustomApiFailedException("sdf")))
 
         viewModel.processMoviesType(imdbRatedMovies, initialPage)
         testDispatcher.scheduler.advanceUntilIdle()
@@ -129,7 +126,7 @@ class BaseMovieListViewModelTest {
     @Test
     fun `getUpcomingMovie error`() = runTest {
         Mockito.`when`(repository.getUpcomingMovies(initialPage))
-            .thenReturn(Result.Error(CustomeApiFailedException("sdf")))
+            .thenReturn(Result.Error(CustomApiFailedException("sdf")))
 
         viewModel.processMoviesType(upComingMovies, initialPage)
         testDispatcher.scheduler.advanceUntilIdle()

@@ -14,7 +14,6 @@ import com.example.movieapp.ui.activities.MovieDetailsUi
 import com.example.movieapp.ui.activities.TvSeriesDetailsUi
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
-import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
 import com.squareup.picasso.Picasso
 import java.util.*
@@ -69,7 +68,7 @@ class HomeImageSliderAdaptor(private val context: Context): PagerAdapter() {
         binding.trendingType.text = recommendationItem.mediaType.uppercase()
         binding.trendingRating.text = "- ".plus(recommendationItem.rating.toInt())
 
-        Log.i(Tags.TEMP_TAG.getTag(), Api.POSTER_BASE_URL.getValue() + recommendationItem.posterImg)
+        Log.i(getClassTag(), Api.POSTER_BASE_URL.getValue() + recommendationItem.posterImg)
         Picasso.get().load(Api.POSTER_BASE_URL.getValue() + recommendationItem.posterImg)
             .into(binding.trendingImagesView)
     }

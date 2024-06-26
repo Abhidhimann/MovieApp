@@ -8,7 +8,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentMovieListBinding
 import com.example.movieapp.data.datasource.MovieDataSource
 import com.example.movieapp.data.datasource.SavedItemLocalDataSource
@@ -16,8 +16,7 @@ import com.example.movieapp.data.local.database.AppDatabase
 import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
 import com.example.movieapp.navigation.FragmentNavigation
-
-import com.example.movieapp.utils.Tags
+import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.movie.BaseMovieListViewModeFactory
 import com.example.movieapp.viewModel.movie.BaseMovieListViewModel
 
@@ -45,13 +44,13 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
         arguments?.let {
             moviesType = it.getString(MoviesType).toString()
         }
-        Log.i(Tags.TEMP_TAG.getTag(), "Base Movie List View Created with movie type: $moviesType")
+        Log.i(getClassTag(), "Base Movie List View Created with movie type: $moviesType")
 
-        // will change imp imp imp
+        // will change hilt
         val factory =
             BaseMovieListViewModeFactory(
                 MovieDataRepository(
-                    MovieDataSource(MovieApiClient.movieApi()), SavedItemLocalDataSource(
+                    MovieDataSource(ApiClient.movieApi()), SavedItemLocalDataSource(
                         AppDatabase.getDatabase(requireContext()).savedItemDao()
                     )
                 )
@@ -139,10 +138,6 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
         binding.shimmerListView.startShimmer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i(Tags.TEMP_TAG.getTag(), "Base Movie List View Destroyed with movie type: $moviesType")
-    }
 
     private fun errorStateObserver() {
         viewModel.errorState.observe(viewLifecycleOwner) {

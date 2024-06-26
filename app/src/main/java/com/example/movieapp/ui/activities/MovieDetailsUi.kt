@@ -10,27 +10,28 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
-import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.ActivityTvMovieDetailsLayoutBinding
 import com.example.movieapp.data.datasource.MovieDataSource
 import com.example.movieapp.data.datasource.SavedItemLocalDataSource
 import com.example.movieapp.data.local.database.AppDatabase
+import com.example.movieapp.data.remote.model.common.RecommendationItem
+import com.example.movieapp.data.remote.model.common.Review
+import com.example.movieapp.data.remote.model.common.Trailer
+import com.example.movieapp.data.remote.model.movies.MovieDetails
 import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.adapter.ReviewAdaptor
 import com.example.movieapp.ui.adapter.RecommendationListAdaptor
 import com.example.movieapp.ui.adapter.SliderImagesAdaptor
 import com.example.movieapp.utils.CommonUtil
 import com.example.movieapp.utils.Constants
-import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
-import com.example.movieapp.utils.tempTag
 import com.example.movieapp.viewModel.movie.MovieDetailsViewModel
 import com.example.movieapp.viewModel.movie.MovieDetailsViewModelFactory
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import kotlin.math.min
 
-// Don't know if this is ok will check
 class MovieDetailsUi : BaseActivity() {
 
     private lateinit var binding: ActivityTvMovieDetailsLayoutBinding
@@ -48,14 +49,12 @@ class MovieDetailsUi : BaseActivity() {
         val factory =
             MovieDetailsViewModelFactory(
                 MovieDataRepository(
-                    MovieDataSource(MovieApiClient.movieApi()), SavedItemLocalDataSource(
+                    MovieDataSource(ApiClient.movieApi()), SavedItemLocalDataSource(
                         AppDatabase.getDatabase(this).savedItemDao()
                     )
                 )
             )
         viewModel = ViewModelProvider(this, factory).get(MovieDetailsViewModel::class.java)
-
-        Log.i(Tags.MOVIE_DETAILS_UI.getTag(), "Movie Details Created")
 
         val movieId = intent.getLongExtra(Constants.MOVIE_ID.getValue(), -999)
         if (movieId != (-999).toLong()) {
@@ -112,65 +111,81 @@ class MovieDetailsUi : BaseActivity() {
         binding.tvSeason.visibility = View.GONE
     }
 
+    // can put this in start or in onResume(little bad) if activity load is slow
     private fun setMovieDetailsData() {
-        viewModel.movieDetails.observe(this) {
-            Log.i(Tags.TEMP_TAG.getTag(), it.toString())
-            binding.videoWebView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
-                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                    it.getYouTubeTrailer()?.trailerKey.let { key ->
-                        if (key != null) {
-                            youTubePlayer.cueVideo(key!!, 0f)
-                        }
+        viewModel.movieDetails.observe(this) { movieDetails->
+            Log.i(getClassTag(), movieDetails.toString())
+            setMovieTextData(movieDetails)
+            setPagerData(movieDetails.getMovieImages())
+            setMovieReviews(movieDetails.getReviews())
+            setVideoView(movieDetails.getYouTubeTrailer())
+            setRecommendations(movieDetails.getRecommendationList())
+        }
+    }
+
+    private fun setVideoView(trailer: Trailer?) {
+        binding.videoWebView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                trailer?.trailerKey.let { key ->
+                    if (key != null) {
+                        youTubePlayer.cueVideo(key, 0f)
                     }
                 }
-            })
-            binding.movieTitle.text = it.title
-            binding.movieGenres.text = it.genres.joinToString(", ") { genre -> genre.name }
-            binding.movieLength.text = it.length.toString().plus(" min")
-            binding.movieReleasedDate.text = it.releaseDate
-            binding.movieOriginalTitle.text = it.originalTitle
-            binding.movieOverview.text = it.movieOverview
-            binding.movieRating.text = String.format("%.2f", it.rating)
-            binding.movieTotalVotes.text = "/".plus(it.totalVotes).plus(" rated")
-            if (it.getMovieImages().isEmpty()) {
-                binding.movieImagesViewPager.visibility = View.GONE
-            } else {
-                sliderImagesAdaptor.setImageList(it.getMovieImages())
-                sliderImagesAdaptor.notifyDataSetChanged()
-                pageItemSize = it.getMovieImages().size
-                pageChangeListener()
             }
+        })
+    }
 
-            // fun
-            if (it.getReviews().isEmpty()) {
-                binding.movieReviewTitle.text = resources.getText(R.string.no_reviews)
-            } else {
-                reviewAdapter.setReviewList(it.getReviews())
-                reviewAdapter.notifyDataSetChanged()
-            }
+    private fun setMovieTextData(movieDetails: MovieDetails) {
+        binding.title.text = movieDetails.title
+        binding.genres.text = movieDetails.genres.joinToString(", ") { genre -> genre.name }
+        binding.length.text = movieDetails.length.toString().plus(" min")
+        binding.releasedDate.text = movieDetails.releaseDate
+        binding.originalTitle.text = movieDetails.originalTitle
+        binding.overview.text = movieDetails.movieOverview
+        binding.rating.text = String.format("%.2f", movieDetails.rating)
+        binding.totalVotes.text = "/".plus(movieDetails.totalVotes).plus(" rated")
+    }
 
-            // fun
-            if (it.getRecommendationList().isEmpty()) {
-                binding.movieRecommendation.text = resources.getText(R.string.no_recommendation)
-                binding.recommendedNext.visibility = View.GONE
-            } else {
-                viewModel.listInitialIndex = viewModel.listLastIndex
-                viewModel.listLastIndex += recommendedItemCount
-                recommendationListAdaptor.setRecommendationList(
-                    it.getRecommendationList().subList(
-                        viewModel.listInitialIndex,
-                        min(viewModel.listLastIndex, it.getRecommendationList().size)
-                    )
+    private fun setPagerData(movieImages: List<String>) {
+        if (movieImages.isEmpty()) {
+            binding.imagesViewPager.visibility = View.GONE
+        } else {
+            sliderImagesAdaptor.setImageList(movieImages)
+            sliderImagesAdaptor.notifyDataSetChanged()
+            pageItemSize = movieImages.size
+            pageChangeListener()
+        }
+    }
+
+    private fun setMovieReviews(movieReviews: List<Review>) {
+        if (movieReviews.isEmpty()) {
+            binding.reviewsTitle.text = resources.getText(R.string.no_reviews)
+        } else {
+            reviewAdapter.setReviewList(movieReviews)
+            reviewAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun setRecommendations(recommendations: List<RecommendationItem>) {
+        if (recommendations.isEmpty()) {
+            binding.recommendations.text = resources.getText(R.string.no_recommendation)
+            binding.recommendedNext.visibility = View.GONE
+        } else {
+            viewModel.listInitialIndex = viewModel.listLastIndex
+            viewModel.listLastIndex += recommendedItemCount
+            recommendationListAdaptor.setRecommendationList(
+                recommendations.subList(
+                    viewModel.listInitialIndex,
+                    min(viewModel.listLastIndex, recommendations.size)
                 )
-                recommendationListAdaptor.notifyDataSetChanged()
-            }
+            )
+            recommendationListAdaptor.notifyDataSetChanged()
         }
     }
 
     private fun pageChangeListener() {
         updateDots(0)
-        Log.i(tempTag(), "Coming here with $pageItemSize")
-        binding.movieImagesViewPager.addOnPageChangeListener(object :
+        binding.imagesViewPager.addOnPageChangeListener(object :
             ViewPager.OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
@@ -211,13 +226,13 @@ class MovieDetailsUi : BaseActivity() {
 
     private fun initReviewRecycleView() {
         reviewAdapter = ReviewAdaptor()
-        binding.movieReviewRv.layoutManager = LinearLayoutManager(this)
-        binding.movieReviewRv.adapter = reviewAdapter
+        binding.reviewRv.layoutManager = LinearLayoutManager(this)
+        binding.reviewRv.adapter = reviewAdapter
     }
 
     private fun initMovieImagesRecycleView() {
         sliderImagesAdaptor = SliderImagesAdaptor(this)
-        binding.movieImagesViewPager.adapter = sliderImagesAdaptor
+        binding.imagesViewPager.adapter = sliderImagesAdaptor
     }
 
     private fun initRecommendationList() {

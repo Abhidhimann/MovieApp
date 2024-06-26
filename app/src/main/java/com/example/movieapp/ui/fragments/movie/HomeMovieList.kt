@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentMovieListBinding
 import com.example.movieapp.data.datasource.MovieDataSource
 import com.example.movieapp.data.datasource.SavedItemLocalDataSource
@@ -17,7 +17,7 @@ import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.activities.BaseActivity
 import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
 import com.example.movieapp.utils.RetryFunctionality
-import com.example.movieapp.utils.Tags
+import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.utils.tempTag
 import com.example.movieapp.viewModel.HomePageMovieListViewModelFactory
 import com.example.movieapp.viewModel.HomePageMovieListViewModel
@@ -33,20 +33,19 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMovieListBinding.bind(view)
-        Log.i(Tags.TEMP_TAG.getTag(), "Home Movie List View Created")
+        Log.i(getClassTag(), "Home Movie List View Created")
         (activity as BaseActivity).activeFrames.add(this)
 
-        // will change imp imp imp
+        // will change hilt
         val factory =
             HomePageMovieListViewModelFactory(
                 MovieDataRepository(
-                    MovieDataSource(MovieApiClient.movieApi()), SavedItemLocalDataSource(
+                    MovieDataSource(ApiClient.movieApi()), SavedItemLocalDataSource(
                         AppDatabase.getDatabase(requireContext()).savedItemDao()
                     )
                 )
             )
         viewModel = ViewModelProvider(this, factory).get(HomePageMovieListViewModel::class.java)
-
         viewModel.allIndexToInitial()
         initMovieList()
         nextMovieList()
@@ -66,7 +65,6 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
         viewModel.trendingMovies.observe(viewLifecycleOwner) {
             viewModel.listLastIndex = itemCount
             Log.i(tempTag(), it.movieList.toString())
-            Log.i(Tags.TEMP_TAG.getTag(), "whyyy " + viewModel.listLastIndex.toString())
             adaptor.setList(
                 it.movieList.subList(
                     viewModel.listInitialIndex,
@@ -127,14 +125,8 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
         binding.shimmerListView.startShimmer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i(Tags.TEMP_TAG.getTag(), "Home Movie List View Destroyed")
-    }
-
     override fun retryWhenInternetIsAvailable() {
         startShimmerLoading()
         viewModel.getTrendingMovies(viewModel.currentPage)
     }
-
 }

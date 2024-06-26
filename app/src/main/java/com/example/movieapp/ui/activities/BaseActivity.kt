@@ -14,6 +14,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private lateinit var networkConnection: NetworkConnection
     var activeFrames = mutableSetOf<RetryFunctionality>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(getClassTag(), "Activity created")

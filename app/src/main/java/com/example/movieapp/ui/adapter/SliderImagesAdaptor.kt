@@ -9,7 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
 import com.example.movieapp.databinding.SliderImagesViewHolderBinding
 import com.example.movieapp.utils.Api
-import com.example.movieapp.utils.Tags
+import com.example.movieapp.utils.getClassTag
 import com.squareup.picasso.Picasso
 import java.util.*
 
@@ -39,7 +39,7 @@ class SliderImagesAdaptor(private val context: Context) : PagerAdapter() {
     }
 
     fun bind(seriesImages: String) {
-        Log.i(Tags.TEMP_TAG.getTag(), Api.POSTER_BASE_URL.getValue() + seriesImages)
+        Log.i(getClassTag(), Api.POSTER_BASE_URL.getValue() + seriesImages)
         Picasso.get().load(Api.POSTER_BASE_URL.getValue() + seriesImages)
             .into(binding.imagesView)
     }

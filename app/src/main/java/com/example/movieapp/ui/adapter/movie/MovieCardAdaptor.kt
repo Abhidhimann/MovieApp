@@ -16,7 +16,6 @@ import com.squareup.picasso.Picasso
 
 // Although Movie and Series Card adaptor could be combine, but they are kind of main components
 // in future difference could be big so made different
-// todo default image for poster when no image
 class MovieCardAdaptor : RecyclerView.Adapter<MovieCardAdaptor.MovieCardViewHolder>() {
 
     private val initialMovieItemList = mutableListOf<MovieItem>()

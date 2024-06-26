@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.movieapp.R
 import com.example.movieapp.databinding.ListItemCardBinding
 import com.example.movieapp.data.remote.model.common.RecommendationItem
 import com.example.movieapp.ui.activities.MovieDetailsUi
@@ -60,19 +61,24 @@ class TrendingPagingAdaptor :
             binding.itemCardTitle.text = recommendationItem.title
             binding.itemCardYear.text = recommendationItem.postingDate?.substringBefore("-")
             binding.itemCardRating.text = recommendationItem.rating.toInt().toString()
-            Picasso.get().load(Api.POSTER_BASE_URL.getValue() + recommendationItem.posterImg)
-                .into(binding.itemCardImage)
+            if (!recommendationItem.posterImg.isNullOrEmpty()) {
+                Picasso.get().load(Api.POSTER_BASE_URL.getValue() + recommendationItem.posterImg)
+                    .into(binding.itemCardImage)
+            } else {
+                Picasso.get().load(
+                    R.drawable.image_not_found
+                ).into(binding.itemCardImage)
+            }
         }
 
         fun goToMediaTypeDetails(recommendationItem: RecommendationItem) {
-//            Log.i(getClassTag(),recommendationItem.mediaType)
             if (recommendationItem.mediaType == Constants.MOVIE.getValue()) {
                 val intent = Intent(binding.root.context, MovieDetailsUi::class.java)
                 intent.putExtra(Constants.MOVIE_ID.getValue(), recommendationItem.id)
                 intent.flags =
                     Intent.FLAG_ACTIVITY_CLEAR_TOP // destroying current movie details activity
                 binding.root.context.startActivity(intent)
-            }else{
+            } else {
                 val intent = Intent(binding.root.context, TvSeriesDetailsUi::class.java)
                 intent.putExtra(Constants.TV_SERIES_ID.getValue(), recommendationItem.id)
                 intent.flags =

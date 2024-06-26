@@ -2,7 +2,7 @@ package com.example.movieapp.data.datasource
 
 import android.util.Log
 import com.example.movieapp.utils.Api
-import com.example.movieapp.utils.CustomeApiFailedException
+import com.example.movieapp.utils.CustomApiFailedException
 import com.example.movieapp.data.remote.network.TvApiService
 import com.example.movieapp.data.remote.model.common.RecommendationResponse
 import com.example.movieapp.data.remote.model.common.ReviewResponse
@@ -45,7 +45,7 @@ class SeriesDataSource(private val apiService: TvApiService) {
             delay(retryLimitSec)
         }
 
-        throw CustomeApiFailedException("series api request failed after $retryCount attempts")
+        throw CustomApiFailedException("series api request failed after $retryCount attempts")
     }
 
     suspend fun getTrendingSeriesInWeek(page: Int): SeriesItemListResponse =

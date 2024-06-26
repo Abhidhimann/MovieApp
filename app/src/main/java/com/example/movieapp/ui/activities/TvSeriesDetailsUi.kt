@@ -15,19 +15,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
 import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.ActivityTvMovieDetailsLayoutBinding
 import com.example.movieapp.data.remote.model.tvSeries.TvSeasonDetails
 import com.example.movieapp.data.repository.series.SeriesDataRepository
 import com.example.movieapp.data.datasource.SeriesDataSource
 import com.example.movieapp.data.local.database.AppDatabase
+import com.example.movieapp.data.remote.model.common.RecommendationItem
+import com.example.movieapp.data.remote.model.common.Review
+import com.example.movieapp.data.remote.model.common.Trailer
+import com.example.movieapp.data.remote.model.tvSeries.SeriesDetails
 import com.example.movieapp.ui.adapter.RecommendationListAdaptor
 import com.example.movieapp.ui.adapter.ReviewAdaptor
 import com.example.movieapp.ui.adapter.SliderImagesAdaptor
 import com.example.movieapp.ui.adapter.series.EpisodeDetailsCardAdaptor
 import com.example.movieapp.utils.CommonUtil
 import com.example.movieapp.utils.Constants
-import com.example.movieapp.utils.Tags
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.utils.tempTag
 import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModel
@@ -60,7 +63,7 @@ class TvSeriesDetailsUi : BaseActivity() {
             SeriesDetailsViewModelFactory(
                 SeriesDataRepository(
                     SeriesDataSource(
-                        MovieApiClient.tvSeriesApi(
+                        ApiClient.tvSeriesApi(
                         )
                     ),
                     SavedItemLocalDataSource(
@@ -70,8 +73,6 @@ class TvSeriesDetailsUi : BaseActivity() {
             )
         viewModel = ViewModelProvider(this, factory).get(SeriesDetailsViewModel::class.java)
 
-        Log.i(getClassTag(), "Series Details activity Created")
-
         val seriesId = intent.getLongExtra(Constants.TV_SERIES_ID.getValue(), -999)
         if (seriesId != (-999).toLong()) {
             viewModel.getSeriesDetails(seriesId)
@@ -80,7 +81,7 @@ class TvSeriesDetailsUi : BaseActivity() {
             // show error page
         }
 
-        initMovieImagesPage()
+        initSeriesImagesPage()
         initReviewRecycleView()
         initRecommendationList()
         setSeriesDetailsData()
@@ -124,59 +125,81 @@ class TvSeriesDetailsUi : BaseActivity() {
     }
 
     private fun setSeriesDetailsData() {
-        viewModel.seriesDetails.observe(this) { it ->
-            Log.i(Tags.TEMP_TAG.getTag(), it.toString())
-            binding.videoWebView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
-                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                    it.getYouTubeTrailer()?.trailerKey.let { key ->
-                        if (key != null) {
-                            youTubePlayer.cueVideo(key, 0f)
-                        }
+        viewModel.seriesDetails.observe(this) { seriesDetails ->
+            setVideoView(seriesDetails.getYouTubeTrailer())
+            setSeriesTextData(seriesDetails)
+            setPagerData(seriesDetails.getSeriesImages())
+            setSeriesReviews(seriesDetails.getReviews())
+            setRecommendations(seriesDetails.getRecommendationList())
+            setSeriesSeasonsDetails(seriesDetails.seasons)
+        }
+    }
+
+    private fun setVideoView(trailer: Trailer?) {
+        binding.videoWebView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                trailer?.trailerKey.let { key ->
+                    if (key != null) {
+                        youTubePlayer.cueVideo(key, 0f)
                     }
                 }
-            })
-            binding.movieTitle.text = it.title
-            binding.movieGenres.text = it.genres.joinToString(", ") { genre -> genre.name }
-            binding.movieLength.text = it.runTimeDetails.averageRunTime.toString().plus(" min / ep")
-            binding.movieReleasedDate.text = it.releaseDate
-            binding.movieOriginalTitle.text = it.originalTitle
-            binding.movieOverview.text = it.seriesOverview
-            binding.movieRating.text = String.format("%.2f", it.rating)
-            binding.movieTotalVotes.text = "/".plus(it.totalVotes).plus(" rated")
-            if (it.getSeriesImages().isEmpty()) {
-                binding.movieImagesViewPager.visibility = View.GONE
-            } else {
-                sliderImagesAdaptor.setImageList(it.getSeriesImages())
-                sliderImagesAdaptor.notifyDataSetChanged()
-                pageItemSize = it.getSeriesImages().size
-                pageChangeListener()
             }
+        })
+    }
 
-            if (it.getReviews().isEmpty()) {
-                binding.movieReviewTitle.text = resources.getText(R.string.no_reviews)
-            } else {
-                reviewAdaptor.setReviewList(it.getReviews())
-                reviewAdaptor.notifyDataSetChanged()
-            }
+    private fun setSeriesTextData(seriesDetails: SeriesDetails) {
+        binding.title.text = seriesDetails.title
+        binding.genres.text = seriesDetails.genres.joinToString(", ") { genre -> genre.name }
+        binding.length.text =
+            seriesDetails.runTimeDetails.averageRunTime.toString().plus(" min / ep")
+        binding.releasedDate.text = seriesDetails.releaseDate
+        binding.originalTitle.text = seriesDetails.originalTitle
+        binding.overview.text = seriesDetails.seriesOverview
+        binding.rating.text = String.format("%.2f", seriesDetails.rating)
+        binding.totalVotes.text = "/".plus(seriesDetails.totalVotes).plus(" rated")
+    }
 
-            if (it.getRecommendationList().isEmpty()) {
-                binding.movieRecommendation.text = resources.getText(R.string.no_recommendation)
-                binding.recommendedNext.visibility = View.GONE
-            } else {
-                viewModel.listInitialIndex = viewModel.listLastIndex
-                viewModel.listLastIndex += recommendedItemCount
-                recommendationListAdaptor.setRecommendationList(
-                    it.getRecommendationList().subList(
-                        viewModel.listInitialIndex,
-                        viewModel.listLastIndex
-                    )
+    private fun setPagerData(seriesImages: List<String>) {
+        if (seriesImages.isEmpty()) {
+            binding.imagesViewPager.visibility = View.GONE
+        } else {
+            sliderImagesAdaptor.setImageList(seriesImages)
+            sliderImagesAdaptor.notifyDataSetChanged()
+            pageItemSize = seriesImages.size
+            pageChangeListener()
+        }
+    }
+
+    private fun setSeriesReviews(seriesReviews: List<Review>) {
+        if (seriesReviews.isEmpty()) {
+            binding.reviewsTitle.text = resources.getText(R.string.no_reviews)
+        } else {
+            reviewAdaptor.setReviewList(seriesReviews)
+            reviewAdaptor.notifyDataSetChanged()
+        }
+    }
+
+    private fun setRecommendations(recommendations: List<RecommendationItem>) {
+        if (recommendations.isEmpty()) {
+            binding.recommendations.text = resources.getText(R.string.no_recommendation)
+            binding.recommendedNext.visibility = View.GONE
+        } else {
+            viewModel.listInitialIndex = viewModel.listLastIndex
+            viewModel.listLastIndex += recommendedItemCount
+            recommendationListAdaptor.setRecommendationList(
+                recommendations.subList(
+                    viewModel.listInitialIndex,
+                    min(viewModel.listLastIndex, recommendations.size)
                 )
-                recommendationListAdaptor.notifyDataSetChanged()
-            }
-            if (it.seasons.isNotEmpty()) {
-                initSeriesSeasonSpinner(it.seasons)
-                episodeDetailsListViewInit()
-            }
+            )
+            recommendationListAdaptor.notifyDataSetChanged()
+        }
+    }
+
+    private fun setSeriesSeasonsDetails(tvSeasons: List<TvSeasonDetails>) {
+        if (tvSeasons.isNotEmpty()) {
+            initSeriesSeasonSpinner(tvSeasons)
+            episodeDetailsListViewInit()
         }
     }
 
@@ -240,7 +263,7 @@ class TvSeriesDetailsUi : BaseActivity() {
     private fun pageChangeListener() {
         updateDots(0)
         Log.i(tempTag(), "Coming here with $pageItemSize")
-        binding.movieImagesViewPager.addOnPageChangeListener(object :
+        binding.imagesViewPager.addOnPageChangeListener(object :
             ViewPager.OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
@@ -293,13 +316,13 @@ class TvSeriesDetailsUi : BaseActivity() {
 
     private fun initReviewRecycleView() {
         reviewAdaptor = ReviewAdaptor()
-        binding.movieReviewRv.layoutManager = LinearLayoutManager(this)
-        binding.movieReviewRv.adapter = reviewAdaptor
+        binding.reviewRv.layoutManager = LinearLayoutManager(this)
+        binding.reviewRv.adapter = reviewAdaptor
     }
 
-    private fun initMovieImagesPage() {
+    private fun initSeriesImagesPage() {
         sliderImagesAdaptor = SliderImagesAdaptor(this)
-        binding.movieImagesViewPager.adapter = sliderImagesAdaptor
+        binding.imagesViewPager.adapter = sliderImagesAdaptor
     }
 
     private fun initRecommendationList() {

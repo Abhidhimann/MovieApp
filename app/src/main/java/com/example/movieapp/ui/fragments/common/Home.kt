@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
-import com.example.movieapp.data.remote.network.MovieApiClient
+import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentHomeBinding
 import com.example.movieapp.data.datasource.MovieDataSource
 import com.example.movieapp.data.datasource.SavedItemLocalDataSource
@@ -20,7 +20,7 @@ import com.example.movieapp.ui.activities.BaseActivity
 import com.example.movieapp.ui.adapter.HomeImageSliderAdaptor
 import com.example.movieapp.navigation.FragmentNavigation
 import com.example.movieapp.utils.RetryFunctionality
-import com.example.movieapp.utils.Tags
+import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.HomePageViewModel
 import com.example.movieapp.viewModel.HomePageViewModelFactory
 import kotlin.math.min
@@ -34,7 +34,7 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i(Tags.TEMP_TAG.getTag(), "Home Fragment Created")
+        Log.i(getClassTag(), "Home Fragment Created")
         binding = FragmentHomeBinding.bind(view)
         (activity as BaseActivity).activeFrames.add(this)
         navigation = FragmentNavigation(childFragmentManager)
@@ -42,7 +42,7 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
         val factory =
             HomePageViewModelFactory(
                 MovieDataRepository(
-                    MovieDataSource(MovieApiClient.movieApi()), SavedItemLocalDataSource(
+                    MovieDataSource(ApiClient.movieApi()), SavedItemLocalDataSource(
                         AppDatabase.getDatabase(requireContext()).savedItemDao()
                     )
                 )
@@ -51,7 +51,7 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
 
         initImageSlider()
         displayMovieList()
-        switchBetweenMovieAndTvSeriesList()
+        movieAndSeriesSwitchListner()
         pageChangeListener()
     }
 
@@ -110,17 +110,17 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
                 )
             )
             imageSliderAdaptor.notifyDataSetChanged()
-            Log.i(Tags.TEMP_TAG.getTag(), it.recommendationList.toString())
+            Log.i(getClassTag(), it.recommendationList.toString())
             // showing only 10 trending item now
         }
     }
 
-    private fun switchBetweenMovieAndTvSeriesList() {
+    private fun movieAndSeriesSwitchListner() {
         binding.movieList.setOnClickListener {
             displayMovieList()
         }
         binding.tvSeriesList.setOnClickListener {
-            displayTvList()
+            displayTvSeriesList()
         }
     }
 
@@ -143,7 +143,7 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
         )
     }
 
-    private fun displayTvList() {
+    private fun displayTvSeriesList() {
         navigation.toTvSeriesFragment(binding.containerTv.id)
         binding.containerMovie.visibility = View.GONE
         binding.containerTv.visibility = View.VISIBLE

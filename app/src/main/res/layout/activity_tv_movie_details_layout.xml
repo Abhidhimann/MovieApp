@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/lessBlack"
     android:clickable="false"
-    android:orientation="vertical"
-    tools:context=".ui.activities.MovieDetailsUi">
+    android:orientation="vertical">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/detailsShimmerContainer"
@@ -27,7 +26,7 @@
         android:background="@color/lessBlack">
 
         <LinearLayout
-            android:id="@+id/movieDrawerLayout"
+            android:id="@+id/drawerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -62,7 +61,7 @@
                         android:textColor="@color/white" />
 
                     <TextView
-                        android:id="@+id/movieRating"
+                        android:id="@+id/rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
@@ -72,7 +71,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/movieTotalVotes"
+                        android:id="@+id/total_votes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="/12 rated"
@@ -91,7 +90,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/movieTitle"
+                    android:id="@+id/title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
@@ -140,7 +139,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/movieLength"
+                    android:id="@+id/length"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textColor="@color/white" />
@@ -163,7 +162,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/movieGenres"
+                    android:id="@+id/genres"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="24dp"
@@ -187,7 +186,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/movieReleasedDate"
+                    android:id="@+id/released_date"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textColor="@color/white" />
@@ -210,7 +209,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/movieOriginalTitle"
+                    android:id="@+id/original_title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="24dp"
@@ -226,7 +225,7 @@
                 android:textColor="@color/white" />
 
             <TextView
-                android:id="@+id/movieOverview"
+                android:id="@+id/overview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -281,7 +280,7 @@
                 tools:listitem="@layout/episode_card_view" />
 
             <androidx.viewpager.widget.ViewPager
-                android:id="@+id/movieImagesViewPager"
+                android:id="@+id/images_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
                 android:layout_marginStart="10dp"
@@ -298,7 +297,7 @@
                 android:orientation="horizontal" />
 
             <TextView
-                android:id="@+id/movieReviewTitle"
+                android:id="@+id/reviews_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -308,7 +307,7 @@
                 android:textSize="24dp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/movieReviewRv"
+                android:id="@+id/review_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -317,7 +316,7 @@
                 android:nestedScrollingEnabled="false" />
 
             <TextView
-                android:id="@+id/movieRecommendation"
+                android:id="@+id/recommendations"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"

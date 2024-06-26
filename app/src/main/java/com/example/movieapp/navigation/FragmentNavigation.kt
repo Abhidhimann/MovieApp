@@ -13,7 +13,7 @@ import com.example.movieapp.ui.fragments.common.TrendingPaging
 import com.example.movieapp.ui.fragments.movie.HomeMovieList
 import com.example.movieapp.ui.fragments.series.HomeSeriesList
 import com.example.movieapp.ui.fragments.movie.BaseMovieList
-import com.example.movieapp.ui.fragments.movie.SearchResult
+import com.example.movieapp.ui.fragments.common.SearchResult
 import com.example.movieapp.ui.fragments.series.BaseSeriesList
 import com.example.movieapp.utils.Constants
 

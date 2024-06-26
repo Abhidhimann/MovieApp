@@ -56,17 +56,6 @@ class MovieDataRepository(private val movieDataSource: MovieDataSource, private 
         }
     }
 
-//    suspend fun searchMovie(query: String, page: Int): Result<MoviesItemListResponse> {
-//        return withContext(Dispatchers.IO) {
-//            try {
-//                val response = movieDataSource.searchMovie(query, page)
-//                Result.Success(response)
-//            } catch (e: Exception) {
-//                Result.Error(e)
-//            }
-//        }
-//    }
-
 
     suspend fun getMovieDetails(movieId: Long): Result<MovieDetails> {
         return withContext(Dispatchers.IO) {
@@ -133,6 +122,4 @@ class MovieDataRepository(private val movieDataSource: MovieDataSource, private 
     suspend fun isMovieSaved(itemId: Long): Boolean = withContext(Dispatchers.IO) {
         return@withContext savedItemLocalDataSource.isItemSaved(itemId)
     }
-
-
 }
