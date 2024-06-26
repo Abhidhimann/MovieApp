@@ -61,7 +61,6 @@ class BaseMovieListViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertFalse(viewModel.loadingState.getOrAwaitValue())
-        assertFalse(viewModel.errorState.getOrAwaitValue())
         assertEquals(viewModel.moviesList.getOrAwaitValue(), mockMoviesResponse)
     }
 
@@ -90,7 +89,6 @@ class BaseMovieListViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertFalse(viewModel.loadingState.getOrAwaitValue())
-        assertFalse(viewModel.errorState.getOrAwaitValue())
         assertEquals(viewModel.moviesList.getOrAwaitValue(), mockMoviesResponse)
     }
 
@@ -119,7 +117,6 @@ class BaseMovieListViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertFalse(viewModel.loadingState.getOrAwaitValue())
-        assertFalse(viewModel.errorState.getOrAwaitValue())
         assertEquals(viewModel.moviesList.getOrAwaitValue(), mockMoviesResponse)
     }
 

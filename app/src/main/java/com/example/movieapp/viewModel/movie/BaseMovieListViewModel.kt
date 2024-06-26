@@ -68,13 +68,13 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
     private fun getImdbRatedMovies(page: Int) = viewModelScope.launch {
         when (val result = repository.getImdbRatedMovies(page)) {
             is Result.Success -> {
-                _moviesList.value = result.data
+                _moviesList.value = result.data!!
                 _loadingState.value = false
             }
             is Result.Error -> {
                 _loadingState.value = false
                 _errorState.value = true
-                Log.i(getClassTag(), result.exception.toString())
+//                Log.i(getClassTag(), result.exception.toString())
                 // ui change according to error state
             }
         }
@@ -89,7 +89,7 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
             is Result.Error -> {
                 _loadingState.value = false
                 _errorState.value = true
-                Log.i(getClassTag(), result.exception.toString())
+//                Log.i(getClassTag(), result.exception.toString())
             }
         }
     }

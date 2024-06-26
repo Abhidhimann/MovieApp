@@ -5,6 +5,7 @@ import com.example.movieapp.data.remote.model.movies.MovieItem
 import com.example.movieapp.data.remote.model.movies.MoviesItemListResponse
 import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.data.datasource.MovieDataSource
+import com.example.movieapp.data.datasource.SavedItemLocalDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -18,9 +19,11 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
-class MovieDataRepositoryTest{
+class MovieDataRepositoryTest {
     @Mock
-    private lateinit var dataSource: MovieDataSource
+    private lateinit var movieDataSource: MovieDataSource
+    @Mock
+    private lateinit var savedItemLocalDataSource: SavedItemLocalDataSource
     private lateinit var repository: MovieDataRepository
 
     @get:Rule
@@ -39,28 +42,28 @@ class MovieDataRepositoryTest{
     private val mockError = Exception("An error occurred")
 
     @Before
-    fun setup(){
+    fun setup() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(testDispatcher)
-        repository = MovieDataRepository(dataSource)
+        repository = MovieDataRepository(movieDataSource, savedItemLocalDataSource)
     }
 
     @Test
     fun `getTrendingMoviesInWeek Success`() = runTest {
-        `when`(dataSource.getTrendingMoviesInWeek(initialPage)).thenReturn(mockMoviesResponse)
+        `when`(movieDataSource.getTrendingMoviesInWeek(initialPage)).thenReturn(mockMoviesResponse)
         val result = repository.getTrendingMoviesInWeek(initialPage)
-        verify(dataSource).getTrendingMoviesInWeek(initialPage)
+        verify(movieDataSource).getTrendingMoviesInWeek(initialPage)
         assert(result is Result.Success)
-        assert(result.data==mockMoviesResponse)
+        assert(result.data == mockMoviesResponse)
     }
 
     @Test
     fun `getTrendingMoviesInWeek Error`() = runTest {
         val runtimeException = java.lang.RuntimeException("temp")
-        `when`(dataSource.getTrendingMoviesInWeek(initialPage)).thenThrow(runtimeException)
+        `when`(movieDataSource.getTrendingMoviesInWeek(initialPage)).thenThrow(runtimeException)
         val result = repository.getTrendingMoviesInWeek(initialPage)
-        verify(dataSource).getTrendingMoviesInWeek(initialPage)
+        verify(movieDataSource).getTrendingMoviesInWeek(initialPage)
         assert(result is Result.Error)
-        assert(result.exception==runtimeException)
+        assert(result.exception == runtimeException)
     }
 }

@@ -2,6 +2,7 @@ package com.example.movieapp.model.movies
 
 import com.example.movieapp.data.remote.model.common.RecommendationItem
 import com.example.movieapp.data.remote.model.common.Review
+import com.example.movieapp.data.remote.model.common.Trailer
 import com.example.movieapp.data.remote.model.movies.MovieDetails
 import com.example.movieapp.data.remote.model.movies.MovieGenre
 import org.junit.Assert.*
@@ -29,7 +30,8 @@ class MovieDetailsTest{
             listOf(MovieGenre(12,"Name")),
             emptyList(),
             emptyList(),
-            emptyList()
+            emptyList(),
+            Trailer("noId", "noKey")
         )
 
         reviews = listOf(Review("User1", "Great movie", "2012"), Review("User2", "Awesome", "2012"))
