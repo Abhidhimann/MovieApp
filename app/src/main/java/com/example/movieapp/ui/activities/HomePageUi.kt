@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import com.example.movieapp.R
@@ -24,12 +25,13 @@ class HomePageUi : BaseActivity() {
 
         navigation.toHomeFragment(binding.homeFrameLayout.id) // Default Menu
         initializeDrawerMenu()
-        showSearchBar()
-        searchBarListener()
+        searchBarTextChangeListener()
+        searchClickListener()
+        searchBarImeActionListener()
         initErrorPage()
     }
 
-    private fun searchBarListener() {
+    private fun searchBarTextChangeListener() {
         binding.toolBar.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // do nothing
@@ -103,15 +105,27 @@ class HomePageUi : BaseActivity() {
         }
     }
 
-    private fun showSearchBar() {
+    private fun searchClickListener() {
         binding.toolBar.searchMain.setOnClickListener {
-            afterEditingOnSearchBar()
-            searchBarCancelButtonInit()
-
+            searchQuery()
         }
     }
 
-    private fun afterEditingOnSearchBar() {
+    private fun searchBarImeActionListener(){
+        binding.toolBar.searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                searchQuery()
+            }
+            false
+        }
+    }
+
+    private fun searchQuery(){
+        searchBarQuerySubmit()
+        searchBarCancelButtonInit()
+    }
+
+    private fun searchBarQuerySubmit() {
         if (binding.toolBar.searchEditText.visibility == View.VISIBLE) {
             if (binding.toolBar.searchEditText.text.toString().length < 3) {
                 binding.toolBar.searchEditText.error = "Enter at-least 3 digits"

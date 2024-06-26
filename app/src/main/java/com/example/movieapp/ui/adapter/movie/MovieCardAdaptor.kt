@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.movieapp.R
 import com.example.movieapp.databinding.ListItemCardBinding
 import com.example.movieapp.data.remote.model.movies.MovieItem
 import com.example.movieapp.ui.activities.MovieDetailsUi
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso
 
 // Although Movie and Series Card adaptor could be combine, but they are kind of main components
 // in future difference could be big so made different
+// todo default image for poster when no image
 class MovieCardAdaptor : RecyclerView.Adapter<MovieCardAdaptor.MovieCardViewHolder>() {
 
     private val initialMovieItemList = mutableListOf<MovieItem>()
@@ -45,8 +47,14 @@ class MovieCardAdaptor : RecyclerView.Adapter<MovieCardAdaptor.MovieCardViewHold
 
         fun bind(movieItem: MovieItem) {
             Log.i(getClassTag(), "movie is $movieItem")
-            Picasso.get().load(Api.POSTER_BASE_URL.getValue() + movieItem.posterImg)
-                .into(binding.itemCardImage)
+            if (!movieItem.posterImg.isNullOrEmpty()){
+                Picasso.get().load(Api.POSTER_BASE_URL.getValue() + movieItem.posterImg)
+                    .into(binding.itemCardImage)
+            } else {
+                Picasso.get().load(
+                    R.drawable.image_not_found)
+                    .into(binding.itemCardImage)
+            }
             binding.itemCardTitle.text = movieItem.title
             binding.itemCardYear.text = movieItem.releaseDate.substringBefore("-")
             binding.itemCardRating.text = movieItem.rating.toInt().toString()

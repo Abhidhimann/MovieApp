@@ -10,7 +10,7 @@ data class SeriesItem(
     @SerializedName("vote_average")
     val rating: Float,
     @SerializedName("poster_path")
-    val posterImg: String,
+    val posterImg: String?,
     @SerializedName("first_air_date")
     val releaseDate: String,
     @SerializedName("number_of_seasons")
