@@ -26,7 +26,7 @@ class HomePageUi : BaseActivity() {
         navigation = FragmentNavigation(supportFragmentManager)
         Log.i(getClassTag(), "Home page ui activity created")
 
-        if (savedInstanceState==null) {
+        if (savedInstanceState == null) {
             navigation.toHomeFragment(binding.homeFrameLayout.id) // Default Menu
         }
         initializeDrawerMenu()

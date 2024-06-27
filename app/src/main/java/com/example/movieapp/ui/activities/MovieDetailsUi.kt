@@ -66,14 +66,14 @@ class MovieDetailsUi : BaseActivity() {
         }
 
         initView()
-        initMovieImagesRecycleView()
+        initShimmerLoading()
+        initMovieImagesPager()
         initReviewRecycleView()
         initRecommendationList()
         viewModel.allIndexToInitial()
         setMovieDetailsData()
         savedMovieObserver()
         nextRecommendationButtonClickListener()
-        initShimmerLoading()
         lifecycle.addObserver(binding.videoWebView)
         saveItemListener()
         unSaveItemListener()
@@ -232,7 +232,7 @@ class MovieDetailsUi : BaseActivity() {
         binding.reviewRv.adapter = reviewAdapter
     }
 
-    private fun initMovieImagesRecycleView() {
+    private fun initMovieImagesPager() {
         sliderImagesAdaptor = SliderImagesAdaptor(this)
         binding.imagesViewPager.adapter = sliderImagesAdaptor
     }

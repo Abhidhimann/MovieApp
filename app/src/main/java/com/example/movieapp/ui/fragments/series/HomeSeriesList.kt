@@ -47,8 +47,8 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
 
         viewModel.allIndexToInitial()
         initSeriesList()
-        nextSeriesList()
         initShimmerLoading()
+        nextButtonClickListener()
     }
 
     override fun onDestroy() {
@@ -56,7 +56,7 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
         Log.i(getClassTag(), "Series List View Destroyed")
     }
 
-    private fun nextSeriesList() {
+    private fun nextButtonClickListener() {
         binding.homeSeriesListNext.setOnClickListener {
             if (viewModel.listLastIndex + itemCount > viewModel.trendingSeries.value?.seriesList?.size!!) {
                 viewModel.listInitialIndex = 0

@@ -48,8 +48,8 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
         viewModel = ViewModelProvider(this, factory).get(HomePageMovieListViewModel::class.java)
         viewModel.allIndexToInitial()
         initMovieList()
-        nextButtonClickListener()
         initShimmerLoading()
+        nextButtonClickListener()
     }
 
 

@@ -81,14 +81,14 @@ class TvSeriesDetailsUi : BaseActivity() {
             // show error page
         }
 
-        initSeriesImagesPage()
+        initShimmerLoading()
+        initSeriesImagesPager()
         initReviewRecycleView()
         initRecommendationList()
         viewModel.allIndexToInitial()
         setSeriesDetailsData()
         savedSeriesObserver()
-        nextRecommendationList()
-        initShimmerLoading()
+        nextRecommendationButtonClickListener()
         seasonDetailsMoreArrowListener()
         lifecycle.addObserver(binding.videoWebView)
         saveItemListener()
@@ -321,7 +321,7 @@ class TvSeriesDetailsUi : BaseActivity() {
         binding.reviewRv.adapter = reviewAdaptor
     }
 
-    private fun initSeriesImagesPage() {
+    private fun initSeriesImagesPager() {
         sliderImagesAdaptor = SliderImagesAdaptor(this)
         binding.imagesViewPager.adapter = sliderImagesAdaptor
     }
@@ -332,7 +332,7 @@ class TvSeriesDetailsUi : BaseActivity() {
         binding.recommendedListRC.adapter = recommendationListAdaptor
     }
 
-    private fun nextRecommendationList() {
+    private fun nextRecommendationButtonClickListener() {
         binding.recommendedNext.setOnClickListener {
             loadRecommendation()
         }
