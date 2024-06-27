@@ -93,6 +93,7 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
                 }
                 loadItems()
             }
+            binding.mainLayout.scrollTo(0,0)
         }
     }
 

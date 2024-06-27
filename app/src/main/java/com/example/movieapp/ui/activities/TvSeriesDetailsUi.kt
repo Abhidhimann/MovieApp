@@ -181,7 +181,7 @@ class TvSeriesDetailsUi : BaseActivity() {
     }
 
     private fun setRecommendations(recommendations: List<RecommendationItem>) {
-        if (recommendations.isEmpty()) {
+        if (recommendations.isNullOrEmpty()) {
             binding.recommendations.text = resources.getText(R.string.no_recommendation)
             binding.recommendedNext.visibility = View.GONE
         } else {

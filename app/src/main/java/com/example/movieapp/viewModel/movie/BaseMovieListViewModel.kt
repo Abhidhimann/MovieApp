@@ -28,7 +28,7 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
     var listLastIndex = 0
 
     fun allIndexToInitial(){
-        currentPage = 1
+//        currentPage = 1
         listLastIndex = 0
         listInitialIndex = 0
     }

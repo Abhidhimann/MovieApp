@@ -76,6 +76,7 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
             } else {
                 loadItems()
             }
+            binding.mainLayout.scrollTo(0,0)
         }
     }
 

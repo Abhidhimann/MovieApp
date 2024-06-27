@@ -80,6 +80,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
                 }
                 loadItems()
             }
+            binding.mainLayout.scrollTo(0,0)
         }
     }
 

@@ -32,7 +32,7 @@ class BaseSeriesListViewModel(private val repository: SeriesDataRepository): Vie
     }
 
     fun allIndexToInitial(){
-        currentPage = 1
+//        currentPage = 1
         listLastIndex = 0
         listInitialIndex = 0
     }
