@@ -4,9 +4,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
 import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentMovieListBinding
@@ -84,7 +86,6 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
                 viewModel.listInitialIndex = 0
                 viewModel.listLastIndex = 0
                 startShimmerLoading()
-                Log.i("temp tag", viewModel.currentPage.toString())
                 viewModel.getTrendingMovies(++viewModel.currentPage)
             } else {
                 if (viewModel.currentPage == viewModel.trendingMovies.value?.totalPages) {
@@ -93,7 +94,10 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
                 }
                 loadItems()
             }
-            binding.mainLayout.scrollTo(0,0)
+            // comment this to stop automatic scroll while pressing next button
+            val toScrollHeight: Int = activity?.findViewById<ViewPager>(R.id.imageSlider)?.height.toString().toInt()
+            val scrollView = activity?.findViewById<NestedScrollView>(R.id.nested_scroll_view)
+            scrollView?.scrollTo(0, toScrollHeight + 30)
         }
     }
 

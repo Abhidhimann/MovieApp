@@ -4,9 +4,11 @@ package com.example.movieapp.ui.fragments.series
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
 import com.example.movieapp.data.datasource.SavedItemLocalDataSource
 import com.example.movieapp.data.remote.network.ApiClient
@@ -66,6 +68,10 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
             } else {
                 loadItems()
             }
+            // comment this to stop automatic scroll while pressing next button
+            val toScrollHeight: Int = activity?.findViewById<ViewPager>(R.id.imageSlider)?.height.toString().toInt()
+            val scrollView = activity?.findViewById<NestedScrollView>(R.id.nested_scroll_view)
+            scrollView?.scrollTo(0, toScrollHeight + 30)
         }
     }
 

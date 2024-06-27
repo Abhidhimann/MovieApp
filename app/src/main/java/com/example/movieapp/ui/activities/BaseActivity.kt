@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
 import com.example.movieapp.utils.RetryFunctionality
-import com.example.movieapp.utils.network.NetworkConnection
+import com.example.movieapp.utils.NetworkConnection
 import com.example.movieapp.utils.getClassTag
 import kotlin.system.exitProcess
 
