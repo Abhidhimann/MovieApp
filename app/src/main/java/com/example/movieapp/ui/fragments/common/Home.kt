@@ -50,6 +50,7 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
         viewModel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
 
         initImageSlider()
+        initFragment()
         displayMovieList()
         movieAndSeriesSwitchListner()
         pageChangeListener()
@@ -60,6 +61,11 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
         imageSliderAdaptor = HomeImageSliderAdaptor(requireContext())
         binding.imageSlider.adapter = imageSliderAdaptor
         setImageList()
+    }
+
+    private fun initFragment() {
+        displayMovieList()
+        displayTvSeriesList()
     }
 
     private fun pageChangeListener() {
