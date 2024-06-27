@@ -13,6 +13,7 @@ import com.example.movieapp.databinding.FragmentSeriesListBinding
 import com.example.movieapp.data.repository.series.SeriesDataRepository
 import com.example.movieapp.data.datasource.SeriesDataSource
 import com.example.movieapp.data.local.database.AppDatabase
+import com.example.movieapp.navigation.FragmentNavigation
 import com.example.movieapp.ui.adapter.series.SeriesCardAdaptor
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.tvSeries.BaseSeriesListViewModeFactory
@@ -35,7 +36,7 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
     private lateinit var adaptor: SeriesCardAdaptor
     private lateinit var viewModel: BaseSeriesListViewModel
 
-    private val itemCount = 16
+    private val itemCount = 20
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,11 +61,12 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
 
         viewModel.allIndexToInitial()
         initSeriesList()
-        nextSeriesList()
         initShimmerLoading()
+        nextButtonClickListener()
+        errorStateObserver()
     }
 
-    private fun nextSeriesList() {
+    private fun nextButtonClickListener() {
         binding.homeSeriesListNext.setOnClickListener {
             if (viewModel.listLastIndex + itemCount > viewModel.seriesList.value?.seriesList?.size!!) {
                 viewModel.listInitialIndex = 0
@@ -87,8 +89,7 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
 
     private fun setSeriesListObserver() {
         viewModel.seriesList.observe(viewLifecycleOwner) {
-            viewModel.listInitialIndex = viewModel.listLastIndex
-            viewModel.listLastIndex += itemCount
+            viewModel.listLastIndex = itemCount
             adaptor.setList(
                 it.seriesList.subList(
                     viewModel.listInitialIndex,
@@ -120,6 +121,13 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
                 binding.shimmerListView.stopShimmer()
                 binding.shimmerListView.visibility = View.GONE
                 binding.mainLayout.visibility = View.VISIBLE
+            }
+        }
+    }
+    private fun errorStateObserver() {
+        viewModel.errorState.observe(viewLifecycleOwner) {
+            if (it) {
+                FragmentNavigation(childFragmentManager).toErrorActivity(requireContext())
             }
         }
     }

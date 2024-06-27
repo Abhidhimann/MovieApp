@@ -27,6 +27,11 @@ class MovieDetailsViewModel(private val repository: MovieDataRepository) : ViewM
     var listInitialIndex = 0
     var listLastIndex = 0
 
+    fun allIndexToInitial(){
+        listLastIndex = 0
+        listInitialIndex = 0
+    }
+
     fun getMovieDetails(movieId: Long) = viewModelScope.launch {
         when (val result = repository.getMovieDetails(movieId)) {
             is Result.Success -> {

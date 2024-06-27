@@ -84,6 +84,7 @@ class TvSeriesDetailsUi : BaseActivity() {
         initSeriesImagesPage()
         initReviewRecycleView()
         initRecommendationList()
+        viewModel.allIndexToInitial()
         setSeriesDetailsData()
         savedSeriesObserver()
         nextRecommendationList()

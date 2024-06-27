@@ -44,6 +44,7 @@ class MovieDetailsUi : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTvMovieDetailsLayoutBinding.inflate(layoutInflater)
+        Log.i(getClassTag(), "Movie Details Ui activity created")
         setContentView(binding.root)
 
         val factory =
@@ -68,9 +69,10 @@ class MovieDetailsUi : BaseActivity() {
         initMovieImagesRecycleView()
         initReviewRecycleView()
         initRecommendationList()
+        viewModel.allIndexToInitial()
         setMovieDetailsData()
         savedMovieObserver()
-        nextRecommendationList()
+        nextRecommendationButtonClickListener()
         initShimmerLoading()
         lifecycle.addObserver(binding.videoWebView)
         saveItemListener()
@@ -241,7 +243,7 @@ class MovieDetailsUi : BaseActivity() {
         binding.recommendedListRC.adapter = recommendationListAdaptor
     }
 
-    private fun nextRecommendationList() {
+    private fun nextRecommendationButtonClickListener() {
         binding.recommendedNext.setOnClickListener {
             loadRecommendation()
         }

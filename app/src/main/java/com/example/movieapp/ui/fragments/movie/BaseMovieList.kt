@@ -36,7 +36,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
     private lateinit var adaptor: MovieCardAdaptor
     private lateinit var viewModel: BaseMovieListViewModel
 
-    private val itemCount = 16
+    private val itemCount = 20
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,12 +61,12 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
 
         viewModel.allIndexToInitial()
         initMovieList()
-        nextMovieList()
         initShimmerLoading()
+        nextButtonClickListener()
         errorStateObserver()
     }
 
-    private fun nextMovieList() {
+    private fun nextButtonClickListener() {
         binding.homeMovieListNext.setOnClickListener {
             if (viewModel.listLastIndex + itemCount > viewModel.moviesList.value?.movieList?.size!!) {
                 viewModel.listInitialIndex = 0
@@ -93,8 +93,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
 
     private fun setMovieListObserver() {
         viewModel.moviesList.observe(viewLifecycleOwner) {
-            viewModel.listInitialIndex = viewModel.listLastIndex
-            viewModel.listLastIndex += itemCount
+            viewModel.listLastIndex = itemCount
             adaptor.setList(
                 it.movieList.subList(
                     viewModel.listInitialIndex,

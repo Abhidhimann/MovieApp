@@ -27,6 +27,11 @@ class SeriesDetailsViewModel(private val repository: SeriesDataRepository): View
     var listInitialIndex = 0
     var listLastIndex = 0
 
+    fun allIndexToInitial() {
+        listLastIndex = 0
+        listInitialIndex = 0
+    }
+
     fun saveSeries(seriesDetails: SeriesDetails) = viewModelScope.launch {
         Log.i(tempTag(), "saving movie item")
         repository.saveSeries(seriesDetails)

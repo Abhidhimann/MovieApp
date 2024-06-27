@@ -55,7 +55,7 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
    private fun getPopularMovies(page: Int) = viewModelScope.launch {
         when (val result = repository.getPopularMovies(page)) {
             is Result.Success -> {
-                _moviesList.value = result.data
+                _moviesList.value = result.data!!
                 _loadingState.value = false
             }
             is Result.Error -> {
@@ -83,7 +83,7 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
     private fun getUpcomingMovies(page: Int) = viewModelScope.launch {
         when (val result = repository.getUpcomingMovies(page)) {
             is Result.Success -> {
-                _moviesList.value = result.data
+                _moviesList.value = result.data!!
                 _loadingState.value = false
             }
             is Result.Error -> {

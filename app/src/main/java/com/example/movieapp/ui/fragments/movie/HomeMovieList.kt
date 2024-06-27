@@ -48,7 +48,7 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
         viewModel = ViewModelProvider(this, factory).get(HomePageMovieListViewModel::class.java)
         viewModel.allIndexToInitial()
         initMovieList()
-        nextMovieList()
+        nextButtonClickListener()
         initShimmerLoading()
     }
 
@@ -78,7 +78,7 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
         }
     }
 
-    private fun nextMovieList() {
+    private fun nextButtonClickListener() {
         binding.homeMovieListNext.setOnClickListener {
             if (viewModel.listLastIndex + itemCount > viewModel.trendingMovies.value?.movieList?.size!!) {
                 viewModel.listInitialIndex = 0

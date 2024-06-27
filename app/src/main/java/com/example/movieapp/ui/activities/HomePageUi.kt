@@ -3,6 +3,7 @@ package com.example.movieapp.ui.activities
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
@@ -11,6 +12,7 @@ import com.example.movieapp.R
 import com.example.movieapp.databinding.ActivityMainBinding
 import com.example.movieapp.navigation.FragmentNavigation
 import com.example.movieapp.utils.Constants
+import com.example.movieapp.utils.getClassTag
 
 class HomePageUi : BaseActivity() {
 
@@ -22,8 +24,11 @@ class HomePageUi : BaseActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         navigation = FragmentNavigation(supportFragmentManager)
+        Log.i(getClassTag(), "Home page ui activity created")
 
-        navigation.toHomeFragment(binding.homeFrameLayout.id) // Default Menu
+        if (savedInstanceState==null) {
+            navigation.toHomeFragment(binding.homeFrameLayout.id) // Default Menu
+        }
         initializeDrawerMenu()
         searchBarTextChangeListener()
         searchClickListener()

@@ -15,8 +15,8 @@ class BaseSeriesListViewModel(private val repository: SeriesDataRepository): Vie
     val seriesList: LiveData<SeriesItemListResponse>
         get() = _seriesList
 
-    private val _errorState = MutableLiveData<String>()
-    val errorState: LiveData<String>
+    private val _errorState = MutableLiveData<Boolean>()
+    val errorState: LiveData<Boolean>
         get() = _errorState
 
     private val _loadingState = MutableLiveData(true)
@@ -55,12 +55,11 @@ class BaseSeriesListViewModel(private val repository: SeriesDataRepository): Vie
     private fun getPopularSeries(page: Int) = viewModelScope.launch {
         when (val result = repository.getPopularSeries(page)) {
             is Result.Success -> {
-                _seriesList.value = result.data
+                _seriesList.value = result.data!!
                 _loadingState.value = false
             }
             is Result.Error -> {
-                _errorState.value = result.exception?.message
-                Log.i("Abhi", "errpr")
+                _errorState.value = true
                 // ui change according to error state
             }
         }
@@ -69,12 +68,11 @@ class BaseSeriesListViewModel(private val repository: SeriesDataRepository): Vie
     private fun getImdbRatedSeries(page: Int) = viewModelScope.launch {
         when (val result = repository.getImdbRatedSeries(page)) {
             is Result.Success -> {
-                _seriesList.value = result.data
+                _seriesList.value = result.data!!
                 _loadingState.value = false
             }
             is Result.Error -> {
-                _errorState.value = result.exception?.message
-                Log.i("Abhi", "errpr")
+                _errorState.value = true
                 // ui change according to error state
             }
         }
@@ -83,12 +81,11 @@ class BaseSeriesListViewModel(private val repository: SeriesDataRepository): Vie
     private fun getAiringSeries(page: Int) = viewModelScope.launch {
         when (val result = repository.getAiringSeries(page)) {
             is Result.Success -> {
-                _seriesList.value = result.data
+                _seriesList.value = result.data!!
                 _loadingState.value = false
             }
             is Result.Error -> {
-                _errorState.value = result.exception?.message
-                Log.i("Abhi", "errpr")
+                _errorState.value = true
                 // ui change according to error state
             }
         }
