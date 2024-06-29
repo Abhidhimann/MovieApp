@@ -23,7 +23,7 @@ data class MovieDetails(
     @SerializedName("vote_count")
     val totalVotes: Int,
     @SerializedName("poster_path")
-    val posterImg: String,
+    val posterImg: String?,
     @SerializedName("runtime")
     val length: Int,
     @SerializedName("genres")
@@ -72,7 +72,7 @@ data class MovieDetails(
                 mediaType = Constants.MOVIE.getValue(),
                 rating = this.rating,
                 releaseDate = this.releaseDate,
-                thumbnail = this.posterImg
+                thumbnail = this.posterImg?: ""
             )
         }
     }

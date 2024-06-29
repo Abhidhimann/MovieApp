@@ -61,6 +61,7 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
 
         viewModel.allIndexToInitial()
         initSeriesList()
+        pagesIndexInit()
         initShimmerLoading()
         nextButtonClickListener()
         errorStateObserver()
@@ -69,14 +70,11 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
     private fun nextButtonClickListener() {
         binding.homeSeriesListNext.setOnClickListener {
             if (viewModel.listLastIndex + itemCount > viewModel.seriesList.value?.seriesList?.size!!) {
-                viewModel.listInitialIndex = 0
-                viewModel.listLastIndex = 0
-                startShimmerLoading()
-                viewModel.processSeriesType(seriesType, ++viewModel.currentPage)
+                loadSeriesListNextPage(seriesType, viewModel.currentPage + 1)
             } else {
                 loadItems()
             }
-            binding.mainLayout.scrollTo(0,0)
+            binding.mainLayout.scrollTo(0, 0)
         }
     }
 
@@ -85,7 +83,7 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
         binding.rcSeriesList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcSeriesList.adapter = adaptor
         setSeriesListObserver()
-        viewModel.processSeriesType(seriesType, viewModel.currentPage)
+        loadSeriesListNextPage(seriesType, viewModel.currentPage + 1)
     }
 
     private fun setSeriesListObserver() {
@@ -102,6 +100,67 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
                 binding.homeSeriesListNext.visibility = View.GONE
             }
         }
+    }
+
+    private fun pagesIndexInit() {
+        pagesClickListener()
+        currentPageObserver()
+    }
+
+    private fun currentPageObserver() {
+        viewModel.currentPageLiveValue.observe(viewLifecycleOwner) {
+            if (it >= 3) {
+                binding.nextPage.text = it.toString()
+                binding.previousPage.text = (it - 1).toString()
+            }
+            when (it.toString()) {
+                binding.nextPage.text.toString() -> setActivePage(
+                    binding.nextPage,
+                    binding.previousPage,
+                    binding.initialPage
+                )
+
+                binding.previousPage.text.toString() -> setActivePage(
+                    binding.previousPage,
+                    binding.nextPage,
+                    binding.initialPage
+                )
+
+                binding.initialPage.text.toString() -> setActivePage(
+                    binding.initialPage,
+                    binding.previousPage,
+                    binding.nextPage
+                )
+            }
+        }
+    }
+
+    private fun setActivePage(activeView: View, vararg inactiveViews: View) {
+        activeView.setBackgroundResource(R.drawable.index_page_active)
+        inactiveViews.forEach { it.setBackgroundResource(R.drawable.index_page_inactive) }
+    }
+
+    private fun pagesClickListener() {
+        binding.initialPage.setOnClickListener {
+            loadSeriesListNextPage(seriesType, binding.initialPage.text.toString().toInt())
+            binding.nextPage.text = (3).toString()
+            binding.previousPage.text = (2).toString()
+        }
+        binding.previousPage.setOnClickListener {
+            loadSeriesListNextPage(seriesType, binding.previousPage.text.toString().toInt())
+        }
+        binding.nextPage.setOnClickListener {
+            loadSeriesListNextPage(seriesType, binding.nextPage.text.toString().toInt())
+        }
+    }
+
+    private fun loadSeriesListNextPage(seriesType: String, currentPage: Int) {
+        binding.mainLayout.scrollTo(0, 0)
+        startShimmerLoading()
+        viewModel.listInitialIndex = 0
+        viewModel.listLastIndex = 0
+        viewModel.incrementCurrentPage(currentPage)
+        viewModel.processSeriesType(seriesType, currentPage)
     }
 
     private fun loadItems() {
@@ -125,6 +184,7 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
             }
         }
     }
+
     private fun errorStateObserver() {
         viewModel.errorState.observe(viewLifecycleOwner) {
             if (it) {

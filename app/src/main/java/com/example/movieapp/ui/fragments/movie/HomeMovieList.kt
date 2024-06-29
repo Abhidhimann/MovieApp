@@ -20,7 +20,6 @@ import com.example.movieapp.ui.activities.BaseActivity
 import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
 import com.example.movieapp.utils.RetryFunctionality
 import com.example.movieapp.utils.getClassTag
-import com.example.movieapp.utils.tempTag
 import com.example.movieapp.viewModel.HomePageMovieListViewModelFactory
 import com.example.movieapp.viewModel.HomePageMovieListViewModel
 
@@ -30,7 +29,7 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
     private lateinit var adaptor: MovieCardAdaptor
     private lateinit var viewModel: HomePageMovieListViewModel
 
-    private val itemCount = 10
+    private val itemCount = 20
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,6 +50,7 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
         viewModel.allIndexToInitial()
         initMovieList()
         initShimmerLoading()
+        pagesIndexInit()
         nextButtonClickListener()
     }
 
@@ -60,13 +60,12 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
         binding.rcMovieList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcMovieList.adapter = adaptor
         setMovieListObserver()
-        viewModel.getTrendingMovies(viewModel.currentPage)
+        loadMovieListNextPage(viewModel.currentPage)
     }
 
     private fun setMovieListObserver() {
         viewModel.trendingMovies.observe(viewLifecycleOwner) {
             viewModel.listLastIndex = itemCount
-            Log.i(tempTag(), it.movieList.toString())
             adaptor.setList(
                 it.movieList.subList(
                     viewModel.listInitialIndex,
@@ -83,10 +82,7 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
     private fun nextButtonClickListener() {
         binding.homeMovieListNext.setOnClickListener {
             if (viewModel.listLastIndex + itemCount > viewModel.trendingMovies.value?.movieList?.size!!) {
-                viewModel.listInitialIndex = 0
-                viewModel.listLastIndex = 0
-                startShimmerLoading()
-                viewModel.getTrendingMovies(++viewModel.currentPage)
+                loadMovieListNextPage(viewModel.currentPage + 1)
             } else {
                 if (viewModel.currentPage == viewModel.trendingMovies.value?.totalPages) {
                     binding.homeMovieListNext.setTextColor(Color.WHITE)
@@ -94,13 +90,71 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
                 }
                 loadItems()
             }
-            // comment this to stop automatic scroll while pressing next button
-            val toScrollHeight: Int = activity?.findViewById<ViewPager>(R.id.imageSlider)?.height.toString().toInt()
-            val scrollView = activity?.findViewById<NestedScrollView>(R.id.nested_scroll_view)
-            scrollView?.scrollTo(0, toScrollHeight + 30)
         }
     }
 
+    private fun pagesIndexInit() {
+        pagesClickListener()
+        currentPageObserver()
+    }
+
+    private fun currentPageObserver() {
+        viewModel.currentPageLiveValue.observe(viewLifecycleOwner) {
+            if (it >= 3) {
+                binding.nextPage.text = it.toString()
+                binding.previousPage.text = (it - 1).toString()
+            }
+            when (it.toString()) {
+                binding.nextPage.text.toString() -> setActivePage(
+                    binding.nextPage,
+                    binding.previousPage,
+                    binding.initialPage
+                )
+
+                binding.previousPage.text.toString() -> setActivePage(
+                    binding.previousPage,
+                    binding.nextPage,
+                    binding.initialPage
+                )
+
+                binding.initialPage.text.toString() -> setActivePage(
+                    binding.initialPage,
+                    binding.previousPage,
+                    binding.nextPage
+                )
+            }
+        }
+    }
+
+    private fun setActivePage(activeView: View, vararg inactiveViews: View) {
+        activeView.setBackgroundResource(R.drawable.index_page_active)
+        inactiveViews.forEach { it.setBackgroundResource(R.drawable.index_page_inactive) }
+    }
+
+    private fun pagesClickListener() {
+        binding.initialPage.setOnClickListener {
+            loadMovieListNextPage(binding.initialPage.text.toString().toInt())
+            binding.nextPage.text = (3).toString()
+            binding.previousPage.text = (2).toString()
+        }
+        binding.previousPage.setOnClickListener {
+            loadMovieListNextPage(binding.previousPage.text.toString().toInt())
+        }
+        binding.nextPage.setOnClickListener {
+            loadMovieListNextPage(binding.nextPage.text.toString().toInt())
+        }
+    }
+
+    private fun loadMovieListNextPage(currentPage: Int) {
+        // comment this to stop automatic scroll while pressing next button
+        val toScrollHeight: Int = activity?.findViewById<ViewPager>(R.id.imageSlider)?.height.toString().toInt()
+        val scrollView = activity?.findViewById<NestedScrollView>(R.id.nested_scroll_view)
+        scrollView?.scrollTo(0, toScrollHeight + 30)
+
+        startShimmerLoading()
+        viewModel.incrementCurrentPage(currentPage)
+        viewModel.getTrendingMovies(currentPage)
+    }
 
     private fun loadItems() {
         viewModel.listInitialIndex = viewModel.listLastIndex
@@ -132,6 +186,6 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
 
     override fun retryWhenInternetIsAvailable() {
         startShimmerLoading()
-        viewModel.getTrendingMovies(viewModel.currentPage)
+        loadMovieListNextPage(viewModel.currentPage)
     }
 }

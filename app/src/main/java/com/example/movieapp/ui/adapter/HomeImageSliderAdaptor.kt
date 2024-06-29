@@ -50,7 +50,7 @@ class HomeImageSliderAdaptor(private val context: Context): PagerAdapter() {
 
     private fun onViewClickListener(recommendationItem: RecommendationItem){
         binding.root.setOnClickListener {
-            Log.i(getClassTag(),recommendationItem.mediaType)
+//            Log.i(getClassTag(),recommendationItem.mediaType)
             if(recommendationItem.mediaType == Constants.MOVIE.getValue()){
                 val intent = Intent(context, MovieDetailsUi::class.java)
                 intent.putExtra(Constants.MOVIE_ID.getValue(),recommendationItem.id)

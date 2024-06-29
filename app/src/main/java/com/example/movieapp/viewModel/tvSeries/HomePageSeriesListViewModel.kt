@@ -1,6 +1,5 @@
 package com.example.movieapp.viewModel.tvSeries
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.movieapp.data.remote.model.tvSeries.SeriesItemListResponse
 import com.example.movieapp.data.repository.series.SeriesDataRepository
@@ -21,31 +20,39 @@ class HomePageSeriesListViewModel(private val repository: SeriesDataRepository) 
     val loadingState: LiveData<Boolean>
         get() = _loadingState
 
+    private val _currentPageLiveValue = MutableLiveData<Int>()
+    val currentPageLiveValue : LiveData<Int> = _currentPageLiveValue
 
     var currentPage = 1
     var listInitialIndex = 0
     var listLastIndex = 0
 
     fun allIndexToInitial() {
-        currentPage = 1
+//        currentPage = 1
         listLastIndex = 0
         listInitialIndex = 0
+    }
+
+    fun incrementCurrentPage(value: Int){
+        currentPage = value
+        listInitialIndex = 0
+        listLastIndex = 0
+        _currentPageLiveValue.postValue(value)
     }
 
     private fun startLoading(){
         _loadingState.value = true
     }
 
-    fun getTrendingMovies(page: Int) = viewModelScope.launch {
+    fun getTrendingSeries(page: Int) = viewModelScope.launch {
         startLoading()
         when (val result = repository.getTrendingSeriesInWeek(page)) {
             is Result.Success -> {
-                _trendingSeries.value = result.data
+                _trendingSeries.value = result.data!!
                 _loadingState.value = false
             }
             is Result.Error -> {
                 _errorState.value = result.exception?.message
-                Log.i("Abhi", "errpr")
                 // ui change according to error state
             }
         }

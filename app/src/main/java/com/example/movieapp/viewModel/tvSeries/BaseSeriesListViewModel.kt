@@ -23,12 +23,20 @@ class BaseSeriesListViewModel(private val repository: SeriesDataRepository): Vie
     val loadingState: LiveData<Boolean>
         get() = _loadingState
 
+    private val _currentPageLiveValue = MutableLiveData<Int>()
+    val currentPageLiveValue : LiveData<Int> = _currentPageLiveValue
+
     var currentPage = 1
     var listInitialIndex = 0
     var listLastIndex = 0
 
     private fun startLoading(){
         _loadingState.value = true
+    }
+
+    fun incrementCurrentPage(value: Int){
+        currentPage = value
+        _currentPageLiveValue.postValue(value)
     }
 
     fun allIndexToInitial(){

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.movieapp.R
 import com.example.movieapp.databinding.RecommendedMovieTvCardBinding
 import com.example.movieapp.data.remote.model.common.RecommendationItem
 import com.example.movieapp.ui.activities.MovieDetailsUi
@@ -44,7 +45,7 @@ class RecommendationListAdaptor :
         }
     }
 
-    fun setRecommendationList(newList: List<RecommendationItem>){
+    fun setRecommendationList(newList: List<RecommendationItem>) {
         recommendedList.clear()
         recommendedList.addAll(newList)
     }
@@ -53,12 +54,18 @@ class RecommendationListAdaptor :
         ViewHolder(binding.root) {
 
         fun bind(recommendationItem: RecommendationItem) {
-            Picasso.get().load(Api.POSTER_BASE_URL.getValue() + recommendationItem.posterImg)
-                .into(binding.recommendedImage)
             binding.recommendedTitle.text = recommendationItem.title
             binding.recommendedYear.text = recommendationItem.postingDate?.substringBefore("-")
             binding.recommendedRating.text = "- ".plus(recommendationItem.rating.toInt())
             binding.recommendedMovieTV.text = recommendationItem.mediaType.uppercase()
+            if (!recommendationItem.posterImg.isNullOrEmpty()) {
+                Picasso.get().load(Api.POSTER_BASE_URL.getValue() + recommendationItem.posterImg)
+                    .into(binding.recommendedImage)
+            } else {
+                Picasso.get().load(
+                    R.drawable.image_not_found
+                ).into(binding.recommendedImage)
+            }
         }
 
         fun goToMediaTypeDetails(recommendationItem: RecommendationItem) {
@@ -67,7 +74,7 @@ class RecommendationListAdaptor :
                 intent.putExtra(Constants.MOVIE_ID.getValue(), recommendationItem.id)
                 intent.flags = FLAG_ACTIVITY_CLEAR_TOP // destroying current movie details activity
                 binding.root.context.startActivity(intent)
-            }else{
+            } else {
                 val intent = Intent(binding.root.context, TvSeriesDetailsUi::class.java)
                 intent.putExtra(Constants.TV_SERIES_ID.getValue(), recommendationItem.id)
                 intent.flags = FLAG_ACTIVITY_CLEAR_TOP // destroying current movie details activity

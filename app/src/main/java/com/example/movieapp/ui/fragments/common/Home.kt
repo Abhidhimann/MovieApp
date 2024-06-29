@@ -116,7 +116,7 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
                 )
             )
             imageSliderAdaptor.notifyDataSetChanged()
-            Log.i(getClassTag(), it.recommendationList.toString())
+//            Log.i(getClassTag(), it.recommendationList.toString())
             // showing only 10 trending item now
         }
     }
@@ -135,18 +135,14 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
         binding.containerTv.visibility = View.GONE
         binding.containerMovie.visibility = View.VISIBLE
 
-        binding.movieList.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.green
-            )
-        )
-        binding.tvSeriesList.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.colorPrimary
-            )
-        )
+        binding.movieList.setBackgroundColor(resources.getColor(R.color.green, null))
+        binding.tvSeriesList.setBackgroundColor(resources.getColor(R.color.colorPrimary, null))
+//        binding.tvSeriesList.setBackgroundColor(
+//            ContextCompat.getColor(
+//                requireContext(),
+//                R.color.colorPrimary
+//            )
+//        )
     }
 
     private fun displayTvSeriesList() {
@@ -154,18 +150,8 @@ class Home : Fragment(R.layout.fragment_home), RetryFunctionality {
         binding.containerMovie.visibility = View.GONE
         binding.containerTv.visibility = View.VISIBLE
 
-        binding.tvSeriesList.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.green
-            )
-        )
-        binding.movieList.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.colorPrimary
-            )
-        )
+        binding.tvSeriesList.setBackgroundColor(resources.getColor(R.color.green, null))
+        binding.movieList.setBackgroundColor(resources.getColor(R.color.colorPrimary, null))
     }
 
     override fun retryWhenInternetIsAvailable() {

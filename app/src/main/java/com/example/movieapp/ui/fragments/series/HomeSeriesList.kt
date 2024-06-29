@@ -28,7 +28,7 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
     private lateinit var adaptor: SeriesCardAdaptor
     private lateinit var viewModel: HomePageSeriesListViewModel
 
-    private val itemCount = 10
+    private val itemCount = 20
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,6 +50,7 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
         viewModel.allIndexToInitial()
         initSeriesList()
         initShimmerLoading()
+        pagesIndexInit()
         nextButtonClickListener()
     }
 
@@ -61,17 +62,10 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
     private fun nextButtonClickListener() {
         binding.homeSeriesListNext.setOnClickListener {
             if (viewModel.listLastIndex + itemCount > viewModel.trendingSeries.value?.seriesList?.size!!) {
-                viewModel.listInitialIndex = 0
-                viewModel.listLastIndex = 0
-                startShimmerLoading()
-                viewModel.getTrendingMovies(++viewModel.currentPage)
+                loadSeriesListNextPage(viewModel.currentPage + 1)
             } else {
                 loadItems()
             }
-            // comment this to stop automatic scroll while pressing next button
-            val toScrollHeight: Int = activity?.findViewById<ViewPager>(R.id.imageSlider)?.height.toString().toInt()
-            val scrollView = activity?.findViewById<NestedScrollView>(R.id.nested_scroll_view)
-            scrollView?.scrollTo(0, toScrollHeight + 30)
         }
     }
 
@@ -79,8 +73,8 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
         adaptor = SeriesCardAdaptor()
         binding.rcSeriesList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcSeriesList.adapter = adaptor
-        viewModel.getTrendingMovies(viewModel.currentPage)
         setSeriesObserver()
+        loadSeriesListNextPage(viewModel.currentPage)
     }
 
     private fun setSeriesObserver() {
@@ -98,6 +92,69 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
                 binding.homeSeriesListNext.visibility = View.GONE
             }
         }
+    }
+
+    private fun pagesIndexInit() {
+        pagesClickListener()
+        currentPageObserver()
+    }
+
+    private fun pagesClickListener() {
+        binding.initialPage.setOnClickListener {
+            loadSeriesListNextPage(binding.initialPage.text.toString().toInt())
+            binding.nextPage.text = (3).toString()
+            binding.previousPage.text = (2).toString()
+        }
+        binding.previousPage.setOnClickListener {
+            loadSeriesListNextPage(binding.previousPage.text.toString().toInt())
+        }
+        binding.nextPage.setOnClickListener {
+            loadSeriesListNextPage(binding.nextPage.text.toString().toInt())
+        }
+    }
+
+    private fun loadSeriesListNextPage(currentPage: Int) {
+        // comment this to stop automatic scroll while pressing next button
+        val toScrollHeight: Int = activity?.findViewById<ViewPager>(R.id.imageSlider)?.height.toString().toInt()
+        val scrollView = activity?.findViewById<NestedScrollView>(R.id.nested_scroll_view)
+        scrollView?.scrollTo(0, toScrollHeight + 30)
+
+        startShimmerLoading()
+        viewModel.incrementCurrentPage(currentPage)
+        viewModel.getTrendingSeries(currentPage)
+    }
+
+    private fun currentPageObserver() {
+        viewModel.currentPageLiveValue.observe(viewLifecycleOwner) {
+            if (it >= 3) {
+                binding.nextPage.text = it.toString()
+                binding.previousPage.text = (it - 1).toString()
+            }
+            when (it.toString()) {
+                binding.nextPage.text.toString() -> setActivePage(
+                    binding.nextPage,
+                    binding.previousPage,
+                    binding.initialPage
+                )
+
+                binding.previousPage.text.toString() -> setActivePage(
+                    binding.previousPage,
+                    binding.nextPage,
+                    binding.initialPage
+                )
+
+                binding.initialPage.text.toString() -> setActivePage(
+                    binding.initialPage,
+                    binding.previousPage,
+                    binding.nextPage
+                )
+            }
+        }
+    }
+
+    private fun setActivePage(activeView: View, vararg inactiveViews: View) {
+        activeView.setBackgroundResource(R.drawable.index_page_active)
+        inactiveViews.forEach { it.setBackgroundResource(R.drawable.index_page_inactive) }
     }
 
     private fun loadItems() {
@@ -129,7 +186,7 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
     }
 
     override fun retryWhenInternetIsAvailable() {
-        viewModel.getTrendingMovies(viewModel.currentPage)
+        loadSeriesListNextPage(viewModel.currentPage)
     }
 
 }

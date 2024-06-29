@@ -32,7 +32,6 @@ import com.example.movieapp.ui.adapter.series.EpisodeDetailsCardAdaptor
 import com.example.movieapp.utils.CommonUtil
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.getClassTag
-import com.example.movieapp.utils.tempTag
 import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModel
 import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModelFactory
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -205,7 +204,6 @@ class TvSeriesDetailsUi : BaseActivity() {
     }
 
     private fun initSeriesSeasonSpinner(tvSeasons: List<TvSeasonDetails>) {
-        Log.i(tempTag(), "tv seasons are $tvSeasons")
         tvSeasonsAdaptor = object :
             ArrayAdapter<TvSeasonDetails>(this, R.layout.custom_spinner_item, tvSeasons) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -250,7 +248,6 @@ class TvSeriesDetailsUi : BaseActivity() {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     val seasonDetails: TvSeasonDetails =
                         p0?.getItemAtPosition(p2) as TvSeasonDetails
-                    Log.i(tempTag(), "epidsoes are ${seasonDetails.episodes}")
                     binding.seasonEpisodeDetails.visibility = View.VISIBLE
                     tvSeasonsSelectedItemPos = p2
                     seriesEpisodeListViewAdaptor.setList((1..seasonDetails.episodes).toList())
@@ -263,7 +260,6 @@ class TvSeriesDetailsUi : BaseActivity() {
 
     private fun pageChangeListener() {
         updateDots(0)
-        Log.i(tempTag(), "Coming here with $pageItemSize")
         binding.imagesViewPager.addOnPageChangeListener(object :
             ViewPager.OnPageChangeListener {
             override fun onPageScrolled(
@@ -366,9 +362,6 @@ class TvSeriesDetailsUi : BaseActivity() {
         }
     }
 
-    private fun initSeasonsSpinner() {
-
-    }
 
     private fun startShimmerLoading() {
         binding.detailsShimmerContainer.visibility = View.VISIBLE

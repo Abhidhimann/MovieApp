@@ -42,7 +42,7 @@ class SeriesCardAdaptor : RecyclerView.Adapter<SeriesCardAdaptor.SeriesCardViewH
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(seriesItem: SeriesItem) {
-            Log.i(getClassTag(), "series is $seriesItem")
+//            Log.i(getClassTag(), "series is $seriesItem")
             Picasso.get().load(Api.POSTER_BASE_URL.getValue() + seriesItem.posterImg)
                 .into(binding.itemCardImage)
             if (!seriesItem.posterImg.isNullOrEmpty()) {

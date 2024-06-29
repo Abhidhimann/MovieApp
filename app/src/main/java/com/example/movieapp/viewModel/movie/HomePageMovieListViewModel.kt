@@ -23,15 +23,24 @@ class HomePageMovieListViewModel(private val repository: MovieDataRepository) : 
     val loadingState: LiveData<Boolean>
         get() = _loadingState
 
+    private val _currentPageLiveValue = MutableLiveData<Int>()
+    val currentPageLiveValue : LiveData<Int> = _currentPageLiveValue
 
     var currentPage = 1
     var listInitialIndex = 0
     var listLastIndex = 0
 
     fun allIndexToInitial(){
-        currentPage = 1
+//        currentPage = 1
         listLastIndex = 0
         listInitialIndex = 0
+    }
+
+    fun incrementCurrentPage(value: Int){
+        currentPage = value
+        listInitialIndex = 0
+        listLastIndex = 0
+        _currentPageLiveValue.postValue(value)
     }
 
     private fun startLoading(){
@@ -42,12 +51,11 @@ class HomePageMovieListViewModel(private val repository: MovieDataRepository) : 
         startLoading()
         when (val result = repository.getTrendingMoviesInWeek(page)) {
             is Result.Success -> {
-                _trendingMovies.value = result.data
+                _trendingMovies.value = result.data!!
                 _loadingState.value = false
             }
             is Result.Error -> {
                 _errorState.value = result.exception?.message
-                Log.i("Abhi", "errpr")
                 // ui change according to error state
             }
         }

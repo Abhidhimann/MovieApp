@@ -23,6 +23,9 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
     val loadingState: LiveData<Boolean>
         get() = _loadingState
 
+    private val _currentPageLiveValue = MutableLiveData<Int>()
+    val currentPageLiveValue : LiveData<Int> = _currentPageLiveValue
+
     var currentPage = 1
     var listInitialIndex = 0
     var listLastIndex = 0
@@ -31,6 +34,11 @@ class BaseMovieListViewModel(private val repository: MovieDataRepository) : View
 //        currentPage = 1
         listLastIndex = 0
         listInitialIndex = 0
+    }
+
+    fun incrementCurrentPage(value: Int){
+        currentPage = value
+        _currentPageLiveValue.postValue(value)
     }
 
     private fun startLoading(){

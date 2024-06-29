@@ -61,6 +61,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
 
         viewModel.allIndexToInitial()
         initMovieList()
+        pagesIndexInit()
         initShimmerLoading()
         nextButtonClickListener()
         errorStateObserver()
@@ -69,10 +70,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
     private fun nextButtonClickListener() {
         binding.homeMovieListNext.setOnClickListener {
             if (viewModel.listLastIndex + itemCount > viewModel.moviesList.value?.movieList?.size!!) {
-                viewModel.listInitialIndex = 0
-                viewModel.listLastIndex = 0
-                startShimmerLoading()
-                viewModel.processMoviesType(moviesType, ++viewModel.currentPage)
+                loadMovieListNextPage(moviesType, viewModel.currentPage + 1)
             } else {
                 if (viewModel.currentPage == viewModel.moviesList.value?.totalPages) {
                     binding.homeMovieListNext.setTextColor(Color.WHITE)
@@ -80,7 +78,6 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
                 }
                 loadItems()
             }
-            binding.mainLayout.scrollTo(0,0)
         }
     }
 
@@ -89,7 +86,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
         binding.rcMovieList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rcMovieList.adapter = adaptor
         setMovieListObserver()
-        viewModel.processMoviesType(moviesType, viewModel.currentPage)
+        loadMovieListNextPage(moviesType, viewModel.currentPage)
     }
 
     private fun setMovieListObserver() {
@@ -107,6 +104,62 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
                 binding.homeMovieListNext.visibility = View.GONE
             }
         }
+    }
+
+    private fun pagesIndexInit() {
+        pagesClickListener()
+        currentPageObserver()
+    }
+
+    private fun currentPageObserver() {
+        viewModel.currentPageLiveValue.observe(viewLifecycleOwner) {
+            if (it >= 3) {
+                binding.nextPage.text = it.toString()
+                binding.previousPage.text = (it - 1).toString()
+            }
+            when (it.toString()) {
+                binding.nextPage.text.toString() -> setActivePage(
+                    binding.nextPage,
+                    binding.previousPage,
+                    binding.initialPage
+                )
+
+                binding.previousPage.text.toString() -> setActivePage(
+                    binding.previousPage,
+                    binding.nextPage,
+                    binding.initialPage
+                )
+
+                binding.initialPage.text.toString() -> setActivePage(
+                    binding.initialPage,
+                    binding.previousPage,
+                    binding.nextPage
+                )
+            }
+        }
+    }
+
+    private fun pagesClickListener() {
+        binding.initialPage.setOnClickListener {
+            loadMovieListNextPage(moviesType, binding.initialPage.text.toString().toInt())
+            binding.nextPage.text = (3).toString()
+            binding.previousPage.text = (2).toString()
+        }
+        binding.previousPage.setOnClickListener {
+            loadMovieListNextPage(moviesType, binding.previousPage.text.toString().toInt())
+        }
+        binding.nextPage.setOnClickListener {
+            loadMovieListNextPage(moviesType, binding.nextPage.text.toString().toInt())
+        }
+    }
+
+    private fun loadMovieListNextPage(movieType: String, currentPage: Int) {
+        binding.mainLayout.scrollTo(0, 0)
+        startShimmerLoading()
+        viewModel.listInitialIndex = 0
+        viewModel.listLastIndex = 0
+        viewModel.incrementCurrentPage(currentPage)
+        viewModel.processMoviesType(movieType, currentPage)
     }
 
     private fun loadItems() {
@@ -130,6 +183,11 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
                 binding.mainLayout.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun setActivePage(activeView: View, vararg inactiveViews: View) {
+        activeView.setBackgroundResource(R.drawable.index_page_active)
+        inactiveViews.forEach { it.setBackgroundResource(R.drawable.index_page_inactive) }
     }
 
     private fun startShimmerLoading() {

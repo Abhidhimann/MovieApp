@@ -45,7 +45,7 @@ class MovieCardAdaptor : RecyclerView.Adapter<MovieCardAdaptor.MovieCardViewHold
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movieItem: MovieItem) {
-            Log.i(getClassTag(), "movie is $movieItem")
+//            Log.i(getClassTag(), "movie is $movieItem")
             if (!movieItem.posterImg.isNullOrEmpty()){
                 Picasso.get().load(Api.POSTER_BASE_URL.getValue() + movieItem.posterImg)
                     .into(binding.itemCardImage)

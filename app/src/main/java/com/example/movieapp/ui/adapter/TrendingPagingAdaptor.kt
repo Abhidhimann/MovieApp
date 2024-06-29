@@ -14,7 +14,6 @@ import com.example.movieapp.ui.activities.MovieDetailsUi
 import com.example.movieapp.ui.activities.TvSeriesDetailsUi
 import com.example.movieapp.utils.Api
 import com.example.movieapp.utils.Constants
-import com.example.movieapp.utils.tempTag
 import com.squareup.picasso.Picasso
 
 class TrendingPagingAdaptor :
@@ -27,7 +26,6 @@ class TrendingPagingAdaptor :
                     oldItem: RecommendationItem,
                     newItem: RecommendationItem
                 ): Boolean {
-                    Log.i(tempTag(), "calling are Items same")
                     return oldItem.id == newItem.id
                 }
 
