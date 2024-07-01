@@ -8,17 +8,12 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentMovieListBinding
-import com.example.movieapp.data.datasource.MovieDataSource
-import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.local.database.AppDatabase
-import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
 import com.example.movieapp.navigation.FragmentNavigation
 import com.example.movieapp.utils.getClassTag
-import com.example.movieapp.viewModel.movie.BaseMovieListViewModeFactory
 import com.example.movieapp.viewModel.movie.BaseMovieListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 private const val MoviesType = "movieType"
@@ -29,11 +24,13 @@ private const val MoviesType = "movieType"
  * then we have to use 3 different model and then will see what viewModel to use according to argument
  * that will be difficult to manage, so then it will be better to use 3 fragment ( maybe can use one base class as parent)
  */
+@AndroidEntryPoint
 class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
 
     private lateinit var moviesType: String
     private lateinit var binding: FragmentMovieListBinding
     private lateinit var adaptor: MovieCardAdaptor
+//    private val viewModel: BaseMovieListViewModel by viewModels()
     private lateinit var viewModel: BaseMovieListViewModel
 
     private val itemCount = 20
@@ -46,19 +43,7 @@ class BaseMovieList : Fragment(R.layout.fragment_movie_list) {
         }
         Log.i(getClassTag(), "Base Movie List View Created with movie type: $moviesType")
 
-        // will change hilt
-        val factory =
-            BaseMovieListViewModeFactory(
-                MovieDataRepository(
-                    MovieDataSource(ApiClient.movieApi()), SavedItemLocalDataSource(
-                        AppDatabase.getDatabase(requireContext()).savedItemDao()
-                    )
-                )
-            )
-        viewModel = ViewModelProvider(
-            this, factory
-        ).get(BaseMovieListViewModel::class.java)
-
+        viewModel = ViewModelProvider(this)[BaseMovieListViewModel::class.java]
         viewModel.allIndexToInitial()
         initMovieList()
         pagesIndexInit()

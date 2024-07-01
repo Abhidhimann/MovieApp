@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -79,6 +80,9 @@ dependencies {
     implementation "androidx.room:room-ktx:2.6.1"
     kapt "androidx.room:room-compiler:2.6.1"
 
+    // hilt https://tomas-repcik.medium.com/dependency-injection-with-hilt-in-android-development-e23fc636d65c
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-android-compiler:2.44"
 
     // tests
     testImplementation 'org.mockito:mockito-core:3.12.4'

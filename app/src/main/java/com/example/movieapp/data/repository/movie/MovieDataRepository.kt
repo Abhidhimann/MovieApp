@@ -8,9 +8,12 @@ import com.example.movieapp.data.remote.model.common.RecommendationResponse
 import com.example.movieapp.data.remote.model.movies.MovieDetails.Companion.toSavedItemEntity
 import com.example.movieapp.utils.Result
 import kotlinx.coroutines.*
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.min
 
-class MovieDataRepository(private val movieDataSource: MovieDataSource, private val savedItemLocalDataSource: SavedItemLocalDataSource) {
+@Singleton
+class MovieDataRepository @Inject constructor(private val movieDataSource: MovieDataSource, private val savedItemLocalDataSource: SavedItemLocalDataSource) {
 
     suspend fun getTrendingMoviesInWeek(page: Int): Result<MoviesItemListResponse> {
         return withContext(Dispatchers.IO) {

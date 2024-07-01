@@ -13,7 +13,9 @@ import com.example.movieapp.databinding.ActivityMainBinding
 import com.example.movieapp.navigation.FragmentNavigation
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.getClassTag
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomePageUi : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding

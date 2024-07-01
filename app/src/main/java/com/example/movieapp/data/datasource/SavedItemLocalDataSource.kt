@@ -5,8 +5,11 @@ import com.example.movieapp.data.local.entity.SavedItemEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SavedItemLocalDataSource(private val savedItemDao: SavedItemDao) {
+@Singleton
+class SavedItemLocalDataSource @Inject constructor(private val savedItemDao: SavedItemDao) {
 
     suspend fun insertSavedItem(item: SavedItemEntity) = withContext(Dispatchers.IO) {
         savedItemDao.insert(item)

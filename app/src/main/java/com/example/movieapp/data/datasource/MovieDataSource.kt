@@ -16,8 +16,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieDataSource(private val apiService: MovieApiService) {
+@Singleton
+class MovieDataSource @Inject constructor(private val apiService: MovieApiService) {
 
     // maybe will put it in helper functions class
     private suspend inline fun <reified T> getDataFromApiWithRetry(
