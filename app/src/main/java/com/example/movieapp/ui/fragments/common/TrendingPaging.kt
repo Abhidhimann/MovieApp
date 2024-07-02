@@ -6,13 +6,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.CommonTvSeriesCardLayoutBinding
-import com.example.movieapp.data.datasource.MovieDataSource
 import com.example.movieapp.ui.adapter.TrendingPagingAdaptor
 import com.example.movieapp.viewModel.TrendingPagingViewModel
-import com.example.movieapp.viewModel.TrendingPagingViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TrendingPaging : Fragment(R.layout.common_tv_series_card_layout) {
 
     private lateinit var binding: CommonTvSeriesCardLayoutBinding
@@ -23,11 +22,7 @@ class TrendingPaging : Fragment(R.layout.common_tv_series_card_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = CommonTvSeriesCardLayoutBinding.bind(view)
-
-        // will change this using hilt
-        val factory =
-            TrendingPagingViewModelFactory(MovieDataSource(ApiClient.movieApi()))
-        viewModel = ViewModelProvider(this, factory)[TrendingPagingViewModel::class.java]
+        viewModel = ViewModelProvider(this)[TrendingPagingViewModel::class.java]
         initItemList()
     }
 

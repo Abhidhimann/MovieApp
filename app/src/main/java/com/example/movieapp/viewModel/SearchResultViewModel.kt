@@ -1,13 +1,16 @@
-package com.example.movieapp.viewModel.movie
+package com.example.movieapp.viewModel
 
 import androidx.lifecycle.*
 import com.example.movieapp.data.remote.model.movies.MoviesItemListResponse
 import com.example.movieapp.data.remote.model.tvSeries.SeriesItemListResponse
 import com.example.movieapp.data.repository.common.SearchRepository
 import com.example.movieapp.utils.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchMovieViewModel(private val repository: SearchRepository) : ViewModel() {
+@HiltViewModel
+class SearchResultViewModel @Inject constructor(private val repository: SearchRepository) : ViewModel() {
 
     private var _moviesList = MutableLiveData<MoviesItemListResponse>()
     val moviesList: LiveData<MoviesItemListResponse>
@@ -74,15 +77,5 @@ class SearchMovieViewModel(private val repository: SearchRepository) : ViewModel
                 // ui change according to error state
             }
         }
-    }
-}
-
-class SearchMovieViewModelFactory(private val repository: SearchRepository) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SearchMovieViewModel::class.java)) { //If the modelClass is not compatible with HomePageViewModel, it throws an IllegalArgumentException with the message "Unknown ViewModel class." This is a safety check to ensure that you only create instances of the expected ViewModel class.
-            return SearchMovieViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

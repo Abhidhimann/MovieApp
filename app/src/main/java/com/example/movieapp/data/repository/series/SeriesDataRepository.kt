@@ -11,9 +11,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.min
 
-class SeriesDataRepository(private val seriesDataSource: SeriesDataSource, private val savedItemLocalDataSource: SavedItemLocalDataSource) {
+@Singleton
+class SeriesDataRepository @Inject constructor(private val seriesDataSource: SeriesDataSource, private val savedItemLocalDataSource: SavedItemLocalDataSource) {
 
     suspend fun getTrendingSeriesInWeek(page: Int): Result<SeriesItemListResponse> {
         return withContext(Dispatchers.IO) {

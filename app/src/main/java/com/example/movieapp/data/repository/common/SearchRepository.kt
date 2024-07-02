@@ -7,8 +7,11 @@ import com.example.movieapp.data.remote.model.tvSeries.SeriesItemListResponse
 import com.example.movieapp.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SearchRepository(
+@Singleton
+class SearchRepository @Inject constructor(
     private val movieDataSource: MovieDataSource,
     private val seriesDataSource: SeriesDataSource
 ) {

@@ -10,19 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
-import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentMovieListBinding
-import com.example.movieapp.data.datasource.MovieDataSource
-import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.local.database.AppDatabase
-import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.activities.BaseActivity
 import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
 import com.example.movieapp.utils.RetryFunctionality
 import com.example.movieapp.utils.getClassTag
-import com.example.movieapp.viewModel.HomePageMovieListViewModelFactory
-import com.example.movieapp.viewModel.HomePageMovieListViewModel
+import com.example.movieapp.viewModel.movie.HomePageMovieListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality {
 
     private lateinit var binding: FragmentMovieListBinding
@@ -37,16 +33,7 @@ class HomeMovieList : Fragment(R.layout.fragment_movie_list), RetryFunctionality
         Log.i(getClassTag(), "Home Movie List View Created")
         (activity as BaseActivity).activeFrames.add(this)
 
-        // will change hilt
-        val factory =
-            HomePageMovieListViewModelFactory(
-                MovieDataRepository(
-                    MovieDataSource(ApiClient.movieApi()), SavedItemLocalDataSource(
-                        AppDatabase.getDatabase(requireContext()).savedItemDao()
-                    )
-                )
-            )
-        viewModel = ViewModelProvider(this, factory).get(HomePageMovieListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(HomePageMovieListViewModel::class.java)
         viewModel.allIndexToInitial()
         initMovieList()
         initShimmerLoading()

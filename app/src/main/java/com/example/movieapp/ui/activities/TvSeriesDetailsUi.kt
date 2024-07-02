@@ -14,13 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
-import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.ActivityTvMovieDetailsLayoutBinding
 import com.example.movieapp.data.remote.model.tvSeries.TvSeasonDetails
-import com.example.movieapp.data.repository.series.SeriesDataRepository
-import com.example.movieapp.data.datasource.SeriesDataSource
-import com.example.movieapp.data.local.database.AppDatabase
 import com.example.movieapp.data.remote.model.common.RecommendationItem
 import com.example.movieapp.data.remote.model.common.Review
 import com.example.movieapp.data.remote.model.common.Trailer
@@ -33,13 +28,13 @@ import com.example.movieapp.utils.CommonUtil
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModel
-import com.example.movieapp.viewModel.tvSeries.SeriesDetailsViewModelFactory
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.min
 
-
+@AndroidEntryPoint
 class TvSeriesDetailsUi : BaseActivity() {
 
     private lateinit var binding: ActivityTvMovieDetailsLayoutBinding
@@ -58,19 +53,7 @@ class TvSeriesDetailsUi : BaseActivity() {
         binding = ActivityTvMovieDetailsLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val factory =
-            SeriesDetailsViewModelFactory(
-                SeriesDataRepository(
-                    SeriesDataSource(
-                        ApiClient.tvSeriesApi(
-                        )
-                    ),
-                    SavedItemLocalDataSource(
-                        AppDatabase.getDatabase(this).savedItemDao()
-                    )
-                )
-            )
-        viewModel = ViewModelProvider(this, factory).get(SeriesDetailsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SeriesDetailsViewModel::class.java)
 
         val seriesId = intent.getLongExtra(Constants.TV_SERIES_ID.getValue(), -999)
         if (seriesId != (-999).toLong()) {

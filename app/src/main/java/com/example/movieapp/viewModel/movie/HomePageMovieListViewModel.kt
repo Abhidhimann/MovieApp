@@ -1,15 +1,17 @@
-package com.example.movieapp.viewModel
+package com.example.movieapp.viewModel.movie
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.movieapp.data.remote.model.movies.MoviesItemListResponse
 import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.utils.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 // Simple, easiest & easy to main things is 1 view (Activity) -> 1 view model
 // or 1 to many ( 1 view - many view model)
-class HomePageMovieListViewModel(private val repository: MovieDataRepository) : ViewModel() {
+@HiltViewModel
+class HomePageMovieListViewModel @Inject constructor(private val repository: MovieDataRepository) : ViewModel() {
 
     private var _trendingMovies = MutableLiveData<MoviesItemListResponse>()
     val trendingMovies: LiveData<MoviesItemListResponse>
@@ -61,14 +63,4 @@ class HomePageMovieListViewModel(private val repository: MovieDataRepository) : 
         }
     }
 
-}
-
-class HomePageMovieListViewModelFactory(private val repository: MovieDataRepository) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomePageMovieListViewModel::class.java)) { //If the modelClass is not compatible with HomePageViewModel, it throws an IllegalArgumentException with the message "Unknown ViewModel class." This is a safety check to ensure that you only create instances of the expected ViewModel class.
-            return HomePageMovieListViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }

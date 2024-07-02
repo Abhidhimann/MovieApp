@@ -7,10 +7,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 // can also make interface in domain/ i.e. SavedItemRepository then implement it SavedItemRepositoryImpl
-class SavedItemRepository(private val dataSource: SavedItemLocalDataSource) {
+@Singleton
+class SavedItemRepository @Inject constructor(private val dataSource: SavedItemLocalDataSource) {
 
     // better to change SavedItemEntity -> ToSavedItemModel or use same ToRecommendationItem
     // as in future if we change table then, don't have to change lot of code

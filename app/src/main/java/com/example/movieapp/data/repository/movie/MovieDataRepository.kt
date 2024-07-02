@@ -13,7 +13,10 @@ import javax.inject.Singleton
 import kotlin.math.min
 
 @Singleton
-class MovieDataRepository @Inject constructor(private val movieDataSource: MovieDataSource, private val savedItemLocalDataSource: SavedItemLocalDataSource) {
+class MovieDataRepository @Inject constructor(
+    private val movieDataSource: MovieDataSource,
+    private val savedItemLocalDataSource: SavedItemLocalDataSource
+) {
 
     suspend fun getTrendingMoviesInWeek(page: Int): Result<MoviesItemListResponse> {
         return withContext(Dispatchers.IO) {
@@ -114,11 +117,11 @@ class MovieDataRepository @Inject constructor(private val movieDataSource: Movie
         }
     }
 
-    suspend fun saveMovie(movieDetails: MovieDetails){
+    suspend fun saveMovie(movieDetails: MovieDetails) {
         savedItemLocalDataSource.insertSavedItem(movieDetails.toSavedItemEntity())
     }
 
-    suspend fun deleteMovie(movieDetails: MovieDetails){
+    suspend fun deleteMovie(movieDetails: MovieDetails) {
         savedItemLocalDataSource.deleteSavedItem(movieDetails.toSavedItemEntity())
     }
 

@@ -7,17 +7,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentSeriesListBinding
-import com.example.movieapp.data.repository.series.SeriesDataRepository
-import com.example.movieapp.data.datasource.SeriesDataSource
-import com.example.movieapp.data.local.database.AppDatabase
 import com.example.movieapp.navigation.FragmentNavigation
 import com.example.movieapp.ui.adapter.series.SeriesCardAdaptor
 import com.example.movieapp.utils.getClassTag
-import com.example.movieapp.viewModel.tvSeries.BaseSeriesListViewModeFactory
 import com.example.movieapp.viewModel.tvSeries.BaseSeriesListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val SeriesType = "seriesType"
 
@@ -29,6 +24,7 @@ private const val SeriesType = "seriesType"
  * in 1-1 relationship ( maybe can use one base class as parent)
  */
 
+@AndroidEntryPoint
 class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
 
     private lateinit var seriesType: String
@@ -46,18 +42,7 @@ class BaseSeriesList : Fragment(R.layout.fragment_series_list) {
         }
         Log.i(getClassTag(), "Base Series List View Created with movie type: $seriesType")
 
-        // will change to hilt
-        val factory =
-            BaseSeriesListViewModeFactory(
-                SeriesDataRepository(
-                    SeriesDataSource(ApiClient.tvSeriesApi()),
-                    SavedItemLocalDataSource(
-                        AppDatabase.getDatabase(requireContext()).savedItemDao()
-                    )
-                )
-            )
-
-        viewModel = ViewModelProvider(this, factory).get(BaseSeriesListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(BaseSeriesListViewModel::class.java)
 
         viewModel.allIndexToInitial()
         initSeriesList()

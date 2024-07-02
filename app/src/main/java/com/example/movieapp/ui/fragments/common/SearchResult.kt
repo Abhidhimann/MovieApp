@@ -7,24 +7,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.data.datasource.MovieDataSource
-import com.example.movieapp.data.datasource.SeriesDataSource
-import com.example.movieapp.data.remote.network.ApiClient
-import com.example.movieapp.data.repository.common.SearchRepository
 import com.example.movieapp.databinding.SearchResultLayoutBinding
 import com.example.movieapp.ui.adapter.movie.MovieCardAdaptor
 import com.example.movieapp.ui.adapter.series.SeriesCardAdaptor
 import com.example.movieapp.utils.getClassTag
-import com.example.movieapp.viewModel.movie.SearchMovieViewModel
-import com.example.movieapp.viewModel.movie.SearchMovieViewModelFactory
+import com.example.movieapp.viewModel.SearchResultViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val SEARCHED_QUERY = "searched_Query"
 
+@AndroidEntryPoint
 // Maybe will add show previous results on back button
 class SearchResult : Fragment(R.layout.search_result_layout) {
 
     private lateinit var binding: SearchResultLayoutBinding
-    private lateinit var viewModel: SearchMovieViewModel
+    private lateinit var viewModel: SearchResultViewModel
     private lateinit var movieCardAdaptor: MovieCardAdaptor
     private lateinit var seriesCardAdaptor: SeriesCardAdaptor
     private lateinit var query: String
@@ -40,14 +37,7 @@ class SearchResult : Fragment(R.layout.search_result_layout) {
         }
         Log.i(getClassTag(), "Search View Created with query: $query")
 
-        val factory =
-            SearchMovieViewModelFactory(
-                SearchRepository(
-                    MovieDataSource(ApiClient.movieApi()),
-                    SeriesDataSource(ApiClient.tvSeriesApi())
-                )
-            )
-        viewModel = ViewModelProvider(this, factory).get(SearchMovieViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SearchResultViewModel::class.java)
 
         viewModel.allMovieIndexToInitial()
         viewModel.allSeriesIndexToInitial()

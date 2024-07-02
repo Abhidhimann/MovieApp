@@ -10,16 +10,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
-import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.ActivityTvMovieDetailsLayoutBinding
-import com.example.movieapp.data.datasource.MovieDataSource
-import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.local.database.AppDatabase
 import com.example.movieapp.data.remote.model.common.RecommendationItem
 import com.example.movieapp.data.remote.model.common.Review
 import com.example.movieapp.data.remote.model.common.Trailer
 import com.example.movieapp.data.remote.model.movies.MovieDetails
-import com.example.movieapp.data.repository.movie.MovieDataRepository
 import com.example.movieapp.ui.adapter.ReviewAdaptor
 import com.example.movieapp.ui.adapter.RecommendationListAdaptor
 import com.example.movieapp.ui.adapter.SliderImagesAdaptor
@@ -27,11 +22,12 @@ import com.example.movieapp.utils.CommonUtil
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.movie.MovieDetailsViewModel
-import com.example.movieapp.viewModel.movie.MovieDetailsViewModelFactory
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.min
 
+@AndroidEntryPoint
 class MovieDetailsUi : BaseActivity() {
 
     private lateinit var binding: ActivityTvMovieDetailsLayoutBinding
@@ -47,15 +43,7 @@ class MovieDetailsUi : BaseActivity() {
         Log.i(getClassTag(), "Movie Details Ui activity created")
         setContentView(binding.root)
 
-        val factory =
-            MovieDetailsViewModelFactory(
-                MovieDataRepository(
-                    MovieDataSource(ApiClient.movieApi()), SavedItemLocalDataSource(
-                        AppDatabase.getDatabase(this).savedItemDao()
-                    )
-                )
-            )
-        viewModel = ViewModelProvider(this, factory).get(MovieDetailsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MovieDetailsViewModel::class.java)
 
         val movieId = intent.getLongExtra(Constants.MOVIE_ID.getValue(), -999)
         if (movieId != (-999).toLong()) {

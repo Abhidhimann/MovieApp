@@ -10,19 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.movieapp.R
-import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.remote.network.ApiClient
 import com.example.movieapp.databinding.FragmentSeriesListBinding
-import com.example.movieapp.data.repository.series.SeriesDataRepository
-import com.example.movieapp.data.datasource.SeriesDataSource
-import com.example.movieapp.data.local.database.AppDatabase
 import com.example.movieapp.ui.activities.BaseActivity
 import com.example.movieapp.ui.adapter.series.SeriesCardAdaptor
 import com.example.movieapp.utils.RetryFunctionality
 import com.example.movieapp.utils.getClassTag
 import com.example.movieapp.viewModel.tvSeries.HomePageSeriesListViewModel
-import com.example.movieapp.viewModel.tvSeries.HomePageSeriesListViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionality {
     private lateinit var binding: FragmentSeriesListBinding
     private lateinit var adaptor: SeriesCardAdaptor
@@ -36,16 +32,7 @@ class HomeSeriesList : Fragment(R.layout.fragment_series_list), RetryFunctionali
         Log.i(getClassTag(), "Series List View Created")
         (activity as BaseActivity).activeFrames.add(this)
 
-        // will change to hilt
-        val factory =
-            HomePageSeriesListViewModelFactory(
-                SeriesDataRepository(
-                    SeriesDataSource((ApiClient.tvSeriesApi())), SavedItemLocalDataSource(
-                        AppDatabase.getDatabase(requireContext()).savedItemDao()
-                    )
-                )
-            )
-        viewModel = ViewModelProvider(this, factory).get(HomePageSeriesListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(HomePageSeriesListViewModel::class.java)
 
         viewModel.allIndexToInitial()
         initSeriesList()

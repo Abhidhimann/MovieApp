@@ -106,13 +106,3 @@ class BaseMovieListViewModel @Inject constructor(private val repository: MovieDa
 
 
 }
-
-//class BaseMovieListViewModeFactory(private val repository: MovieDataRepository) :
-//    ViewModelProvider.Factory {
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(BaseMovieListViewModel::class.java)) { //If the modelClass is not compatible with HomePageViewModel, it throws an IllegalArgumentException with the message "Unknown ViewModel class." This is a safety check to ensure that you only create instances of the expected ViewModel class.
-//            return BaseMovieListViewModel(repository) as T
-//        }
-//        throw IllegalArgumentException("Unknown ViewModel class")
-//    }
-//}

@@ -17,8 +17,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SeriesDataSource(private val apiService: TvApiService) {
+@Singleton
+class SeriesDataSource @Inject constructor(private val apiService: TvApiService) {
 
     private suspend inline fun <reified T> getDataFromApiWithRetry(
         crossinline apiCall: suspend () -> Response<T>,

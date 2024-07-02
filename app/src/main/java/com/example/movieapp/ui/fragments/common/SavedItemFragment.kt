@@ -6,15 +6,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.data.datasource.SavedItemLocalDataSource
-import com.example.movieapp.data.local.database.AppDatabase
-import com.example.movieapp.data.repository.common.SavedItemRepository
 import com.example.movieapp.databinding.CommonTvSeriesCardLayoutBinding
 import com.example.movieapp.ui.adapter.RecommendationListAdaptor
 import com.example.movieapp.viewModel.SavedItemsViewModel
-import com.example.movieapp.viewModel.SavedItemsViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class SavedItemFragment : Fragment(R.layout.common_tv_series_card_layout) {
     private lateinit var binding: CommonTvSeriesCardLayoutBinding
     private lateinit var viewModel: SavedItemsViewModel
@@ -23,19 +21,7 @@ class SavedItemFragment : Fragment(R.layout.common_tv_series_card_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = CommonTvSeriesCardLayoutBinding.bind(view)
-
-        // change this using hilt
-        val factory =
-            SavedItemsViewModelFactory(
-                SavedItemRepository(
-                    SavedItemLocalDataSource(
-                        AppDatabase.getDatabase(requireContext()).savedItemDao()
-                    )
-                )
-            )
-        viewModel = ViewModelProvider(
-            this, factory
-        )[SavedItemsViewModel::class.java]
+        viewModel = ViewModelProvider(this)[SavedItemsViewModel::class.java]
 
         initItemList()
     }
