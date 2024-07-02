@@ -12,6 +12,7 @@ import javax.inject.Singleton
 
 
 // can also make interface in domain/ i.e. SavedItemRepository then implement it SavedItemRepositoryImpl
+// then for di simple provides or better binds
 @Singleton
 class SavedItemRepository @Inject constructor(private val dataSource: SavedItemLocalDataSource) {
 
