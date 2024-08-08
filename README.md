@@ -19,3 +19,5 @@ To build and run the project, you need to create a `credential.properties` file 
 
    ```properties
    MOVIE_DB_API_KEY="your_api_key_here"
+
+### 3. Apk File: [Movie App](https://github.com/Abhidhimann/MovieApp/blob/movie_app_with_di/app/release/app-release.apk.zip)
