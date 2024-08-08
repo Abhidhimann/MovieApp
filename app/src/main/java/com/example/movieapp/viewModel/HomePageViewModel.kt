@@ -27,11 +27,14 @@ class HomePageViewModel @Inject constructor(private val repository: MovieDataRep
     fun getTrendingRecommendation() = viewModelScope.launch {
         when (val result = repository.getTrendingRecommendation()) {
             is Result.Success -> {
-                _trending.value = result.data
+                // really don't know why
+                result.data?.let {
+                    _trending.value = it
+                }
                 _loadingState.value = false
             }
             is Result.Error -> {
-                _errorState.value = result.exception?.message
+                _errorState.value = result.exception.message
                 Log.i("Abhi", "errpr")
                 // ui change according to error state
             }

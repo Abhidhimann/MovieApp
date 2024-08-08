@@ -35,10 +35,10 @@ class MovieDataSource @Inject constructor(private val apiService: MovieApiServic
             try {
                 val response = apiCall.invoke()
                 if (response.isSuccessful && response.body() != null) {
-                    Log.d(tag, "Response successful : $response")
+//                    Log.d(tag, "Response successful : $response")
                     return@withContext response.body()!!
                 } else {
-                    Log.d(tag, "Response unsuccessful: $response")
+                    Log.d(tag, "Response unsuccessful")
                 }
             } catch (e: Exception) {
                 Log.d(tag, "Error in network request: $e")

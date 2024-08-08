@@ -134,7 +134,7 @@ class TvSeriesDetailsUi : BaseActivity() {
         binding.title.text = seriesDetails.title
         binding.genres.text = seriesDetails.genres.joinToString(", ") { genre -> genre.name }
         binding.length.text =
-            seriesDetails.runTimeDetails.averageRunTime.toString().plus(" min / ep")
+            seriesDetails.runTimeDetails?.averageRunTime.toString().plus(" min / ep")
         binding.releasedDate.text = seriesDetails.releaseDate
         binding.originalTitle.text = seriesDetails.originalTitle
         binding.overview.text = seriesDetails.seriesOverview

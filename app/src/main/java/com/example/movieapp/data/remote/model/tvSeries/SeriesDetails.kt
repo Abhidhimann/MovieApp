@@ -27,7 +27,7 @@ data class SeriesDetails(
     @SerializedName("poster_path")
     val posterImg: String,
     @SerializedName("last_episode_to_air")
-    val runTimeDetails: SeriesRunTimeDetails,
+    val runTimeDetails: SeriesRunTimeDetails?,
     @SerializedName("genres")
     val genres: List<MovieGenre>,
     @SerializedName("seasons")
