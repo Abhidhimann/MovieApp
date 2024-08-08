@@ -4,6 +4,10 @@ plugins {
     id 'org.jetbrains.kotlin.kapt'
 }
 
+Properties properties = new Properties()
+properties.load(rootProject.file('credential.properties').newDataInputStream())
+def movieDbApiKey = properties.getProperty('MOVIE_DB_API_KEY')
+
 android {
     namespace 'com.example.movieapp'
     compileSdk 34
@@ -16,6 +20,7 @@ android {
         versionName "1.0"
         buildConfigField "String", "APP_NAME", "\"Movie App\""
         buildConfigField "String", "DB_NAME", "\"movieApp.db\""
+        buildConfigField "String", "MOVIE_DB_API_KEY", "${movieDbApiKey}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
