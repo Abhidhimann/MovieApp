@@ -1,6 +1,6 @@
 # MovieApp by Abhishek
 
-MovieApp is a application where see find various movies and series, see review, recommendations, watch trailer and much more.
+MovieApp is a application where you can find various movies and series, see reviews, recommendations, find trendings, watch trailers and much more.
 
 ## Setting Up Your Environment
 
