@@ -1,6 +1,15 @@
 # MovieApp by Abhishek
 
-MovieApp is a application where you can find various movies and series, see reviews, recommendations, find trendings, watch trailers and much more.
+MovieApp is an Android application that lets users explore a wide range of Movies and TV series. It provides features like viewing detailed information about movies and series, reading reviews, discovering recommendations, watching YouTube trailers, and more.
+
+## Features
+
+- **Browse Movies and TV Series**: Discover various movies and series based on different selections.
+- **Read Reviews**: Access user and critic reviews for each movie or series.
+- **Get Recommendations**: Find personalized recommendations based on your current selections.
+- **Trending Movies**: Stay updated with the latest trending movies and series.
+- **Watch Trailers**: View YouTube trailers for upcoming and popular movies.
+- **Search Functionality**: Easily find specific movies or series.
 
 ## Setting Up Your Environment
 
