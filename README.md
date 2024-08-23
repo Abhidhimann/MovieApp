@@ -29,8 +29,10 @@ Common tech stacks used are:
 ## DEMO
 
 ### 1. Basic Walkthrough & ScreenShots: 
+![screen-20240823-161448](https://github.com/user-attachments/assets/16c786cd-2e8b-4515-a2e3-4c4ad1e5c010)
 
 ### 2. Infinite scrolling using pagination: 
+![paging_list](https://github.com/user-attachments/assets/245f1b9a-2f4d-467a-ba94-8d507d08a081)
 
 ### 3. More Videos: [Click Here](https://drive.google.com/drive/folders/1MgSvUu1P8FUN5MOwWTIq4NeilNPcoKvi)
 
