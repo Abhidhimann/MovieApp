@@ -56,3 +56,10 @@ To build and run the project, you need to create a `credential.properties` file 
    ```properties
    MOVIE_DB_API_KEY="your_api_key_here"
 
+## Suggestions and Feedback
+
+If you have any suggestions or feedback regarding the project, please feel free to reach out to me:
+
+- **Email**: [abhishekdhimaniitg@gmail.com](mailto:abhishekdhimaniitg@gmail.com)
+
+Your input is greatly appreciated and helps improve the project!
