@@ -29,7 +29,7 @@ Common tech stacks used are:
 ## DEMO
 
 ### 1. Basic Walkthrough & ScreenShots: 
-![screen-20240823-161448](https://github.com/user-attachments/assets/16c786cd-2e8b-4515-a2e3-4c4ad1e5c010)
+<img src="https://github.com/user-attachments/assets/16c786cd-2e8b-4515-a2e3-4c4ad1e5c010" width="270">
 <img src="https://github.com/user-attachments/assets/f66200f1-f1a0-4055-87f9-d31a902ba532" width="270">
 <img src="https://github.com/user-attachments/assets/96cc7e46-241c-4910-bb46-5d0b53e99992" width="270">
 <img src="https://github.com/user-attachments/assets/4fb3e2a5-9bee-413c-8926-1fe9df230ad0" width="270">
@@ -37,7 +37,7 @@ Common tech stacks used are:
 <img src="https://github.com/user-attachments/assets/fa2be3a2-db72-4e11-a86e-6a9ef279d6f3" width="270">
 
 ### 2. Infinite scrolling using pagination: 
-![paging_list](https://github.com/user-attachments/assets/245f1b9a-2f4d-467a-ba94-8d507d08a081)
+<img src="https://github.com/user-attachments/assets/245f1b9a-2f4d-467a-ba94-8d507d08a081" width="270">
 
 ### 3. More Videos: [Click Here](https://drive.google.com/drive/folders/1MgSvUu1P8FUN5MOwWTIq4NeilNPcoKvi)
 
